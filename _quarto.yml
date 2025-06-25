@@ -18,11 +18,11 @@ website:
     align: center
     tools: 
       - icon: globe
-        href: https://www.fisheries.noaa.gov/pacific-islands/science-data/providing-science-protect-marine-species
-        text: "NMFS PIFSC PSD"
+        href: https://www.fisheries.noaa.gov/pacific-islands/science-data/whale-and-dolphin-surveys-pacific-islands
+        text: "NMFS PIFSC PSD CRP"
       - icon: github
         href: https://github.com/pifsc-protected-species-division/density_surface_modeling/
-        text: "PIFSC-PSD"
+        text: "PIFSC-PSD DSM"
 
     style: "docked"
     search: true
