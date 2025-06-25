@@ -1,16 +1,22 @@
 [
   {
-    "objectID": "about.html",
-    "href": "about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2"
-  },
-  {
     "objectID": "index.html",
     "href": "index.html",
     "title": "density_surface_modeling",
     "section": "",
-    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit\n\n1 + 1\n\n[1] 2"
+    "text": "This is a Quarto website.\nTo learn more about Quarto websites visit. Also here’s some math \\(x+y=z\\)\n\n1 + 22\n\n[1] 23",
+    "crumbs": [
+      "Home"
+    ]
+  },
+  {
+    "objectID": "content/about.html",
+    "href": "content/about.html",
+    "title": "About",
+    "section": "",
+    "text": "About this site\n\n1 + 1\n\n[1] 2",
+    "crumbs": [
+      "About"
+    ]
   }
 ]

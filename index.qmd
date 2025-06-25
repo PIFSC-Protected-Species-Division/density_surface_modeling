@@ -4,8 +4,8 @@ title: "density_surface_modeling"
 
 This is a Quarto website.
 
-To learn more about Quarto websites visit
+To learn more about Quarto websites visit. Also here's some math $x+y=z$
 
 ```{r}
-1 + 1
+1 + 22
 ```

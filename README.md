@@ -8,12 +8,14 @@
 # Density Surface Modeling: A Case Study for Central Pacific False Killer Whales (*Pseudorca crassidens*)
 
 <p float="center">
-<img src="docs/img/noaa_fisheries.png" height="200"/>          
-  <img src="docs/img/PSD.Dark.NoBackground.png" height="200"/>
+
+<img src="img/noaa_fisheries.png" height="200"/>            
+<img src="img/PSD.Dark.NoBackground.png" height="200"/>
+
 </p>
 
 Full documentation is available
-[here](https://pifsc-protected-species-division.github.io/fkw_dsm/).
+[here](https://pifsc-protected-species-division.github.io/density_surface_modeling/).
 
 ## Disclaimer
 
