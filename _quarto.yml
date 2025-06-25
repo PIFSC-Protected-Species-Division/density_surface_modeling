@@ -5,7 +5,7 @@ project:
 website: 
   page-navigation: true
   title: "NMFS Open Science Resources" 
-  site-url: "https://pifsc-protected-species-division.github.io/density_surface_modeling" 
+  site-url: https://pifsc-protected-species-division.github.io/density_surface_modeling/ 
   repo-url: https://github.com/pifsc-protected-species-division/density_surface_modeling
   repo-actions: [edit, issue]
   # favicon: images/favicon.ico  
@@ -18,7 +18,7 @@ website:
     align: center
     tools: 
       - icon: globe
-        href: https://pifsc-protected-species-division.github.io
+        href: https://www.fisheries.noaa.gov/pacific-islands/science-data/providing-science-protect-marine-species
         text: "NMFS PIFSC PSD"
       - icon: github
         href: https://github.com/pifsc-protected-species-division
