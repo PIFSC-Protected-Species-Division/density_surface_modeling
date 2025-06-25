@@ -1,11 +1,24 @@
 ---
-title: "density_surface_modeling"
+title: "Desity Surface Modeling: A Case Study for Central Pacific False Killer Whales (*Pseudorca crassidens*)" 
 ---
 
-This is a Quarto website.
+| 
+| **Devin Johnson**, **Erin Oleson**, **Janelle Badger**, **Amanda Bradford**, **Jennifer McCullough**
+| Pacific Islands Fisheries Science Center, NOAA Fisheries, Honolulu, Hawai‘i
+| 
+| **Yvonne Barkley**
+| Cooperative Institute for Marine & Atmospheric Research, University of Hawai‘i at Mānoa, Honolulu, Hawai‘i
+|
+| **Elizabeth Becker**
+| Cascadia Research Collective LLC, Olympia, Washington
+|
+|
 
-To learn more about Quarto websites visit. Also here's some math $x+y=z$
+<p float="center">
 
-```{r}
-1 + 22
-```
+<img src="img/pifsc_logo.png" height="200"/>             <img src="img/PSD.Dark.NoBackground.png" height="200"/>
+
+</p>
+|
+|
+

@@ -4,7 +4,7 @@ project:
   
 website: 
   page-navigation: true
-  title: "NMFS Open Science Resources" 
+  title: "PIFSC PSD Density Surface Modeling" 
   site-url: https://pifsc-protected-species-division.github.io/density_surface_modeling/ 
   repo-url: https://github.com/pifsc-protected-species-division/density_surface_modeling
   repo-actions: [edit, issue]
@@ -12,7 +12,7 @@ website:
   
   sidebar:
     background: "#D9E3E4"
-    logo: img/PSD.Dark.NoBackground.png
+    logo: img/noaa_fisheries.png
     # favicon: img/noaa_fisheries.png
     pinned: true
     align: center
@@ -21,7 +21,7 @@ website:
         href: https://www.fisheries.noaa.gov/pacific-islands/science-data/providing-science-protect-marine-species
         text: "NMFS PIFSC PSD"
       - icon: github
-        href: https://github.com/pifsc-protected-species-division
+        href: https://github.com/pifsc-protected-species-division/density_surface_modeling/
         text: "PIFSC-PSD"
 
     style: "docked"
@@ -36,9 +36,7 @@ website:
 
 format:
   html:
-    theme:
-      light: [cosmo, theme.scss] # from https://github.com/sta210-s22/website/blob/main/_quarto.yml
-      dark: [cosmo, theme-dark.scss]
+    theme: [cosmo, theme.scss] # from https://github.com/sta210-s22/website/blob/main/_quarto.yml
     code-copy: true
     code-overflow: wrap
     toc: true
