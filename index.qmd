@@ -4,7 +4,7 @@ title: "density_surface_modeling"
 
 This is a Quarto website.
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+To learn more about Quarto websites visit
 
 ```{r}
 1 + 1
