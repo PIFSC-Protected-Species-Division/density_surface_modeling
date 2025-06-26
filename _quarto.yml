@@ -30,9 +30,22 @@ website:
     contents:
       - href: index.qmd
         text: Home
-      - href: content/about.qmd
-        text: About
-        
+      - href: content/intro.qmd
+        text: Introduction
+      - href: content/s1_construct_segs/index.qmd
+        text: 1. Segmenting DAS Survey Data
+      - href: content/s2_est_g0_esw/index.qmd
+        text: 2. Estimate g(0) and ESW
+      - href: content/s3_env_data/index.qmd
+        text: 3. Dowload envrion. data
+      - href: content/s4_fit_models/index.qmd
+        text: 4. Fit DSM models
+      - href: content/s5_prediction/index.qmd
+        text: 5. Predict abundance for selected regions
+      - href: content/s6_varprop/index.qmd
+        text: 6. Assess uncertainty
+
+
 
 format:
   html:

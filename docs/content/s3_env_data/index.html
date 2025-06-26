@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Desity Surface Modeling: A Case Study for Central Pacific False Killer Whales (Pseudorca crassidens) – PIFSC PSD Density Surface Modeling</title>
+<title>Download and Merge Environmental data to segments – PIFSC PSD Density Surface Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -23,22 +23,23 @@ ul.task-list li input[type="checkbox"] {
 </style>
 
 
-<script src="site_libs/quarto-nav/quarto-nav.js"></script>
-<script src="site_libs/clipboard/clipboard.min.js"></script>
-<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
-<script src="site_libs/quarto-search/fuse.min.js"></script>
-<script src="site_libs/quarto-search/quarto-search.js"></script>
-<meta name="quarto:offset" content="./">
-<link href="./content/intro.html" rel="next">
-<script src="site_libs/quarto-html/quarto.js"></script>
-<script src="site_libs/quarto-html/popper.min.js"></script>
-<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
-<script src="site_libs/quarto-html/anchor.min.js"></script>
-<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
-<script src="site_libs/bootstrap/bootstrap.min.js"></script>
-<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<script src="../../site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="../../site_libs/clipboard/clipboard.min.js"></script>
+<script src="../../site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="../../site_libs/quarto-search/fuse.min.js"></script>
+<script src="../../site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="../../">
+<link href="../../content/s4_fit_models/index.html" rel="next">
+<link href="../../content/s2_est_g0_esw/index.html" rel="prev">
+<script src="../../site_libs/quarto-html/quarto.js"></script>
+<script src="../../site_libs/quarto-html/popper.min.js"></script>
+<script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="../../site_libs/quarto-html/anchor.min.js"></script>
+<link href="../../site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="../../site_libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="../../site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="../../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="../../site_libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -79,7 +80,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">Home</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/s3_env_data/index.html">3. Dowload envrion. data</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -93,8 +94,8 @@ ul.task-list li input[type="checkbox"] {
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation docked overflow-auto">
     <div class="pt-lg-2 mt-2 text-center sidebar-header">
-      <a href="./index.html" class="sidebar-logo-link">
-      <img src="./img/noaa_fisheries.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
+      <a href="../../index.html" class="sidebar-logo-link">
+      <img src="../../img/noaa_fisheries.png" alt="" class="sidebar-logo py-0 d-lg-inline d-none">
       </a>
       <div class="sidebar-tools-main">
     <a href="https://www.fisheries.noaa.gov/pacific-islands/science-data/whale-and-dolphin-surveys-pacific-islands" title="NMFS PIFSC PSD CRP" class="quarto-navigation-tool px-1" aria-label="NMFS PIFSC PSD CRP"><i class="bi bi-globe"></i></a>
@@ -110,49 +111,49 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Home</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/intro.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/intro.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">Introduction</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/s1_construct_segs/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/s1_construct_segs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">1. Segmenting DAS Survey Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/s2_est_g0_esw/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/s2_est_g0_esw/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">2. Estimate g(0) and ESW</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/s3_env_data/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/s3_env_data/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">3. Dowload envrion. data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/s4_fit_models/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/s4_fit_models/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">4. Fit DSM models</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/s5_prediction/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/s5_prediction/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">5. Predict abundance for selected regions</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./content/s6_varprop/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/s6_varprop/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">6. Assess uncertainty</span></a>
   </div>
 </li>
@@ -161,15 +162,22 @@ ul.task-list li input[type="checkbox"] {
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">Section</a></li>
+  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">Section</a></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s3_env_data/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Desity Surface Modeling: A Case Study for Central Pacific False Killer Whales (<em>Pseudorca crassidens</em>)</h1>
+<h1 class="title">Download and Merge Environmental data to segments</h1>
 </div>
 
 
@@ -186,26 +194,14 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<div class="line-block"><br>
-<strong>Devin Johnson</strong>, <strong>Erin Oleson</strong>, <strong>Janelle Badger</strong>, <strong>Amanda Bradford</strong>, <strong>Jennifer McCullough</strong><br>
-Pacific Islands Fisheries Science Center, NOAA Fisheries, Honolulu, Hawai‘i<br>
-<br>
-<strong>Yvonne Barkley</strong><br>
-Cooperative Institute for Marine &amp; Atmospheric Research, University of Hawai‘i at Mānoa, Honolulu, Hawai‘i<br>
-<br>
-<strong>Elizabeth Becker</strong><br>
-Cascadia Research Collective LLC, Olympia, Washington<br>
-<br>
-</div>
-<p float="center">
-</p><p><img src="img/pifsc_logo.png" height="200"> &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; <img src="img/PSD.Dark.NoBackground.png" height="200"></p>
-<p></p>
-<div class="line-block"><br>
-<br>
-</div>
-<p><strong>Summary</strong>: skhjdfsdkhfb</p>
+<section id="section" class="level2">
+<h2 class="anchored" data-anchor-id="section">Section</h2>
+</section>
+<section id="section-1" class="level2">
+<h2 class="anchored" data-anchor-id="section-1">Section</h2>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
@@ -630,10 +626,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="../../content/s2_est_g0_esw/index.html" class="pagination-link" aria-label="2. Estimate g(0) and ESW">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">2. Estimate g(0) and ESW</span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./content/intro.html" class="pagination-link" aria-label="Introduction">
-        <span class="nav-page-text">Introduction</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/s4_fit_models/index.html" class="pagination-link" aria-label="4. Fit DSM models">
+        <span class="nav-page-text">4. Fit DSM models</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -642,4 +641,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s3_env_data/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

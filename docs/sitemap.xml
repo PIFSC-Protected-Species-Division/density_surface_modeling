@@ -2,10 +2,34 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://pifsc-protected-species-division.github.io/density_surface_modeling/index.html</loc>
-    <lastmod>2025-06-25T20:53:30.222Z</lastmod>
+    <lastmod>2025-06-25T23:52:38.371Z</lastmod>
   </url>
   <url>
-    <loc>https://pifsc-protected-species-division.github.io/density_surface_modeling/content/about.html</loc>
-    <lastmod>2025-06-25T17:59:58.678Z</lastmod>
+    <loc>https://pifsc-protected-species-division.github.io/density_surface_modeling/content/s1_construct_segs/index.html</loc>
+    <lastmod>2025-06-25T23:56:16.656Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pifsc-protected-species-division.github.io/density_surface_modeling/content/s5_prediction/index.html</loc>
+    <lastmod>2025-06-26T00:14:39.760Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pifsc-protected-species-division.github.io/density_surface_modeling/content/s6_varprop/index.html</loc>
+    <lastmod>2025-06-26T00:16:43.223Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pifsc-protected-species-division.github.io/density_surface_modeling/content/intro.html</loc>
+    <lastmod>2025-06-25T23:53:11.697Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pifsc-protected-species-division.github.io/density_surface_modeling/content/s3_env_data/index.html</loc>
+    <lastmod>2025-06-26T00:06:47.330Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pifsc-protected-species-division.github.io/density_surface_modeling/content/s4_fit_models/index.html</loc>
+    <lastmod>2025-06-26T00:11:53.842Z</lastmod>
+  </url>
+  <url>
+    <loc>https://pifsc-protected-species-division.github.io/density_surface_modeling/content/s2_est_g0_esw/index.html</loc>
+    <lastmod>2025-06-26T00:02:47.023Z</lastmod>
   </url>
 </urlset>

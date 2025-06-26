@@ -4,19 +4,79 @@
     "href": "index.html",
     "title": "Desity Surface Modeling: A Case Study for Central Pacific False Killer Whales (Pseudorca crassidens)",
     "section": "",
-    "text": "Devin Johnson, Erin Oleson, Janelle Badger, Amanda Bradford, Jennifer McCullough\nPacific Islands Fisheries Science Center, NOAA Fisheries, Honolulu, Hawai‘i\n\nYvonne Barkley\nCooperative Institute for Marine & Atmospheric Research, University of Hawai‘i at Mānoa, Honolulu, Hawai‘i\n\nElizabeth Becker\nCascadia Research Collective LLC, Olympia, Washington",
+    "text": "Devin Johnson, Erin Oleson, Janelle Badger, Amanda Bradford, Jennifer McCullough\nPacific Islands Fisheries Science Center, NOAA Fisheries, Honolulu, Hawai‘i\n\nYvonne Barkley\nCooperative Institute for Marine & Atmospheric Research, University of Hawai‘i at Mānoa, Honolulu, Hawai‘i\n\nElizabeth Becker\nCascadia Research Collective LLC, Olympia, Washington\n\n\n\n             \n\n\n\n\nSummary: skhjdfsdkhfb",
     "crumbs": [
       "Home"
     ]
   },
   {
-    "objectID": "content/about.html",
-    "href": "content/about.html",
-    "title": "About",
-    "section": "",
-    "text": "About this site\n\n1 + 1\n\n[1] 2",
+    "objectID": "content/s1_construct_segs/index.html#section-1",
+    "href": "content/s1_construct_segs/index.html#section-1",
+    "title": "Segmenting DAS Survey Data",
+    "section": "Section",
+    "text": "Section",
     "crumbs": [
-      "About"
+      "1. Segmenting DAS Survey Data"
+    ]
+  },
+  {
+    "objectID": "content/s5_prediction/index.html#section-1",
+    "href": "content/s5_prediction/index.html#section-1",
+    "title": "Make Abundance Predictions for Stock Assessment",
+    "section": "Section",
+    "text": "Section",
+    "crumbs": [
+      "5. Predict abundance for selected regions"
+    ]
+  },
+  {
+    "objectID": "content/s6_varprop/index.html#section-1",
+    "href": "content/s6_varprop/index.html#section-1",
+    "title": "Assess Abundance Uncertainty by Propogating All Sources of Variation",
+    "section": "Section",
+    "text": "Section",
+    "crumbs": [
+      "6. Assess uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/intro.html#density-surface-modeling",
+    "href": "content/intro.html#density-surface-modeling",
+    "title": "Introduction",
+    "section": "Density Surface Modeling",
+    "text": "Density Surface Modeling",
+    "crumbs": [
+      "Introduction"
+    ]
+  },
+  {
+    "objectID": "content/s3_env_data/index.html#section-1",
+    "href": "content/s3_env_data/index.html#section-1",
+    "title": "Download and Merge Environmental data to segments",
+    "section": "Section",
+    "text": "Section",
+    "crumbs": [
+      "3. Dowload envrion. data"
+    ]
+  },
+  {
+    "objectID": "content/s4_fit_models/index.html#section-1",
+    "href": "content/s4_fit_models/index.html#section-1",
+    "title": "Fit Density Surface Models (DSM) using GAMs",
+    "section": "Section",
+    "text": "Section",
+    "crumbs": [
+      "4. Fit DSM models"
+    ]
+  },
+  {
+    "objectID": "content/s2_est_g0_esw/index.html#section-1",
+    "href": "content/s2_est_g0_esw/index.html#section-1",
+    "title": "Estimate g(0) and Effective Strip Width with Auxillary Data",
+    "section": "Section",
+    "text": "Section",
+    "crumbs": [
+      "2. Estimate g(0) and ESW"
     ]
   }
 ]
