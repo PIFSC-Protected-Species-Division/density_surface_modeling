@@ -43,9 +43,6 @@ This repository is a scientific product and is not official communication of the
 |
 |
 |
-|
-|
-|
 
 ![](img/destiny.png){width=50% fig-align="center"}
 
