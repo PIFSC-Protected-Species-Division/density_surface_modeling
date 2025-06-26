@@ -45,8 +45,6 @@ website:
       - href: content/s6_varprop/index.qmd
         text: 6. Assess uncertainty
 
-
-
 format:
   html:
     theme: [cosmo, theme.scss] # from https://github.com/sta210-s22/website/blob/main/_quarto.yml
