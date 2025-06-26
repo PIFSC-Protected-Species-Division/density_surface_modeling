@@ -1,5 +1,5 @@
 ---
-title: "Desity Surface Modeling: A Case Study for Central Pacific False Killer Whales (*Pseudorca crassidens*)" 
+title: "Density Surface Modeling: A Case Study for Central Pacific False Killer Whales (*Pseudorca crassidens*)" 
 ---
 
 | 
