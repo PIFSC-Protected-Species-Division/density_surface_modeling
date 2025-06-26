@@ -4,10 +4,10 @@ title: "Density Surface Modeling: A Case Study for Central Pacific False Killer 
 
 | 
 | **Devin Johnson**, **Erin Oleson**, **Janelle Badger**, **Amanda Bradford**, **Jennifer McCullough**
-| Pacific Islands Fisheries Science Center, NOAA Fisheries, Honolulu, Hawai‘i
+| Pacific Islands Fisheries Science Center, NOAA Fisheries, Honolulu, Hawaiʻi
 | 
 | **Yvonne Barkley**
-| Cooperative Institute for Marine & Atmospheric Research, University of Hawai‘i at Mānoa, Honolulu, Hawai‘i
+| Cooperative Institute for Marine & Atmospheric Research, University of Hawaiʻi at Mānoa, Honolulu, Hawaiʻi
 |
 | **Elizabeth Becker**
 | Cascadia Research Collective LLC, Olympia, Washington
