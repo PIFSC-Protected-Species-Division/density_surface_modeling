@@ -201,9 +201,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#setup-python-environment" id="toc-setup-python-environment" class="nav-link active" data-scroll-target="#setup-python-environment">Setup Python Environment</a></li>
-  <li><a href="#download-copernicus-marine-data" id="toc-download-copernicus-marine-data" class="nav-link" data-scroll-target="#download-copernicus-marine-data">Download Copernicus Marine Data</a></li>
-  <li><a href="#merge-compernicus-marine-data-with-processed-segment-data" id="toc-merge-compernicus-marine-data-with-processed-segment-data" class="nav-link" data-scroll-target="#merge-compernicus-marine-data-with-processed-segment-data">Merge Compernicus Marine Data with Processed Segment Data</a></li>
+  <li><a href="#a.-setup-python-environment" id="toc-a.-setup-python-environment" class="nav-link active" data-scroll-target="#a.-setup-python-environment">A. Setup Python Environment</a></li>
+  <li><a href="#b.-download-copernicus-marine-data" id="toc-b.-download-copernicus-marine-data" class="nav-link" data-scroll-target="#b.-download-copernicus-marine-data">B. Download Copernicus Marine Data</a></li>
+  <li><a href="#c.-merge-compernicus-marine-data-with-processed-segment-data" id="toc-c.-merge-compernicus-marine-data-with-processed-segment-data" class="nav-link" data-scroll-target="#c.-merge-compernicus-marine-data-with-processed-segment-data">C. Merge Compernicus Marine Data with Processed Segment Data</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s3_env_data/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -229,8 +229,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="setup-python-environment" class="level1">
-<h1>Setup Python Environment</h1>
+<section id="a.-setup-python-environment" class="level1">
+<h1>A. Setup Python Environment</h1>
 <p>Code to download data from the Copernicus Marine Data Store The user must create a login with a username and password to access their data. Username and password is required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate) </span>
@@ -247,11 +247,152 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>cm<span class="sc">$</span><span class="fu">login</span>(<span class="st">"username"</span>,<span class="st">"password"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="download-copernicus-marine-data" class="level1">
-<h1>Download Copernicus Marine Data</h1>
+<section id="b.-download-copernicus-marine-data" class="level1">
+<h1>B. Download Copernicus Marine Data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(picMaps)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate) </span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doFuture)</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(progressr)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_3_download_env_data"</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>copernicus_data <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localwd, <span class="st">"copernicus_data"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(copernicus_data)) <span class="fu">dir.create</span>(copernicus_data)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">use_virtualenv</span>(<span class="st">"cm_py"</span>, <span class="at">required =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>cm <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"copernicusmarine"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>segout <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(<span class="fu">here</span>(), <span class="st">"_R_code"</span>,<span class="st">"task_2_est_g0_esw"</span>,<span class="st">"output"</span>,<span class="st">"seg_sight_out_g0_ESW.rds"</span>))</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>segdata <span class="ot">&lt;-</span> segout<span class="sc">$</span>segdata</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>segdata <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(segdata, <span class="at">coords=</span><span class="fu">c</span>(<span class="st">"mlon"</span>,<span class="st">"mlat"</span>), <span class="at">crs=</span><span class="dv">4326</span>) <span class="sc">%&gt;%</span> <span class="fu">st_shift_longitude</span>()</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>segdata <span class="ot">&lt;-</span> segdata <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">UTC =</span> <span class="fu">as.POSIXct</span>(<span class="fu">paste</span>(year, month, day, <span class="at">sep =</span> <span class="st">"-"</span>), <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>, <span class="at">tz =</span> <span class="st">"UTC"</span>) <span class="sc">+</span> <span class="fu">hms</span>(mtime)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(UTC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">unique</span>(segdata<span class="sc">$</span>year)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"multisession"</span>, <span class="at">workers =</span> <span class="dv">8</span>) </span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">with_progress</span>({</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  pb <span class="ot">&lt;-</span> <span class="fu">progressor</span>(<span class="at">along =</span> years) </span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  env_download <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="fu">seq_along</span>(years), </span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                          <span class="at">.errorhandling =</span> <span class="st">"pass"</span>, </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>                          <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) <span class="sc">%dofuture%</span> </span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="do">### Set up Python environment in each worker</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      cm <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"copernicusmarine"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>      lg <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"logging"</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>      lg<span class="sc">$</span><span class="fu">getLogger</span>(<span class="st">"copernicusmarine"</span>)<span class="sc">$</span><span class="fu">setLevel</span>(<span class="st">'WARN'</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>      tmp_seg <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(segdata, year<span class="sc">==</span>years[i]) </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>      bound <span class="ot">&lt;-</span> <span class="fu">st_bbox</span>(tmp_seg) <span class="sc">+</span> <span class="fu">c</span>(<span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="sc">-</span><span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>, <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>      time_span <span class="ot">&lt;-</span> <span class="fu">date</span>(tmp_seg<span class="sc">$</span>UTC) <span class="sc">%&gt;%</span> <span class="fu">range</span>() <span class="sc">%&gt;%</span> <span class="fu">as.character</span>()</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>      dataset_id <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(tmp_seg<span class="sc">$</span>year[<span class="dv">1</span>]<span class="sc">&lt;=</span><span class="dv">2021</span>,</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"cmems_mod_glo_phy_my_0.083deg_P1D-m"</span>,</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"cmems_mod_glo_phy_myint_0.083deg_P1D-m"</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>      nc_dl <span class="ot">&lt;-</span> cm<span class="sc">$</span><span class="fu">subset</span>(</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">dataset_id =</span> dataset_id,</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">variables =</span> <span class="fu">as.list</span>(<span class="fu">c</span>(<span class="st">"mlotst"</span>,<span class="st">"so"</span>,<span class="st">"thetao"</span>,<span class="st">"zos"</span>)),</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_longitude =</span> bound<span class="sc">$</span>xmin,</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_longitude =</span> bound<span class="sc">$</span>xmax,</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_latitude =</span> bound<span class="sc">$</span>ymin,</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_latitude =</span> bound<span class="sc">$</span>ymax,</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="at">start_datetime =</span> time_span[<span class="dv">1</span>], </span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="at">end_datetime =</span> time_span[<span class="dv">2</span>], </span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_depth =</span> <span class="fl">0.5</span>,</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_depth =</span> <span class="fl">0.5</span>,</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>        <span class="at">coordinates_selection_method =</span> <span class="st">"outside"</span>,</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>        <span class="at">dataset_version =</span> <span class="st">"202311"</span>,</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>        <span class="at">disable_progress_bar =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>        <span class="at">skip_existing =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>        <span class="at">output_directory =</span> copernicus_data</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pb</span>()</span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.frame</span>(<span class="at">years=</span>years[i], <span class="at">filename=</span>nc_dl<span class="sc">$</span>filename)</span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a>  </span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a>}) </span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"sequential"</span>)</span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>env_download <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, env_download)</span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(env_download, <span class="fu">file.path</span>(copernicus_data, <span class="st">"env_download.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="merge-compernicus-marine-data-with-processed-segment-data" class="level1">
-<h1>Merge Compernicus Marine Data with Processed Segment Data</h1>
+<section id="c.-merge-compernicus-marine-data-with-processed-segment-data" class="level1">
+<h1>C. Merge Compernicus Marine Data with Processed Segment Data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> env_download<span class="sc">$</span>years</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>segdata_env <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="fu">seq_along</span>(years), </span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.errorhandling =</span> <span class="st">"pass"</span>, </span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>                       <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) <span class="sc">%do%</span> </span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  {</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    filenm <span class="ot">&lt;-</span> env_download<span class="sc">$</span>filename[i]</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    env <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(copernicus_data, filenm))</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    vnms <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">varnames</span>(env)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    tmp_seg <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(segdata, year<span class="sc">==</span>years[i]) </span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="fu">seq_along</span>(vnms)){</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>      tmp_env <span class="ot">&lt;-</span> <span class="fl">1.0</span><span class="sc">*</span>env[vnms[j]]</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>      tmp_env <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">project</span>(tmp_env, <span class="st">"+proj=longlat +ellps=WGS84 +lon_wrap=180 +datum=WGS84 +no_defs"</span>)</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>      tmp_env <span class="ot">&lt;-</span> <span class="fu">focal</span>(tmp_env, <span class="dv">3</span>, mean, <span class="at">na.policy=</span><span class="st">"only"</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>) <span class="co"># Make sure there are no cells with missing data</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>      <span class="do">### Diagnostic plot if needed</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>      <span class="co"># library(ggplot2); library(ggspatial)</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>      <span class="co"># ggplot() +</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>      <span class="co">#   layer_spatial(tmp_env[[1]]) +</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>      <span class="co">#   layer_spatial(tmp_seg)</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>      tmp_ext <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(tmp_env, <span class="fu">vect</span>(tmp_seg))[,<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>      tmp_ext <span class="ot">&lt;-</span> tmp_ext[<span class="fu">outer</span>(<span class="fu">date</span>(tmp_seg<span class="sc">$</span>UTC), <span class="fu">date</span>(<span class="fu">time</span>(tmp_env)), \(x,y) x<span class="sc">-</span>y<span class="sc">==</span><span class="dv">0</span>)]</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">any</span>(<span class="fu">is.na</span>(tmp_ext))) <span class="fu">print</span>(<span class="st">"FYI: NAs in sd extraction!"</span>) </span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>      tmp_seg <span class="ot">&lt;-</span> <span class="fu">cbind</span>(tmp_seg, tmp_ext)</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>      <span class="fu">colnames</span>(tmp_seg)[<span class="fu">colnames</span>(tmp_seg)<span class="sc">==</span><span class="st">"tmp_ext"</span>] <span class="ot">&lt;-</span> vnms[j]</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>      <span class="co"># Focal SD versions of habitat variables </span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>      tmp_env_sd <span class="ot">&lt;-</span> <span class="fu">focal</span>(tmp_env, <span class="dv">3</span>, sd, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>      tmp_ext <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">extract</span>(tmp_env_sd, <span class="fu">vect</span>(tmp_seg))[,<span class="sc">-</span><span class="dv">1</span>]</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>      tmp_ext <span class="ot">&lt;-</span> tmp_ext[<span class="fu">outer</span>(<span class="fu">date</span>(tmp_seg<span class="sc">$</span>UTC), <span class="fu">date</span>(<span class="fu">time</span>(tmp_env)), \(x,y) x<span class="sc">-</span>y<span class="sc">==</span><span class="dv">0</span>)]</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>      <span class="cf">if</span>(<span class="fu">any</span>(<span class="fu">is.na</span>(tmp_ext))) <span class="fu">print</span>(<span class="st">"FYI: NAs in sd extraction!"</span>) </span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>      tmp_seg <span class="ot">&lt;-</span> <span class="fu">cbind</span>(tmp_seg, tmp_ext)</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>      <span class="fu">colnames</span>(tmp_seg)[<span class="fu">colnames</span>(tmp_seg)<span class="sc">==</span><span class="st">"tmp_ext"</span>] <span class="ot">&lt;-</span> <span class="fu">paste0</span>(vnms[j],<span class="st">"_sd"</span>)</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>    tmp_seg</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-41"><a href="#cb5-41" aria-hidden="true" tabindex="-1"></a>segdata_env <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, segdata_env)</span>
+<span id="cb5-42"><a href="#cb5-42" aria-hidden="true" tabindex="-1"></a>segdata_env<span class="sc">$</span>Longitude <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(segdata_env)[,<span class="dv">1</span>]</span>
+<span id="cb5-43"><a href="#cb5-43" aria-hidden="true" tabindex="-1"></a>segdata_env<span class="sc">$</span>Latitude <span class="ot">&lt;-</span> <span class="fu">st_coordinates</span>(segdata_env)[,<span class="dv">2</span>]</span>
+<span id="cb5-44"><a href="#cb5-44" aria-hidden="true" tabindex="-1"></a>segdata_env <span class="ot">&lt;-</span> <span class="fu">st_drop_geometry</span>(segdata_env)</span>
+<span id="cb5-45"><a href="#cb5-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-46"><a href="#cb5-46" aria-hidden="true" tabindex="-1"></a><span class="do">## Arrange segments by time (UTC)</span></span>
+<span id="cb5-47"><a href="#cb5-47" aria-hidden="true" tabindex="-1"></a>segdata_env <span class="ot">&lt;-</span> <span class="fu">arrange</span>(segdata_env, UTC)</span>
+<span id="cb5-48"><a href="#cb5-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-49"><a href="#cb5-49" aria-hidden="true" tabindex="-1"></a><span class="do">## Reorder and rename covariates</span></span>
+<span id="cb5-50"><a href="#cb5-50" aria-hidden="true" tabindex="-1"></a>cols_to_modify <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"thetao"</span>, <span class="st">"thetao_sd"</span>, <span class="st">"so"</span>, <span class="st">"so_sd"</span>, <span class="st">"mlotst"</span>, <span class="st">"mlotst_sd"</span>, <span class="st">"zos"</span>, <span class="st">"zos_sd"</span>)</span>
+<span id="cb5-51"><a href="#cb5-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-52"><a href="#cb5-52" aria-hidden="true" tabindex="-1"></a>segdata_env <span class="ot">&lt;-</span> segdata_env <span class="sc">%&gt;%</span> <span class="fu">select</span>(<span class="sc">-</span><span class="fu">all_of</span>(cols_to_modify), <span class="fu">all_of</span>(cols_to_modify) ) <span class="sc">%&gt;%</span> </span>
+<span id="cb5-53"><a href="#cb5-53" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">sst =</span> thetao, <span class="at">sst_sd=</span>thetao_sd, <span class="at">salinity=</span>so, <span class="at">salinity_sd=</span>so_sd, <span class="at">mld=</span>mlotst, <span class="at">mld_sd=</span>mlotst_sd, <span class="at">ssh=</span>zos, <span class="at">ssh_sd=</span>zos_sd)</span>
+<span id="cb5-54"><a href="#cb5-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-55"><a href="#cb5-55" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(segdata_env, <span class="at">file =</span> <span class="fu">file.path</span>(localwd,<span class="st">"output"</span>,<span class="st">"segdata_env.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-56"><a href="#cb5-56" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(segdata_env, <span class="at">file=</span> <span class="fu">file.path</span>(localwd,<span class="st">"output"</span>,<span class="st">"segdata_env.rds"</span>) )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>
