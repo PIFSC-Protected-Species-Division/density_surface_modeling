@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -167,8 +201,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">Section</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">Section</a></li>
+  <li><a href="#a.-process-previous-survey-das-data" id="toc-a.-process-previous-survey-das-data" class="nav-link active" data-scroll-target="#a.-process-previous-survey-das-data">A. Process Previous Survey DAS Data</a>
+  <ul class="collapse">
+  <li><a href="#read-in-previous-survey-data" id="toc-read-in-previous-survey-data" class="nav-link" data-scroll-target="#read-in-previous-survey-data">Read in previous survey data</a></li>
+  <li><a href="#process-das-file-and-filter-for-fkw-regions" id="toc-process-das-file-and-filter-for-fkw-regions" class="nav-link" data-scroll-target="#process-das-file-and-filter-for-fkw-regions">Process DAS file and filter for FKW regions</a></li>
+  <li><a href="#export-data-for-use-in-g0-and-esw-estimation" id="toc-export-data-for-use-in-g0-and-esw-estimation" class="nav-link" data-scroll-target="#export-data-for-use-in-g0-and-esw-estimation">Export data for use in <em>g</em>(0) and ESW estimation</a></li>
+  </ul></li>
+  <li><a href="#b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" id="toc-b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#b.-estimate-esw-and-g0-relative-to-beaufort-sea-state">B. Estimate ESW and <em>g</em>(0) Relative to Beaufort Sea State</a>
+  <ul class="collapse">
+  <li><a href="#estimate-effective-strip-width-esw-relative-to-beaufort-sea-state" id="toc-estimate-effective-strip-width-esw-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-effective-strip-width-esw-relative-to-beaufort-sea-state">Estimate Effective Strip Width (ESW) relative to Beaufort sea state</a></li>
+  <li><a href="#estimate-g0-relative-to-beaufort-sea-state" id="toc-estimate-g0-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-g0-relative-to-beaufort-sea-state">Estimate <em>g</em>(0) relative to Beaufort sea state</a></li>
+  </ul></li>
+  <li><a href="#c.-monte-carlo-estimation-of-esw-and-g0-parameter-covariance-matrix" id="toc-c.-monte-carlo-estimation-of-esw-and-g0-parameter-covariance-matrix" class="nav-link" data-scroll-target="#c.-monte-carlo-estimation-of-esw-and-g0-parameter-covariance-matrix">C. Monte Carlo Estimation of ESW and <em>g</em>(0) Parameter Covariance Matrix</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s2_est_g0_esw/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -177,7 +221,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Estimate g(0) and Effective Strip Width with Auxillary Data</h1>
+<h1 class="title">Estimate <em>g</em>(0) and Effective Strip Width with Auxillary Data</h1>
 </div>
 
 
@@ -194,11 +238,252 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">Section</h2>
+<section id="a.-process-previous-survey-das-data" class="level1">
+<h1>A. Process Previous Survey DAS Data</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Distance)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(swfscDAS)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(MASS)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvnfast)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(picMaps)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_2_est_g0_esw"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>sp.code <span class="ot">&lt;-</span> <span class="st">"033"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="read-in-previous-survey-data" class="level3">
+<h3 class="anchored" data-anchor-id="read-in-previous-survey-data">Read in previous survey data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#read in input files</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>das_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localwd, <span class="st">"AllSurveys_g0_ESW_1986-2023.das"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>y.proc <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_process</span>(das_file)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>strata_file_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localwd, <span class="st">"Strata Files"</span>, <span class="st">"region_filter_esw_g0.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="section-1" class="level2">
-<h2 class="anchored" data-anchor-id="section-1">Section</h2>
+<section id="process-das-file-and-filter-for-fkw-regions" class="level3">
+<h3 class="anchored" data-anchor-id="process-das-file-and-filter-for-fkw-regions">Process DAS file and filter for FKW regions</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>y.eff <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_effort</span>(</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  y.proc, <span class="at">method =</span> <span class="st">"equallength"</span>,</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">seg.km =</span> <span class="dv">10</span>,</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">dist.method =</span> <span class="st">"greatcircle"</span>,</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">num.cores =</span> <span class="dv">1</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">strata_files =</span> strata_file_dir)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>y.eff.sight <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_effort_sight</span>(y.eff, <span class="at">sp.codes =</span> sp.code, <span class="at">sp.events =</span> <span class="st">"S"</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>y.eff.sight.strata <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_intersects_strata</span>(y.eff.sight, <span class="fu">list</span>(<span class="at">InPoly =</span> strata_file_dir)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="export-data-for-use-in-g0-and-esw-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="export-data-for-use-in-g0-and-esw-estimation">Export data for use in <em>g</em>(0) and ESW estimation</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>input_dat<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>input_dat<span class="sc">$</span>esw.dat <span class="ot">&lt;-</span> y.eff.sight.strata<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(SpCode <span class="sc">==</span> sp.code, InPoly <span class="sc">==</span> <span class="dv">1</span>, OnEffort <span class="sc">==</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>input_dat<span class="sc">$</span>g0.dat <span class="ot">&lt;-</span> y.eff.sight.strata<span class="sc">$</span>segdata <span class="sc">%&gt;%</span> <span class="fu">filter</span>(InPoly <span class="sc">==</span> <span class="dv">1</span>, EffType <span class="sc">==</span> <span class="st">"S"</span>)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(input_dat, <span class="fu">file.path</span>(localwd, <span class="st">"output"</span>,<span class="st">"esw_g0_input.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" class="level1">
+<h1>B. Estimate ESW and <em>g</em>(0) Relative to Beaufort Sea State</h1>
+<p>If you are not continuing from step A in the same session, the following code must be executed to load the appropriate packages and processed data from setp A. Otherwise, this code chunk can be skipped.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' load packages</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(Distance)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mvnfast)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(picMaps)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doFuture)</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_2_est_g0_esw"</span>)</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>sp.code <span class="ot">&lt;-</span> <span class="st">"033"</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#' Recall saved data from step 1</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>input_dat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(localwd, <span class="st">"output"</span>,<span class="st">"esw_g0_input.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="estimate-effective-strip-width-esw-relative-to-beaufort-sea-state" class="level3">
+<h3 class="anchored" data-anchor-id="estimate-effective-strip-width-esw-relative-to-beaufort-sea-state">Estimate Effective Strip Width (ESW) relative to Beaufort sea state</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">distance =</span> input_dat<span class="sc">$</span>esw.dat<span class="sc">$</span>PerpDistKm, <span class="at">beaufort =</span> input_dat<span class="sc">$</span>esw.dat<span class="sc">$</span>Bft)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">complete.cases</span>(df),]</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>detfun <span class="ot">&lt;-</span> <span class="fu">ds</span>(df, <span class="at">formula =</span> <span class="sc">~</span>beaufort, <span class="at">truncation =</span> <span class="fl">5.5</span>, <span class="at">key=</span><span class="st">"hn"</span>) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Model contains covariate term(s): no adjustment terms will be included.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Fitting half-normal key function</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>AIC= 382.087</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>No survey area information supplied, only estimating detection function.</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(detfun)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>
+Summary for distance analysis 
+Number of observations :  132 
+Distance range         :  0  -  5.5 
+
+Model       : Half-normal key function 
+AIC         :  382.087 
+Optimisation:  mrds (nlminb) 
+
+Detection function parameters
+Scale coefficient(s):  
+              estimate         se
+(Intercept)  1.2486795 0.22333973
+beaufort    -0.1320774 0.05168352
+
+                       Estimate          SE         CV
+Average p             0.4805914  0.02942133 0.06121901
+N in covered region 274.6616170 24.21359682 0.08815792</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(detfun, <span class="at">showpoints =</span> <span class="cn">TRUE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-7-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+<p><strong>Estimate ESW for all segments</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>modeling_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(<span class="fu">here</span>(), <span class="st">"_R_code"</span>, <span class="st">"task_1_segment_das_data"</span>, <span class="st">"output"</span>,<span class="st">"seg_sight_out.rds"</span>))</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>modeling_data<span class="sc">$</span>segdata <span class="ot">&lt;-</span> modeling_data<span class="sc">$</span>segdata <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">beaufort =</span> avgBft)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>modeling_data<span class="sc">$</span>segdata[<span class="fu">paste0</span>(<span class="st">"esw"</span>,<span class="st">"_"</span>,sp.code)] <span class="ot">&lt;-</span> <span class="fu">predict</span>(detfun, modeling_data<span class="sc">$</span>segdata, <span class="at">esw=</span><span class="cn">TRUE</span>)[[<span class="st">"fitted"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="estimate-g0-relative-to-beaufort-sea-state" class="level3">
+<h3 class="anchored" data-anchor-id="estimate-g0-relative-to-beaufort-sea-state">Estimate <em>g</em>(0) relative to Beaufort sea state</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>g0_dat <span class="ot">&lt;-</span> input_dat<span class="sc">$</span>g0.dat</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>g0_dat<span class="sc">$</span>resp <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(g0_dat[,<span class="fu">paste0</span>(<span class="st">"nSI_"</span>,sp.code)])</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>g0_dat <span class="ot">&lt;-</span> g0_dat<span class="sc">%&gt;%</span>dplyr<span class="sc">::</span><span class="fu">select</span>(resp, mlat, mlon, avgBft, year,dist) <span class="sc">%&gt;%</span> </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">rename</span>(<span class="at">beaufort =</span> avgBft)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>g0_dat <span class="ot">&lt;-</span> g0_dat[<span class="fu">complete.cases</span>(g0_dat), ]</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>g0_dat<span class="sc">$</span>esa <span class="ot">&lt;-</span> <span class="fu">predict</span>(detfun, <span class="at">newdata =</span> g0_dat, <span class="at">esw=</span><span class="cn">TRUE</span>)[[<span class="st">"fitted"</span>]] <span class="sc">*</span> <span class="dv">2</span> <span class="sc">*</span> g0_dat<span class="sc">$</span>dist</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>g0_dat <span class="ot">&lt;-</span> <span class="fu">filter</span>(g0_dat, esa<span class="sc">&gt;</span><span class="dv">0</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">#' Combine beaufort=0,1 as the same g(0) = 1</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>g0_est<span class="ot">&lt;-</span>scam<span class="sc">::</span><span class="fu">scam</span>(<span class="at">formula =</span> resp <span class="sc">~</span> <span class="fu">s</span>(<span class="fu">I</span>(<span class="fu">pmax</span>(beaufort<span class="dv">-1</span>,<span class="dv">0</span>)), <span class="at">bs=</span><span class="st">'mpd'</span>, <span class="at">k=</span><span class="dv">4</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                     <span class="sc">+</span> <span class="fu">s</span>(mlat, mlon, <span class="at">bs=</span><span class="st">'tp'</span>) <span class="sc">+</span> <span class="fu">s</span>(year, <span class="at">k=</span><span class="dv">4</span>), </span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>                   <span class="at">offset =</span> <span class="fu">log</span>(esa<span class="fl">+0.0001</span>),</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>                   <span class="at">family=</span>poisson,</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data=</span>g0_dat,</span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                   <span class="at">not.exp=</span><span class="cn">TRUE</span>,</span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gamma=</span><span class="fl">1.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>Estimate relative <em>g</em>(0) for each Beaufort sea state</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>newdata_g0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">beaufort =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">7</span>,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mlat =</span> <span class="fu">mean</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>mlat, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mlon =</span> <span class="fu">mean</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>mlon, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">year =</span> <span class="fu">round</span>(<span class="fu">mean</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>year, <span class="at">na.rm=</span><span class="cn">TRUE</span>)))</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>ps <span class="ot">&lt;-</span> scam<span class="sc">::</span><span class="fu">predict.scam</span>(g0_est, <span class="at">newdata =</span> newdata_g0, <span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>Rg0 <span class="ot">&lt;-</span> ps<span class="sc">/</span>ps[<span class="dv">1</span>]</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(Rg0) <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">7</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(Rg0,<span class="dv">2</span>) <span class="co"># for display only</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>   0    1    2    3    4    5    6    7 
+1.00 1.00 0.70 0.49 0.34 0.23 0.16 0.11 </code></pre>
+</div>
+</div>
+<p><strong>Add <em>g</em>(0) estimate to all segments and save final modeling data set</strong></p>
+<p>Linear interpolation when Beaufort sea state changed during the segment.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>BFlow <span class="ot">&lt;-</span> <span class="fu">floor</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>beaufort <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>BFhigh <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>beaufort <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>w <span class="ot">&lt;-</span> BFhigh <span class="sc">-</span> (modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>beaufort <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>modeling_data<span class="sc">$</span>segdata[,<span class="fu">paste0</span>(<span class="st">"g0_w_"</span>,sp.code)] <span class="ot">&lt;-</span> w</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>modeling_data<span class="sc">$</span>segdata[,<span class="fu">paste0</span>(<span class="st">"g0"</span>,<span class="st">"_"</span>,sp.code)] <span class="ot">&lt;-</span> w<span class="sc">*</span>Rg0[BFlow] <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>w)<span class="sc">*</span>Rg0[BFhigh]</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(modeling_data, <span class="fu">file.path</span>(localwd, <span class="st">"output"</span>,<span class="st">"seg_sight_out_g0_ESW.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="c.-monte-carlo-estimation-of-esw-and-g0-parameter-covariance-matrix" class="level1">
+<h1>C. Monte Carlo Estimation of ESW and <em>g</em>(0) Parameter Covariance Matrix</h1>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Design matrix for g(0) estimates </span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Lp <span class="ot">&lt;-</span> scam<span class="sc">::</span><span class="fu">predict.scam</span>(g0_est, <span class="at">newdata =</span> newdata_g0, <span class="at">type=</span><span class="st">"lpmatrix"</span>)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Subset for columns affecting g(0):</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>bft_idx <span class="ot">&lt;-</span> <span class="fu">grep</span>(<span class="st">"beaufort"</span>, <span class="fu">colnames</span>(Lp))</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>Lp <span class="ot">&lt;-</span> Lp[,bft_idx]</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Draw detection parameter sample:</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>detfun_g0 <span class="ot">&lt;-</span> detfun</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>v_theta <span class="ot">&lt;-</span> <span class="fu">solve</span>(detfun_g0<span class="sc">$</span>ddf<span class="sc">$</span>hessian)</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>pars.esw <span class="ot">&lt;-</span> detfun_g0<span class="sc">$</span>ddf<span class="sc">$</span>par</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a>npar <span class="ot">&lt;-</span> <span class="dv">10</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>samps <span class="ot">&lt;-</span> <span class="dv">500</span> <span class="co"># total samples = npar * samps</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"multisession"</span>, <span class="at">workers=</span>npar)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">8675309</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>g0_par_sim <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="dv">1</span><span class="sc">:</span>npar,  <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>), <span class="at">.errorhandling =</span> <span class="st">"pass"</span>) <span class="sc">%dofuture%</span> {</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  theta_star <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, samps, <span class="fu">length</span>(detfun<span class="sc">$</span>ddf<span class="sc">$</span>par))</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>  v_alpha_star <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, samps, <span class="fu">length</span>(bft_idx)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>  alpha_star <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, samps, <span class="fu">length</span>(bft_idx))</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>  Rg0_star <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, samps, <span class="dv">8</span>)</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>  <span class="co"># Constructing variance-covariance matrix </span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(j <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>samps){</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    g0_star_out <span class="ot">&lt;-</span> <span class="fu">sim_esw_g0</span>(pars.esw, v_theta, detfun, g0_dat)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    g0_star <span class="ot">&lt;-</span> g0_star_out<span class="sc">$</span>g0_star</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    theta_star[j,] <span class="ot">&lt;-</span>  g0_star_out<span class="sc">$</span>theta_star</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    v_alpha_star[j,] <span class="ot">&lt;-</span> <span class="fu">as.vector</span>(g0_star<span class="sc">$</span>Vp.t[bft_idx, bft_idx])</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    alpha_star[j,] <span class="ot">&lt;-</span> g0_star<span class="sc">$</span>coefficients.t[bft_idx]</span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    Rg0_star[j,] <span class="ot">&lt;-</span> g0_star_out<span class="sc">$</span>Rg0</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">list</span>(<span class="at">theta_star=</span>theta_star, <span class="at">alpha_star=</span>alpha_star, <span class="at">v_alpha_star=</span>v_alpha_star, <span class="at">Rg0_star=</span>Rg0_star)</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"sequential"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>theta_star <span class="ot">&lt;-</span> <span class="fu">lapply</span>(g0_par_sim, \(x) x<span class="sc">$</span>theta_star) <span class="sc">%&gt;%</span> <span class="fu">do.call</span>(rbind,.)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>alpha_star <span class="ot">&lt;-</span> <span class="fu">lapply</span>(g0_par_sim, \(x) x<span class="sc">$</span>alpha_star) <span class="sc">%&gt;%</span> <span class="fu">do.call</span>(rbind,.)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>v_alpha_star <span class="ot">&lt;-</span> <span class="fu">lapply</span>(g0_par_sim, \(x) x<span class="sc">$</span>v_alpha_star) <span class="sc">%&gt;%</span> <span class="fu">do.call</span>(rbind,.)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>Rg0_star <span class="ot">&lt;-</span> <span class="fu">lapply</span>(g0_par_sim, \(x) x<span class="sc">$</span>Rg0_star) <span class="sc">%&gt;%</span> <span class="fu">do.call</span>(rbind,.)</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="do">## Compose full variance/covariance from law of total variance</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>v_alpha <span class="ot">&lt;-</span> <span class="fu">colMeans</span>(v_alpha_star) <span class="sc">%&gt;%</span> <span class="fu">matrix</span>(.,<span class="fu">sqrt</span>(<span class="fu">length</span>(.))) <span class="sc">+</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">var</span>(alpha_star)</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>c_alpha_theta <span class="ot">&lt;-</span> <span class="fu">cov</span>(alpha_star, theta_star)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>V <span class="ot">&lt;-</span> <span class="fu">rbind</span>(</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(v_alpha, c_alpha_theta),</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cbind</span>(<span class="fu">t</span>(c_alpha_theta), <span class="fu">var</span>(theta_star))</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>varprop_list <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">newdata_g0 =</span> newdata_g0,</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">Lp_g0 =</span> Lp,</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">V_par =</span> V,</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">par_sim =</span> <span class="fu">cbind</span>(alpha_star, theta_star),</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">Rg0_sim =</span> Rg0_star,</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">detfun =</span> detfun, </span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">g0_dat =</span> g0_dat,</span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">g0_est =</span> g0_est,</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">bft_idx =</span> bft_idx</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(varprop_list, <span class="at">file =</span> <span class="fu">file.path</span>(datadir, <span class="st">"output"</span>,<span class="st">"varprop_list.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
 </section>

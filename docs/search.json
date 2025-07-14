@@ -10,11 +10,41 @@
     ]
   },
   {
-    "objectID": "content/s1_construct_segs/index.html#section-1",
-    "href": "content/s1_construct_segs/index.html#section-1",
+    "objectID": "content/s1_construct_segs/index.html",
+    "href": "content/s1_construct_segs/index.html",
     "title": "Segmenting DAS Survey Data",
-    "section": "Section",
-    "text": "Section",
+    "section": "",
+    "text": "library(here)\nlibrary(swfscDAS)\nlibrary(tidyverse)\n\nlocalwd &lt;- here(\"_R_code\",\"task_1_segment_das_data\")\ndas_file &lt;- file.path(localwd, \"CenPac_Toolbox_1997-2023.das\")\nstrata_file &lt;- file.path(localwd, \"CenPac2.csv\")\n# randPics &lt;- readRDS(file.path(localwd, \"output\",\"seg_sight_out.rds\"))[[\"randpicks\"]] #if repeating same das file \nsp.code &lt;- \"033\" # false killer whale sp.code",
+    "crumbs": [
+      "1. Segmenting DAS Survey Data"
+    ]
+  },
+  {
+    "objectID": "content/s1_construct_segs/index.html#load-packages-and-define-working-directory",
+    "href": "content/s1_construct_segs/index.html#load-packages-and-define-working-directory",
+    "title": "Segmenting DAS Survey Data",
+    "section": "",
+    "text": "library(here)\nlibrary(swfscDAS)\nlibrary(tidyverse)\n\nlocalwd &lt;- here(\"_R_code\",\"task_1_segment_das_data\")\ndas_file &lt;- file.path(localwd, \"CenPac_Toolbox_1997-2023.das\")\nstrata_file &lt;- file.path(localwd, \"CenPac2.csv\")\n# randPics &lt;- readRDS(file.path(localwd, \"output\",\"seg_sight_out.rds\"))[[\"randpicks\"]] #if repeating same das file \nsp.code &lt;- \"033\" # false killer whale sp.code",
+    "crumbs": [
+      "1. Segmenting DAS Survey Data"
+    ]
+  },
+  {
+    "objectID": "content/s1_construct_segs/index.html#process-raw-das-data-into-segments-for-dsm-analysis",
+    "href": "content/s1_construct_segs/index.html#process-raw-das-data-into-segments-for-dsm-analysis",
+    "title": "Segmenting DAS Survey Data",
+    "section": "Process raw DAS data into segments for DSM analysis",
+    "text": "Process raw DAS data into segments for DSM analysis\n\ny.proc &lt;- swfscDAS::das_process(das_file)\n\ny.eff &lt;- swfscDAS::das_effort(\n  y.proc, method = \"equallength\", \n  seg.km = 10,\n  dist.method = \"greatcircle\",\n  num.cores = 1, \n  strata_files = strata_file\n  # , randpicks.load = randPics #\n)\n\ny.eff.sight &lt;- swfscDAS::das_effort_sight(y.eff, sp.codes = sp.code, sp.events = \"S\") # the sp.code here returns the number of included sightings and animals per segment. The sightings object is unaffected (has all sp.codes)\n\ny.eff.sight.strata &lt;- swfscDAS::das_intersects_strata(y.eff.sight, list(InPoly = strata_file))\n\n#Filter for study area\ny.eff.sight.strata$segdata &lt;- y.eff.sight.strata$segdata %&gt;% filter(InPoly == 1)\ny.eff.sight.strata$sightinfo &lt;- y.eff.sight.strata$sightinfo %&gt;% filter(InPoly == 1)\n\n#Filter for segment lengths &gt; 0 that do not have an associated sighting\nzero_dist_segs &lt;- y.eff.sight.strata$segdata$segnum[y.eff.sight.strata$segdata$dist&lt;0.1]\nfor(k in 1:length(zero_dist_segs)){\n  segnum_k &lt;- zero_dist_segs[k]\n  y.eff.sight.strata$segdata$dist[y.eff.sight.strata$segdata$segnum==segnum_k] &lt;- ifelse(y.eff.sight.strata$segdata$nSI_033[y.eff.sight.strata$segdata$segnum==segnum_k] &gt; 0, 0.15,0)\n}\n\ny.eff.sight.strata$segdata &lt;- y.eff.sight.strata$segdata %&gt;% filter(dist &gt; 0.1)\n\n# fix NAs in aveBft\n\nif(any(is.na(y.eff.sight.strata$segdata$avgBft))){\n  fix_bft&lt;-data.frame(NA_bft = which(is.na(y.eff.sight.strata$segdata$avgBft)), fixed = c(5,6,6,5,5,4,4)) #bft values provided from das file. Error in data entry resulted in NA values. \n  y.eff.sight.strata$segdata[fix_bft$NA_bft,\"avgBft\"] &lt;- fix_bft$fixed\n}\n#filter sight info for S,G events\n\ny.eff.sight.strata$sightinfo &lt;- y.eff.sight.strata$sightinfo%&gt;%filter(Event %in% c(\"S\",\"G\"))",
+    "crumbs": [
+      "1. Segmenting DAS Survey Data"
+    ]
+  },
+  {
+    "objectID": "content/s1_construct_segs/index.html#save-processed-segment-data",
+    "href": "content/s1_construct_segs/index.html#save-processed-segment-data",
+    "title": "Segmenting DAS Survey Data",
+    "section": "Save processed segment data",
+    "text": "Save processed segment data\n\nif (!dir.exists(file.path(localwd,\"output\"))) {\n  dir.create(file.path(localwd,\"output\"))\n}\n\nsaveRDS(y.eff.sight.strata, file.path(localwd,\"output\", \"seg_sight_out.rds\"))",
     "crumbs": [
       "1. Segmenting DAS Survey Data"
     ]
@@ -50,11 +80,11 @@
     ]
   },
   {
-    "objectID": "content/s3_env_data/index.html#section-1",
-    "href": "content/s3_env_data/index.html#section-1",
+    "objectID": "content/s3_env_data/index.html",
+    "href": "content/s3_env_data/index.html",
     "title": "Download and Merge Environmental data to segments",
-    "section": "Section",
-    "text": "Section",
+    "section": "",
+    "text": "Setup Python Environment\nCode to download data from the Copernicus Marine Data Store The user must create a login with a username and password to access their data. Username and password is required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.\n\nlibrary(reticulate) \n\n## Run this if Python is not installed on the machine\ninstall_python() \n\nreticulate::virtualenv_create(envname = \"cm_py\")\nreticulate::virtualenv_install(\"cm_py\", packages = c(\"copernicusmarine\"))\nreticulate::use_virtualenv(\"cm_py\", required = TRUE)\ncm &lt;- reticulate::import(\"copernicusmarine\")\n\n## Run once with your username and password #----\ncm$login(\"username\",\"password\")\n\n\n\nDownload Copernicus Marine Data\n\n\nMerge Compernicus Marine Data with Processed Segment Data",
     "crumbs": [
       "3. Dowload envrion. data"
     ]
@@ -70,11 +100,11 @@
     ]
   },
   {
-    "objectID": "content/s2_est_g0_esw/index.html#section-1",
-    "href": "content/s2_est_g0_esw/index.html#section-1",
+    "objectID": "content/s2_est_g0_esw/index.html",
+    "href": "content/s2_est_g0_esw/index.html",
     "title": "Estimate g(0) and Effective Strip Width with Auxillary Data",
-    "section": "Section",
-    "text": "Section",
+    "section": "",
+    "text": "A. Process Previous Survey DAS Data\n\nlibrary(tidyverse)\nlibrary(Distance)\nlibrary(lubridate)\nlibrary(here)\nlibrary(swfscDAS)\nlibrary(MASS)\nlibrary(mvnfast)\nlibrary(sf)\nlibrary(picMaps)\n\nlocalwd &lt;- here(\"_R_code\",\"task_2_est_g0_esw\")\nsp.code &lt;- \"033\"\n\n\nRead in previous survey data\n\n#read in input files\ndas_file &lt;- file.path(localwd, \"AllSurveys_g0_ESW_1986-2023.das\")\ny.proc &lt;- swfscDAS::das_process(das_file)\nstrata_file_dir &lt;- file.path(localwd, \"Strata Files\", \"region_filter_esw_g0.csv\")\n\n\n\nProcess DAS file and filter for FKW regions\n\ny.eff &lt;- swfscDAS::das_effort(\n  y.proc, method = \"equallength\",\n  seg.km = 10,\n  dist.method = \"greatcircle\",\n  num.cores = 1,\n  strata_files = strata_file_dir)\ny.eff.sight &lt;- swfscDAS::das_effort_sight(y.eff, sp.codes = sp.code, sp.events = \"S\")\ny.eff.sight.strata &lt;- swfscDAS::das_intersects_strata(y.eff.sight, list(InPoly = strata_file_dir)) \n\n\n\nExport data for use in g(0) and ESW estimation\n\ninput_dat&lt;-list()\ninput_dat$esw.dat &lt;- y.eff.sight.strata$sightinfo %&gt;% \n  filter(SpCode == sp.code, InPoly == 1, OnEffort == TRUE)\ninput_dat$g0.dat &lt;- y.eff.sight.strata$segdata %&gt;% filter(InPoly == 1, EffType == \"S\")\n\nsaveRDS(input_dat, file.path(localwd, \"output\",\"esw_g0_input.rds\"))\n\n\n\n\nB. Estimate ESW and g(0) Relative to Beaufort Sea State\nIf you are not continuing from step A in the same session, the following code must be executed to load the appropriate packages and processed data from setp A. Otherwise, this code chunk can be skipped.\n\n#' load packages\nlibrary(tidyverse)\nlibrary(Distance)\nlibrary(lubridate)\nlibrary(here)\nlibrary(mvnfast)\nlibrary(picMaps)\nlibrary(future)\nlibrary(doFuture)\n\nlocalwd &lt;- here(\"_R_code\",\"task_2_est_g0_esw\")\nsp.code &lt;- \"033\"\n\n\n#' Recall saved data from step 1\ninput_dat &lt;- readRDS(file.path(localwd, \"output\",\"esw_g0_input.rds\"))\n\n\nEstimate Effective Strip Width (ESW) relative to Beaufort sea state\n\ndf &lt;- data.frame(distance = input_dat$esw.dat$PerpDistKm, beaufort = input_dat$esw.dat$Bft)\ndf &lt;- df[complete.cases(df),]\n\ndetfun &lt;- ds(df, formula = ~beaufort, truncation = 5.5, key=\"hn\") \n\nModel contains covariate term(s): no adjustment terms will be included.\n\n\nFitting half-normal key function\n\n\nAIC= 382.087\n\n\nNo survey area information supplied, only estimating detection function.\n\nsummary(detfun)\n\n\nSummary for distance analysis \nNumber of observations :  132 \nDistance range         :  0  -  5.5 \n\nModel       : Half-normal key function \nAIC         :  382.087 \nOptimisation:  mrds (nlminb) \n\nDetection function parameters\nScale coefficient(s):  \n              estimate         se\n(Intercept)  1.2486795 0.22333973\nbeaufort    -0.1320774 0.05168352\n\n                       Estimate          SE         CV\nAverage p             0.4805914  0.02942133 0.06121901\nN in covered region 274.6616170 24.21359682 0.08815792\n\nplot(detfun, showpoints = TRUE)\n\n\n\n\n\n\n\n\nEstimate ESW for all segments\n\nmodeling_data &lt;- readRDS(file.path(here(), \"_R_code\", \"task_1_segment_das_data\", \"output\",\"seg_sight_out.rds\"))\nmodeling_data$segdata &lt;- modeling_data$segdata %&gt;% rename(beaufort = avgBft)\nmodeling_data$segdata[paste0(\"esw\",\"_\",sp.code)] &lt;- predict(detfun, modeling_data$segdata, esw=TRUE)[[\"fitted\"]]\n\n\n\nEstimate g(0) relative to Beaufort sea state\n\ng0_dat &lt;- input_dat$g0.dat\ng0_dat$resp &lt;- as.logical(g0_dat[,paste0(\"nSI_\",sp.code)])\ng0_dat &lt;- g0_dat%&gt;%dplyr::select(resp, mlat, mlon, avgBft, year,dist) %&gt;% \n  rename(beaufort = avgBft)\ng0_dat &lt;- g0_dat[complete.cases(g0_dat), ]\n\ng0_dat$esa &lt;- predict(detfun, newdata = g0_dat, esw=TRUE)[[\"fitted\"]] * 2 * g0_dat$dist\ng0_dat &lt;- filter(g0_dat, esa&gt;0)\n\n#' Combine beaufort=0,1 as the same g(0) = 1\ng0_est&lt;-scam::scam(formula = resp ~ s(I(pmax(beaufort-1,0)), bs='mpd', k=4)\n                     + s(mlat, mlon, bs='tp') + s(year, k=4), \n                   offset = log(esa+0.0001),\n                   family=poisson,\n                   data=g0_dat,\n                   not.exp=TRUE,\n                   gamma=1.4)\n\nEstimate relative g(0) for each Beaufort sea state\n\nnewdata_g0 &lt;- data.frame(beaufort = 0:7,\n                         mlat = mean(modeling_data$segdata$mlat, na.rm=TRUE),\n                         mlon = mean(modeling_data$segdata$mlon, na.rm=TRUE),\n                         year = round(mean(modeling_data$segdata$year, na.rm=TRUE)))\n\nps &lt;- scam::predict.scam(g0_est, newdata = newdata_g0, type=\"response\")\nRg0 &lt;- ps/ps[1]\nnames(Rg0) &lt;- 0:7\nround(Rg0,2) # for display only\n\n   0    1    2    3    4    5    6    7 \n1.00 1.00 0.70 0.49 0.34 0.23 0.16 0.11 \n\n\nAdd g(0) estimate to all segments and save final modeling data set\nLinear interpolation when Beaufort sea state changed during the segment.\n\nBFlow &lt;- floor(modeling_data$segdata$beaufort + 1)\nBFhigh &lt;- ceiling(modeling_data$segdata$beaufort + 1)\nw &lt;- BFhigh - (modeling_data$segdata$beaufort + 1)\nmodeling_data$segdata[,paste0(\"g0_w_\",sp.code)] &lt;- w\nmodeling_data$segdata[,paste0(\"g0\",\"_\",sp.code)] &lt;- w*Rg0[BFlow] + (1-w)*Rg0[BFhigh]\n\nsaveRDS(modeling_data, file.path(localwd, \"output\",\"seg_sight_out_g0_ESW.rds\"))\n\n\n\n\nC. Monte Carlo Estimation of ESW and g(0) Parameter Covariance Matrix\n\n# Design matrix for g(0) estimates \nLp &lt;- scam::predict.scam(g0_est, newdata = newdata_g0, type=\"lpmatrix\")\n# Subset for columns affecting g(0):\nbft_idx &lt;- grep(\"beaufort\", colnames(Lp))\nLp &lt;- Lp[,bft_idx]\n\n# Draw detection parameter sample:\ndetfun_g0 &lt;- detfun\nv_theta &lt;- solve(detfun_g0$ddf$hessian)\npars.esw &lt;- detfun_g0$ddf$par\n\n\nnpar &lt;- 10\nsamps &lt;- 500 # total samples = npar * samps\n\nplan(\"multisession\", workers=npar)\nset.seed(8675309)\n\ng0_par_sim &lt;- foreach(i = 1:npar,  .options.future = list(seed = TRUE), .errorhandling = \"pass\") %dofuture% {\n  theta_star &lt;- matrix(NA, samps, length(detfun$ddf$par))\n  v_alpha_star &lt;- matrix(NA, samps, length(bft_idx)^2)\n  alpha_star &lt;- matrix(NA, samps, length(bft_idx))\n  Rg0_star &lt;- matrix(NA, samps, 8)\n  # Constructing variance-covariance matrix \n  for(j in 1:samps){\n    g0_star_out &lt;- sim_esw_g0(pars.esw, v_theta, detfun, g0_dat)\n    g0_star &lt;- g0_star_out$g0_star\n    theta_star[j,] &lt;-  g0_star_out$theta_star\n    v_alpha_star[j,] &lt;- as.vector(g0_star$Vp.t[bft_idx, bft_idx])\n    alpha_star[j,] &lt;- g0_star$coefficients.t[bft_idx]\n    Rg0_star[j,] &lt;- g0_star_out$Rg0\n    \n  }\n  list(theta_star=theta_star, alpha_star=alpha_star, v_alpha_star=v_alpha_star, Rg0_star=Rg0_star)\n}\nplan(\"sequential\")\n\n\ntheta_star &lt;- lapply(g0_par_sim, \\(x) x$theta_star) %&gt;% do.call(rbind,.)\nalpha_star &lt;- lapply(g0_par_sim, \\(x) x$alpha_star) %&gt;% do.call(rbind,.)\nv_alpha_star &lt;- lapply(g0_par_sim, \\(x) x$v_alpha_star) %&gt;% do.call(rbind,.)\nRg0_star &lt;- lapply(g0_par_sim, \\(x) x$Rg0_star) %&gt;% do.call(rbind,.)\n\n## Compose full variance/covariance from law of total variance\nv_alpha &lt;- colMeans(v_alpha_star) %&gt;% matrix(.,sqrt(length(.))) +\n  var(alpha_star)\nc_alpha_theta &lt;- cov(alpha_star, theta_star)\nV &lt;- rbind(\n  cbind(v_alpha, c_alpha_theta),\n  cbind(t(c_alpha_theta), var(theta_star))\n)\n\nvarprop_list &lt;- list(\n  newdata_g0 = newdata_g0,\n  Lp_g0 = Lp,\n  V_par = V,\n  par_sim = cbind(alpha_star, theta_star),\n  Rg0_sim = Rg0_star,\n  detfun = detfun, \n  g0_dat = g0_dat,\n  g0_est = g0_est,\n  bft_idx = bft_idx\n)\n\nsaveRDS(varprop_list, file = file.path(datadir, \"output\",\"varprop_list.rds\"))",
     "crumbs": [
       "2. Estimate g(0) and ESW"
     ]

@@ -2,6 +2,29 @@
 title: "Download and Merge Environmental data to segments"
 ---
 
-## Section
+# Setup Python Environment 
 
-## Section
+Code to download data from the Copernicus Marine Data Store
+The user must create a login with a username and password to access their data.
+Username and password is required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.
+
+```{r}
+#| eval: false
+
+library(reticulate) 
+
+## Run this if Python is not installed on the machine
+install_python() 
+
+reticulate::virtualenv_create(envname = "cm_py")
+reticulate::virtualenv_install("cm_py", packages = c("copernicusmarine"))
+reticulate::use_virtualenv("cm_py", required = TRUE)
+cm <- reticulate::import("copernicusmarine")
+
+## Run once with your username and password #----
+cm$login("username","password")
+```
+
+# Download Copernicus Marine Data
+
+# Merge Compernicus Marine Data with Processed Segment Data

@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -167,8 +201,9 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">Section</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">Section</a></li>
+  <li><a href="#setup-python-environment" id="toc-setup-python-environment" class="nav-link active" data-scroll-target="#setup-python-environment">Setup Python Environment</a></li>
+  <li><a href="#download-copernicus-marine-data" id="toc-download-copernicus-marine-data" class="nav-link" data-scroll-target="#download-copernicus-marine-data">Download Copernicus Marine Data</a></li>
+  <li><a href="#merge-compernicus-marine-data-with-processed-segment-data" id="toc-merge-compernicus-marine-data-with-processed-segment-data" class="nav-link" data-scroll-target="#merge-compernicus-marine-data-with-processed-segment-data">Merge Compernicus Marine Data with Processed Segment Data</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s3_env_data/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -194,11 +229,29 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">Section</h2>
+<section id="setup-python-environment" class="level1">
+<h1>Setup Python Environment</h1>
+<p>Code to download data from the Copernicus Marine Data Store The user must create a login with a username and password to access their data. Username and password is required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate) </span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Run this if Python is not installed on the machine</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install_python</span>() </span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">virtualenv_create</span>(<span class="at">envname =</span> <span class="st">"cm_py"</span>)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">virtualenv_install</span>(<span class="st">"cm_py"</span>, <span class="at">packages =</span> <span class="fu">c</span>(<span class="st">"copernicusmarine"</span>))</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">use_virtualenv</span>(<span class="st">"cm_py"</span>, <span class="at">required =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>cm <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"copernicusmarine"</span>)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Run once with your username and password #----</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>cm<span class="sc">$</span><span class="fu">login</span>(<span class="st">"username"</span>,<span class="st">"password"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="section-1" class="level2">
-<h2 class="anchored" data-anchor-id="section-1">Section</h2>
+<section id="download-copernicus-marine-data" class="level1">
+<h1>Download Copernicus Marine Data</h1>
+</section>
+<section id="merge-compernicus-marine-data-with-processed-segment-data" class="level1">
+<h1>Merge Compernicus Marine Data with Processed Segment Data</h1>
 
 
 </section>
