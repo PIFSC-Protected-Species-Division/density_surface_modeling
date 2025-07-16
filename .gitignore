@@ -5,4 +5,5 @@
 
 /.quarto/
 
-_R_code
+_R_code/**/*.*
+!_R_code/**/*.R
