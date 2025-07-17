@@ -107,10 +107,6 @@ for(i in seq_along(form_hab)){
 #' 'ts'= thin plate splines ("shrinkage approach" applies additional smoothing penalty)
 #' "tp" is default for s()
 spline2use <- "ts" 
-gam_select <- FALSE
-# if(spline2use == "tp"){
-#   gam_select <- TRUE
-# } else gam_select <- FALSE
 
 workers <- 8
 plan("multisession", workers=workers)
@@ -123,7 +119,7 @@ with_progress({
     .errorhandling = "pass") %dofuture% {
       spline2use <- spline2use
       gam_fit <- gam(formula = as.formula(forms_er[i]), offset = log(effort),
-                     family = tw(), #select=gam_select,
+                     family = tw(),
                      method="REML", 
                      data = fkw_dsm_data, weights = ProbPel)
       pb()
@@ -141,6 +137,7 @@ mod_df <- data.frame(
   waic = exp(-0.5*(aic-min(aic))),
   waic = waic/sum(waic)
 ) %>% arrange(desc(waic))
+write.csv(mod_df, file = file.path(local_wd,"full_mod_selection.csv"))
 
 top_aic <- mod_df[1:10,]
 mod_df <- mod_df %>% arrange(desc(dev_expl))
@@ -154,25 +151,69 @@ write.csv(top_dev, file = file.path(local_wd,"top_dev.csv"))
 
 old_ergam <- gam(nSI_033 ~ s(sst, bs="ts") + s(sst_sd, bs="ts") + te(ssh, Latitude, bs="ts", k=5)
              , offset = log(effort),
-             family = tw(), #select=TRUE,
+             family = tw(),
              method="REML", 
              data = fkw_dsm_data, weights = ProbPel)
+plot(old_ergam,scale=0, shade=TRUE, scheme=2, contour.col = 1, rug=TRUE)
 
 
-#' Group Size GAM
+new_ergam <- gam(as.formula(top_aic$form[1])
+                 , offset = log(effort),
+                 family = tw(), 
+                 method="REML", 
+                 data = fkw_dsm_data, weights = ProbPel)
+plot(new_ergam,scale=0, shade=TRUE, scheme=2, contour.col = 1, rug=TRUE)
 
-jchxvb
-
-form_hab2 <- paste(paste0("log(ANI_033) ~ s(", hab_var, ",bs=spline2use,k=5)"), collapse = " + ")
 
 
-gsgam <- gam(formula = log(ANI_033) ~
-               s(mld, bs=spline2use)
-             + s(ssh, bs=spline2use)
+hab_inc_gs <- expand.grid(rep(list(0:1), length(hab_var)))
+forms_gs <- apply(hab_inc_gs, 1, function(row) {
+  terms <- mapply(function(choice, var) {
+    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
+    return(NULL)
+  }, row, hab_var)
+  terms <- unlist(terms)
+  # if (length(terms) == 0) return(NULL)  # skip null model
+  paste(terms, collapse = " + ")
+}) %>% unlist()
+forms_gs <- paste("log(ANI_033)", forms_gs, sep=" ~ ")
+forms_gs[1] <- "log(ANI_033) ~ 1"
+
+gsgam_list <- foreach(
+  i = seq_along(forms_gs), .options.future = list(seed = TRUE), 
+  .errorhandling = "pass") %dofuture% {
+    spline2use <- spline2use
+    gam_fit <- gam(formula = as.formula(forms_gs[i]),
+                   method="REML", 
+                   data = fkw_gs, weights = ProbPel)
+    list(summary = summary(gam_fit), aic=gam_fit$aic)
+  }
+
+mod_df_gs <- data.frame(
+  idx = 1:length(gsgam_list),
+  form = forms_gs, 
+  aic = sapply(gsgam_list, \(x) x$aic), 
+  dev_expl=sapply(gsgam_list, \(x) x$summary$dev.expl*100)
+) %>% mutate(
+  waic = exp(-0.5*(aic-min(aic))),
+  waic = waic/sum(waic)
+) %>% arrange(desc(waic))
+
+write.csv(mod_df_gs, file = file.path(local_wd,"top_gs.csv"))
+
+
+
+old_gsgam <- gam(formula = log(ANI_033) ~ s(mld, bs=spline2use)
              , family = gaussian,
              method="REML", 
              data =  fkw_gs, weights = ProbPel)
+plot(old_gsgam,scale=0,scheme=2, shade=TRUE)
 
+new_gsgam <- gam(formula = as.formula(mod_df_gs$form[1])
+                 , family = gaussian,
+                 method="REML", 
+                 data =  fkw_gs, weights = ProbPel)
+plot(new_gsgam,scale=0,scheme=2, shade=TRUE)
 
 ##############################################################
 ## MODEL SUMMARIES AND PLOTS  
