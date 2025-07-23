@@ -1,7 +1,0 @@
----
-title: "Assess Abundance Uncertainty by Propogating All Sources of Variation"
----
-
-## Section
-
-## Section

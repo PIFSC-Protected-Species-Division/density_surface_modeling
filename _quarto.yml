@@ -40,10 +40,13 @@ website:
         text: 3. Dowload envrion. data
       - href: content/s4_fit_models/index.qmd
         text: 4. Fit DSM models
-      - href: content/s5_prediction/index.qmd
-        text: 5. Predict abundance for selected regions
-      - href: content/s6_varprop/index.qmd
-        text: 6. Assess uncertainty
+      - href: content/s5_download_prediction_var/index.qmd
+        text: 5. Download environmental variables for prediction
+      - href: content/s6_extrapolation/index.qmd
+        text: 6. Examine areas of extrapolation
+      - href: content/s7_dsm_selection_fitting/index.qmd
+        text: 7. Fitting and selecting DSMs
+
 
 format:
   html:

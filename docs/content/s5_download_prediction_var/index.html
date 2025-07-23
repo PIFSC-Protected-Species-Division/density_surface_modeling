@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Segmenting DAS Survey Data – PIFSC PSD Density Surface Modeling</title>
+<title>Download Environmental Variables for Density Prediction – PIFSC PSD Density Surface Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -63,8 +63,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../../site_libs/quarto-search/fuse.min.js"></script>
 <script src="../../site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="../../">
-<link href="../../content/s2_est_g0_esw/index.html" rel="next">
-<link href="../../content/intro.html" rel="prev">
+<link href="../../content/s6_extrapolation/index.html" rel="next">
+<link href="../../content/s4_fit_models/index.html" rel="prev">
 <script src="../../site_libs/quarto-html/quarto.js"></script>
 <script src="../../site_libs/quarto-html/popper.min.js"></script>
 <script src="../../site_libs/quarto-html/tippy.umd.min.js"></script>
@@ -114,7 +114,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/s1_construct_segs/index.html">1. Segmenting DAS Survey Data</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/s5_download_prediction_var/index.html">5. Download environmental variables for prediction</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -157,7 +157,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/s1_construct_segs/index.html" class="sidebar-item-text sidebar-link active">
+  <a href="../../content/s1_construct_segs/index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">1. Segmenting DAS Survey Data</span></a>
   </div>
 </li>
@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/s5_download_prediction_var/index.html" class="sidebar-item-text sidebar-link">
+  <a href="../../content/s5_download_prediction_var/index.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text">5. Download environmental variables for prediction</span></a>
   </div>
 </li>
@@ -207,21 +207,22 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#load-packages-and-define-working-directory" id="toc-load-packages-and-define-working-directory" class="nav-link active" data-scroll-target="#load-packages-and-define-working-directory">Load packages and define working directory</a></li>
-  <li><a href="#process-raw-das-data-into-segments-for-dsm-analysis" id="toc-process-raw-das-data-into-segments-for-dsm-analysis" class="nav-link" data-scroll-target="#process-raw-das-data-into-segments-for-dsm-analysis">Process raw DAS data into segments for DSM analysis</a>
+  <li><a href="#packages-and-python-preparation" id="toc-packages-and-python-preparation" class="nav-link active" data-scroll-target="#packages-and-python-preparation">Packages and Python Preparation</a></li>
+  <li><a href="#defining-the-central-pacific" id="toc-defining-the-central-pacific" class="nav-link" data-scroll-target="#defining-the-central-pacific">Defining the Central Pacific</a></li>
+  <li><a href="#downloading-the-environmental-variables" id="toc-downloading-the-environmental-variables" class="nav-link" data-scroll-target="#downloading-the-environmental-variables">Downloading the environmental variables</a></li>
+  <li><a href="#processing-the-raw-netcdf-files" id="toc-processing-the-raw-netcdf-files" class="nav-link" data-scroll-target="#processing-the-raw-netcdf-files">Processing the raw netCDF files</a>
   <ul class="collapse">
-  <li><a href="#data-editing-filtering-for-errors" id="toc-data-editing-filtering-for-errors" class="nav-link" data-scroll-target="#data-editing-filtering-for-errors">Data editing, filtering for errors</a></li>
+  <li><a href="#prediction-data-view-for-july-31-2023" id="toc-prediction-data-view-for-july-31-2023" class="nav-link" data-scroll-target="#prediction-data-view-for-july-31-2023">Prediction data view for July, 31 2023</a></li>
   </ul></li>
-  <li><a href="#save-processed-segment-data" id="toc-save-processed-segment-data" class="nav-link" data-scroll-target="#save-processed-segment-data">Save processed segment data</a></li>
   </ul>
-<div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s1_construct_segs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
+<div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s5_download_prediction_var/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Segmenting DAS Survey Data</h1>
+<h1 class="title">Download Environmental Variables for Density Prediction</h1>
 </div>
 
 
@@ -238,80 +239,200 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p>The first step in our workflow is to process raw DAS data collected during ship-based line-transect surveys, and break effort into discrete segments for variance estimation. Here we use <a href="https://swfsc.github.io/swfscDAS/">swfscdas</a> package tools to load, process, and segment these DAS files, but this functionality exists in other packages such as <a href="https://pifsc-protected-species-division.github.io/LTabundR-vignette/index.html#installation">LTabundR</a>.</p>
-<section id="load-packages-and-define-working-directory" class="level2">
-<h2 class="anchored" data-anchor-id="load-packages-and-define-working-directory">Load packages and define working directory</h2>
+<section id="packages-and-python-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="packages-and-python-preparation">Packages and Python Preparation</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(swfscDAS)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_1_segment_das_data"</span>)</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>das_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localwd, <span class="st">"CenPac_Toolbox_1997-2023.das"</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>strata_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localwd, <span class="st">"CenPac2.csv"</span>)</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># randPics &lt;- readRDS(file.path(localwd, "output","seg_sight_out.rds"))[["randpicks"]] # Run this to maintain segments from previous processing of same das file, and load using argument below</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>sp.code <span class="ot">&lt;-</span> <span class="st">"033"</span> <span class="co"># false killer whale species code</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(picMaps)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rnaturalearth)</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate) </span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(foreach)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(future)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(doFuture)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(progressr)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggspatial)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_5_download_prediction_data"</span>)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>copernicus_data <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localwd, <span class="st">"copernicus_data"</span>)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>pred_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localwd, <span class="st">"output"</span>)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(copernicus_data)) <span class="fu">dir.create</span>(copernicus_data)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">dir.exists</span>(pred_dir)) <span class="fu">dir.create</span>(pred_dir)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">use_virtualenv</span>(<span class="st">"cm_py"</span>, <span class="at">required =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>cm <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"copernicusmarine"</span>)</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>lg <span class="ot">&lt;-</span> reticulate<span class="sc">::</span><span class="fu">import</span>(<span class="st">"logging"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>lg<span class="sc">$</span><span class="fu">getLogger</span>(<span class="st">"copernicusmarine"</span>)<span class="sc">$</span><span class="fu">setLevel</span>(<span class="st">'WARN'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="process-raw-das-data-into-segments-for-dsm-analysis" class="level2">
-<h2 class="anchored" data-anchor-id="process-raw-das-data-into-segments-for-dsm-analysis">Process raw DAS data into segments for DSM analysis</h2>
+<section id="defining-the-central-pacific" class="level2">
+<h2 class="anchored" data-anchor-id="defining-the-central-pacific">Defining the Central Pacific</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>y.proc <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_process</span>(das_file)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>y.eff <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_effort</span>(</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  y.proc, </span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"equallength"</span>, </span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">seg.km =</span> <span class="dv">10</span>,</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">dist.method =</span> <span class="st">"greatcircle"</span>,</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">num.cores =</span> <span class="dv">1</span>, </span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">strata_files =</span> strata_file</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># , randpicks.load = randPics </span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>y.eff.sight <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_effort_sight</span>(y.eff, <span class="at">sp.codes =</span> sp.code, <span class="at">sp.events =</span> <span class="st">"S"</span>) <span class="co"># Arguments define which sightings to summarize </span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>y.eff.sight.strata <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_intersects_strata</span>(y.eff.sight, <span class="fu">list</span>(<span class="at">InPoly =</span> strata_file)) <span class="co"># Provides logical column to filter for strata </span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter for study area</span></span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>y.eff.sight.strata<span class="sc">$</span>segdata <span class="ot">&lt;-</span> y.eff.sight.strata<span class="sc">$</span>segdata <span class="sc">%&gt;%</span> <span class="fu">filter</span>(InPoly <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>y.eff.sight.strata<span class="sc">$</span>sightinfo <span class="ot">&lt;-</span> y.eff.sight.strata<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(InPoly <span class="sc">==</span> <span class="dv">1</span>)</span>
-<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="co">#filter sighting info for S,G events</span></span>
-<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>y.eff.sight.strata<span class="sc">$</span>sightinfo <span class="ot">&lt;-</span> y.eff.sight.strata<span class="sc">$</span>sightinfo<span class="sc">%&gt;%</span><span class="fu">filter</span>(Event <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"S"</span>,<span class="st">"G"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cenpac <span class="ot">&lt;-</span> picMaps<span class="sc">::</span><span class="fu">cenpac</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="data-editing-filtering-for-errors" class="level3">
-<h3 class="anchored" data-anchor-id="data-editing-filtering-for-errors">Data editing, filtering for errors</h3>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#Filter for segment lengths &gt; 0 that do not have an associated sighting (threshold distance  = 0.1)</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>zero_dist_segs <span class="ot">&lt;-</span> y.eff.sight.strata<span class="sc">$</span>segdata<span class="sc">$</span>segnum[y.eff.sight.strata<span class="sc">$</span>segdata<span class="sc">$</span>dist<span class="sc">&lt;</span><span class="fl">0.1</span>] <span class="co">#define which segments are less than threshold</span></span>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-3-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="downloading-the-environmental-variables" class="level2">
+<h2 class="anchored" data-anchor-id="downloading-the-environmental-variables">Downloading the environmental variables</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">2017</span>, <span class="dv">2020</span><span class="sc">:</span><span class="dv">2024</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>bound <span class="ot">&lt;-</span> sf<span class="sc">::</span><span class="fu">st_bbox</span>(cenpac) </span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(k <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(zero_dist_segs)){ <span class="co"># For those segments less than threshold, </span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  segnum_k <span class="ot">&lt;-</span> zero_dist_segs[k]</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  y.eff.sight.strata<span class="sc">$</span>segdata<span class="sc">$</span>dist[y.eff.sight.strata<span class="sc">$</span>segdata<span class="sc">$</span>segnum<span class="sc">==</span>segnum_k] <span class="ot">&lt;-</span>  <span class="fu">ifelse</span>(y.eff.sight.strata<span class="sc">$</span>segdata<span class="sc">$</span>nSI_033[y.eff.sight.strata<span class="sc">$</span>segdata<span class="sc">$</span>segnum<span class="sc">==</span>segnum_k] <span class="sc">&gt;</span> <span class="dv">0</span>, <span class="fl">0.11</span>,<span class="dv">0</span>) <span class="co"># If there is a sighting, increase distance to 0.11 to avoid filtering out</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>y.eff.sight.strata<span class="sc">$</span>segdata <span class="ot">&lt;-</span> y.eff.sight.strata<span class="sc">$</span>segdata <span class="sc">%&gt;%</span> <span class="fu">filter</span>(dist <span class="sc">&gt;</span> <span class="fl">0.1</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Error in data entry resulted in NA values in avgBft -- fix with Bft values provided from das file </span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="fu">any</span>(<span class="fu">is.na</span>(y.eff.sight.strata<span class="sc">$</span>segdata<span class="sc">$</span>avgBft))){</span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  fix_bft<span class="ot">&lt;-</span><span class="fu">data.frame</span>(<span class="at">NA_bft =</span> <span class="fu">which</span>(<span class="fu">is.na</span>(y.eff.sight.strata<span class="sc">$</span>segdata<span class="sc">$</span>avgBft)), <span class="at">fixed =</span> <span class="fu">c</span>(<span class="dv">5</span>,<span class="dv">6</span>,<span class="dv">6</span>,<span class="dv">5</span>,<span class="dv">5</span>,<span class="dv">4</span>,<span class="dv">4</span>)) </span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  y.eff.sight.strata<span class="sc">$</span>segdata[fix_bft<span class="sc">$</span>NA_bft,<span class="st">"avgBft"</span>] <span class="ot">&lt;-</span> fix_bft<span class="sc">$</span>fixed</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">with_progress</span>({</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  pb <span class="ot">&lt;-</span> <span class="fu">progressor</span>(<span class="at">along =</span> years) </span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  pred_download <span class="ot">&lt;-</span> <span class="fu">foreach</span>(<span class="at">i =</span> <span class="fu">seq_along</span>(years), </span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) <span class="sc">%do%</span> </span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    {</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      time_span <span class="ot">&lt;-</span> <span class="fu">paste</span>(years[i],<span class="fu">c</span>(<span class="st">"-07-01"</span>,<span class="st">"-12-31"</span>), <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      dataset_id <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(years[i] <span class="sc">&lt;</span> <span class="dv">2021</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"cmems_mod_glo_phy_my_0.083deg_P1D-m"</span>,</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"cmems_mod_glo_phy_myint_0.083deg_P1D-m"</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      nc_dl <span class="ot">&lt;-</span> cm<span class="sc">$</span><span class="fu">subset</span>(</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">dataset_id =</span> dataset_id,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">variables =</span> <span class="fu">as.list</span>(<span class="fu">c</span>(<span class="st">"mlotst"</span>,<span class="st">"so"</span>,<span class="st">"thetao"</span>,<span class="st">"zos"</span>)),</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_longitude =</span> bound<span class="sc">$</span>xmin <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_longitude =</span> bound<span class="sc">$</span>xmax <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_latitude =</span> bound<span class="sc">$</span>ymin <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_latitude =</span> bound<span class="sc">$</span>ymax <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">start_datetime =</span> time_span[<span class="dv">1</span>], </span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">end_datetime =</span> time_span[<span class="dv">2</span>], </span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_depth =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_depth =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">coordinates_selection_method =</span> <span class="st">"outside"</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">dataset_version =</span> <span class="st">"202311"</span>,</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">disable_progress_bar =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">skip_existing =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">output_directory =</span> copernicus_data</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pb</span>()</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.frame</span>(<span class="at">year=</span>years[i], <span class="at">filename=</span>nc_dl<span class="sc">$</span>filename)</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>}) </span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># plan("sequential")</span></span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>pred_download <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, pred_download)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(pred_download, <span class="fu">file.path</span>(copernicus_data, <span class="st">"pred_download.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-</section>
-<section id="save-processed-segment-data" class="level2">
-<h2 class="anchored" data-anchor-id="save-processed-segment-data">Save processed segment data</h2>
+<section id="processing-the-raw-netcdf-files" class="level2">
+<h2 class="anchored" data-anchor-id="processing-the-raw-netcdf-files">Processing the raw netCDF files</h2>
 <div class="cell">
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="fu">file.path</span>(localwd,<span class="st">"output"</span>))) {</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">dir.create</span>(<span class="fu">file.path</span>(localwd,<span class="st">"output"</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(y.eff.sight.strata, <span class="fu">file.path</span>(localwd,<span class="st">"output"</span>, <span class="st">"seg_sight_out.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-overflow-scroll code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># localwd &lt;- here("_R_code","task_5_download_prediction_data")</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># copernicus_data &lt;- file.path(localwd, "copernicus_data")</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># pred_dir &lt;- file.path(localwd, "output")</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># pred_download &lt;- read.csv(file.path(copernicus_data, "pred_download.csv"))</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> pred_download<span class="sc">$</span>year</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">with_progress</span>({</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  pb <span class="ot">&lt;-</span> <span class="fu">progressor</span>(<span class="at">along =</span> years) </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq_along</span>(years)){</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    filenm <span class="ot">&lt;-</span> pred_download<span class="sc">$</span>filename[i]</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    env <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">rast</span>(<span class="fu">file.path</span>(copernicus_data, filenm))</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    vnms <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">varnames</span>(env) </span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    new_vnms <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"mld"</span>,<span class="st">"salinity"</span>,<span class="st">"sst"</span>,<span class="st">"ssh"</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    dates <span class="ot">&lt;-</span> <span class="fu">time</span>(env) <span class="sc">|&gt;</span> <span class="fu">unique</span>() <span class="sc">|&gt;</span> <span class="fu">sort</span>()</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    subs_idx <span class="ot">&lt;-</span> <span class="fu">which</span>(<span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">length=</span><span class="fu">length</span>(dates))<span class="sc">==</span><span class="dv">1</span>)</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    out_env <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="fu">seq_along</span>(vnms)){</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>      tmp_env <span class="ot">&lt;-</span> <span class="fu">toMemory</span>(env[vnms[j]])</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">names</span>(tmp_env) <span class="ot">&lt;-</span> <span class="fu">rep</span>(new_vnms[j],<span class="fu">nlyr</span>(tmp_env))</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>      tmp_env <span class="ot">&lt;-</span> tmp_env[[subs_idx]]</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>      tmp_env <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">project</span>(tmp_env, <span class="st">"+proj=longlat +ellps=WGS84 +lon_wrap=180 +datum=WGS84 +no_defs"</span>)</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>      tmp_env <span class="ot">&lt;-</span> terra<span class="sc">::</span><span class="fu">focal</span>(tmp_env, <span class="dv">3</span>, mean, <span class="at">na.policy=</span><span class="st">"only"</span>, <span class="at">na.rm=</span><span class="cn">TRUE</span>) <span class="co"># Make sure there are no cells with missing data</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>      out_env <span class="ot">&lt;-</span> <span class="fu">c</span>(out_env, tmp_env)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    out_env <span class="ot">&lt;-</span> <span class="fu">do.call</span>(c, out_env)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># add focal sd</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span>(j <span class="cf">in</span> <span class="fu">seq_along</span>(vnms)){</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>      tmp_env <span class="ot">&lt;-</span> out_env[[<span class="fu">names</span>(out_env)<span class="sc">==</span>new_vnms[j]]]</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>      tmp_env_sd <span class="ot">&lt;-</span>  <span class="fu">focal</span>(tmp_env, <span class="dv">3</span>, sd, <span class="at">na.rm=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>      <span class="fu">names</span>(tmp_env_sd) <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="fu">names</span>(tmp_env_sd),<span class="st">"sd"</span>,<span class="at">sep=</span><span class="st">"_"</span>)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>      out_env <span class="ot">&lt;-</span> <span class="fu">c</span>(out_env,tmp_env_sd)</span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    <span class="fu">writeRaster</span>(out_env, <span class="fu">file.path</span>(pred_dir, <span class="fu">paste0</span>(<span class="st">"cenpac_"</span>,years[i], <span class="st">"_env.tif"</span>)), <span class="at">overwrite=</span><span class="cn">TRUE</span>)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pb</span>()</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>})</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="prediction-data-view-for-july-31-2023" class="level3">
+<h3 class="anchored" data-anchor-id="prediction-data-view-for-july-31-2023">Prediction data view for July, 31 2023</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-1.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-2.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-3.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-4.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-5.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-6.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-7.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="index_files/figure-html/unnamed-chunk-6-8.png" class="img-fluid figure-img" width="672"></p>
+</figure>
+</div>
+</div>
 </div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -737,13 +858,13 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/intro.html" class="pagination-link" aria-label="Introduction">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">Introduction</span>
+      <a href="../../content/s4_fit_models/index.html" class="pagination-link" aria-label="4. Fit DSM models">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">4. Fit DSM models</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/s2_est_g0_esw/index.html" class="pagination-link" aria-label="2. Estimate g(0) and ESW">
-        <span class="nav-page-text">2. Estimate g(0) and ESW</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/s6_extrapolation/index.html" class="pagination-link" aria-label="6. Examine areas of extrapolation">
+        <span class="nav-page-text">6. Examine areas of extrapolation</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
@@ -752,4 +873,4 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
 
 
 
-<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s1_construct_segs/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s5_download_prediction_var/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

@@ -1,7 +1,0 @@
----
-title: "Make Abundance Predictions for Stock Assessment"
----
-
-## Section
-
-## Section

@@ -10,63 +10,73 @@
     ]
   },
   {
-    "objectID": "content/s1_construct_segs/index.html",
-    "href": "content/s1_construct_segs/index.html",
-    "title": "Segmenting DAS Survey Data",
-    "section": "",
-    "text": "library(here)\nlibrary(swfscDAS)\nlibrary(tidyverse)\n\nlocalwd &lt;- here(\"_R_code\",\"task_1_segment_das_data\")\ndas_file &lt;- file.path(localwd, \"CenPac_Toolbox_1997-2023.das\")\nstrata_file &lt;- file.path(localwd, \"CenPac2.csv\")\n# randPics &lt;- readRDS(file.path(localwd, \"output\",\"seg_sight_out.rds\"))[[\"randpicks\"]] #if repeating same das file \nsp.code &lt;- \"033\" # false killer whale sp.code",
-    "crumbs": [
-      "1. Segmenting DAS Survey Data"
-    ]
-  },
-  {
-    "objectID": "content/s1_construct_segs/index.html#load-packages-and-define-working-directory",
-    "href": "content/s1_construct_segs/index.html#load-packages-and-define-working-directory",
-    "title": "Segmenting DAS Survey Data",
-    "section": "",
-    "text": "library(here)\nlibrary(swfscDAS)\nlibrary(tidyverse)\n\nlocalwd &lt;- here(\"_R_code\",\"task_1_segment_das_data\")\ndas_file &lt;- file.path(localwd, \"CenPac_Toolbox_1997-2023.das\")\nstrata_file &lt;- file.path(localwd, \"CenPac2.csv\")\n# randPics &lt;- readRDS(file.path(localwd, \"output\",\"seg_sight_out.rds\"))[[\"randpicks\"]] #if repeating same das file \nsp.code &lt;- \"033\" # false killer whale sp.code",
-    "crumbs": [
-      "1. Segmenting DAS Survey Data"
-    ]
-  },
-  {
-    "objectID": "content/s1_construct_segs/index.html#process-raw-das-data-into-segments-for-dsm-analysis",
-    "href": "content/s1_construct_segs/index.html#process-raw-das-data-into-segments-for-dsm-analysis",
-    "title": "Segmenting DAS Survey Data",
-    "section": "Process raw DAS data into segments for DSM analysis",
-    "text": "Process raw DAS data into segments for DSM analysis\n\ny.proc &lt;- swfscDAS::das_process(das_file)\n\ny.eff &lt;- swfscDAS::das_effort(\n  y.proc, method = \"equallength\", \n  seg.km = 10,\n  dist.method = \"greatcircle\",\n  num.cores = 1, \n  strata_files = strata_file\n  # , randpicks.load = randPics #\n)\n\ny.eff.sight &lt;- swfscDAS::das_effort_sight(y.eff, sp.codes = sp.code, sp.events = \"S\") # the sp.code here returns the number of included sightings and animals per segment. The sightings object is unaffected (has all sp.codes)\n\ny.eff.sight.strata &lt;- swfscDAS::das_intersects_strata(y.eff.sight, list(InPoly = strata_file))\n\n#Filter for study area\ny.eff.sight.strata$segdata &lt;- y.eff.sight.strata$segdata %&gt;% filter(InPoly == 1)\ny.eff.sight.strata$sightinfo &lt;- y.eff.sight.strata$sightinfo %&gt;% filter(InPoly == 1)\n\n#Filter for segment lengths &gt; 0 that do not have an associated sighting\nzero_dist_segs &lt;- y.eff.sight.strata$segdata$segnum[y.eff.sight.strata$segdata$dist&lt;0.1]\nfor(k in 1:length(zero_dist_segs)){\n  segnum_k &lt;- zero_dist_segs[k]\n  y.eff.sight.strata$segdata$dist[y.eff.sight.strata$segdata$segnum==segnum_k] &lt;- ifelse(y.eff.sight.strata$segdata$nSI_033[y.eff.sight.strata$segdata$segnum==segnum_k] &gt; 0, 0.15,0)\n}\n\ny.eff.sight.strata$segdata &lt;- y.eff.sight.strata$segdata %&gt;% filter(dist &gt; 0.1)\n\n# fix NAs in aveBft\n\nif(any(is.na(y.eff.sight.strata$segdata$avgBft))){\n  fix_bft&lt;-data.frame(NA_bft = which(is.na(y.eff.sight.strata$segdata$avgBft)), fixed = c(5,6,6,5,5,4,4)) #bft values provided from das file. Error in data entry resulted in NA values. \n  y.eff.sight.strata$segdata[fix_bft$NA_bft,\"avgBft\"] &lt;- fix_bft$fixed\n}\n#filter sight info for S,G events\n\ny.eff.sight.strata$sightinfo &lt;- y.eff.sight.strata$sightinfo%&gt;%filter(Event %in% c(\"S\",\"G\"))",
-    "crumbs": [
-      "1. Segmenting DAS Survey Data"
-    ]
-  },
-  {
-    "objectID": "content/s1_construct_segs/index.html#save-processed-segment-data",
-    "href": "content/s1_construct_segs/index.html#save-processed-segment-data",
-    "title": "Segmenting DAS Survey Data",
-    "section": "Save processed segment data",
-    "text": "Save processed segment data\n\nif (!dir.exists(file.path(localwd,\"output\"))) {\n  dir.create(file.path(localwd,\"output\"))\n}\n\nsaveRDS(y.eff.sight.strata, file.path(localwd,\"output\", \"seg_sight_out.rds\"))",
-    "crumbs": [
-      "1. Segmenting DAS Survey Data"
-    ]
-  },
-  {
-    "objectID": "content/s5_prediction/index.html#section-1",
-    "href": "content/s5_prediction/index.html#section-1",
-    "title": "Make Abundance Predictions for Stock Assessment",
+    "objectID": "content/s6_extrapolation/index.html#section-1",
+    "href": "content/s6_extrapolation/index.html#section-1",
+    "title": "Assessing Areas of Extrapolation",
     "section": "Section",
     "text": "Section",
     "crumbs": [
-      "5. Predict abundance for selected regions"
+      "6. Examine areas of extrapolation"
     ]
   },
   {
-    "objectID": "content/s6_varprop/index.html#section-1",
-    "href": "content/s6_varprop/index.html#section-1",
-    "title": "Assess Abundance Uncertainty by Propogating All Sources of Variation",
+    "objectID": "content/s7_dsm_selection_fitting/index.html#section-1",
+    "href": "content/s7_dsm_selection_fitting/index.html#section-1",
+    "title": "Fitting and Selecting Density Surface Models",
     "section": "Section",
     "text": "Section",
     "crumbs": [
-      "6. Assess uncertainty"
+      "7. Fitting and selecting DSMs"
+    ]
+  },
+  {
+    "objectID": "content/s5_download_prediction_var/index.html",
+    "href": "content/s5_download_prediction_var/index.html",
+    "title": "Download Environmental Variables for Density Prediction",
+    "section": "",
+    "text": "library(here)\nlibrary(terra)\nlibrary(sf)\nlibrary(lubridate)\nlibrary(picMaps)\nlibrary(rnaturalearth)\nlibrary(reticulate) \nlibrary(tidyverse)\nlibrary(foreach)\nlibrary(foreach)\nlibrary(future)\nlibrary(doFuture)\nlibrary(progressr)\nlibrary(ggplot2)\nlibrary(ggspatial)\n\nlocalwd &lt;- here(\"_R_code\",\"task_5_download_prediction_data\")\ncopernicus_data &lt;- file.path(localwd, \"copernicus_data\")\npred_dir &lt;- file.path(localwd, \"output\")\nif(!dir.exists(copernicus_data)) dir.create(copernicus_data)\nif(!dir.exists(pred_dir)) dir.create(pred_dir)\n\nreticulate::use_virtualenv(\"cm_py\", required = TRUE)\ncm &lt;- reticulate::import(\"copernicusmarine\")\nlg &lt;- reticulate::import(\"logging\")\nlg$getLogger(\"copernicusmarine\")$setLevel('WARN')",
+    "crumbs": [
+      "5. Download environmental variables for prediction"
+    ]
+  },
+  {
+    "objectID": "content/s5_download_prediction_var/index.html#packages-and-python-preparation",
+    "href": "content/s5_download_prediction_var/index.html#packages-and-python-preparation",
+    "title": "Download Environmental Variables for Density Prediction",
+    "section": "",
+    "text": "library(here)\nlibrary(terra)\nlibrary(sf)\nlibrary(lubridate)\nlibrary(picMaps)\nlibrary(rnaturalearth)\nlibrary(reticulate) \nlibrary(tidyverse)\nlibrary(foreach)\nlibrary(foreach)\nlibrary(future)\nlibrary(doFuture)\nlibrary(progressr)\nlibrary(ggplot2)\nlibrary(ggspatial)\n\nlocalwd &lt;- here(\"_R_code\",\"task_5_download_prediction_data\")\ncopernicus_data &lt;- file.path(localwd, \"copernicus_data\")\npred_dir &lt;- file.path(localwd, \"output\")\nif(!dir.exists(copernicus_data)) dir.create(copernicus_data)\nif(!dir.exists(pred_dir)) dir.create(pred_dir)\n\nreticulate::use_virtualenv(\"cm_py\", required = TRUE)\ncm &lt;- reticulate::import(\"copernicusmarine\")\nlg &lt;- reticulate::import(\"logging\")\nlg$getLogger(\"copernicusmarine\")$setLevel('WARN')",
+    "crumbs": [
+      "5. Download environmental variables for prediction"
+    ]
+  },
+  {
+    "objectID": "content/s5_download_prediction_var/index.html#defining-the-central-pacific",
+    "href": "content/s5_download_prediction_var/index.html#defining-the-central-pacific",
+    "title": "Download Environmental Variables for Density Prediction",
+    "section": "Defining the Central Pacific",
+    "text": "Defining the Central Pacific\n\ncenpac &lt;- picMaps::cenpac()",
+    "crumbs": [
+      "5. Download environmental variables for prediction"
+    ]
+  },
+  {
+    "objectID": "content/s5_download_prediction_var/index.html#downloading-the-environmental-variables",
+    "href": "content/s5_download_prediction_var/index.html#downloading-the-environmental-variables",
+    "title": "Download Environmental Variables for Density Prediction",
+    "section": "Downloading the environmental variables",
+    "text": "Downloading the environmental variables\n\nyears &lt;- c(2017, 2020:2024)\nbound &lt;- sf::st_bbox(cenpac) \n\nwith_progress({\n  pb &lt;- progressor(along = years) \n  pred_download &lt;- foreach(i = seq_along(years), \n                           .options.future = list(seed = TRUE)) %do% \n    {\n      time_span &lt;- paste(years[i],c(\"-07-01\",\"-12-31\"), sep=\"\")\n      dataset_id &lt;- ifelse(years[i] &lt; 2021,\n                           \"cmems_mod_glo_phy_my_0.083deg_P1D-m\",\n                           \"cmems_mod_glo_phy_myint_0.083deg_P1D-m\")\n      \n      nc_dl &lt;- cm$subset(\n        dataset_id = dataset_id,\n        variables = as.list(c(\"mlotst\",\"so\",\"thetao\",\"zos\")),\n        minimum_longitude = bound$xmin - 1/6,\n        maximum_longitude = bound$xmax + 1/6,\n        minimum_latitude = bound$ymin - 1/6,\n        maximum_latitude = bound$ymax + 1/6,\n        start_datetime = time_span[1], \n        end_datetime = time_span[2], \n        minimum_depth = 0.5,\n        maximum_depth = 0.5,\n        coordinates_selection_method = \"outside\",\n        dataset_version = \"202311\",\n        disable_progress_bar = FALSE,\n        skip_existing = TRUE,\n        output_directory = copernicus_data\n      )\n      \n      pb()\n      data.frame(year=years[i], filename=nc_dl$filename)\n    }\n}) \n# plan(\"sequential\")\npred_download &lt;- do.call(rbind, pred_download)\nwrite.csv(pred_download, file.path(copernicus_data, \"pred_download.csv\"), row.names = FALSE)",
+    "crumbs": [
+      "5. Download environmental variables for prediction"
+    ]
+  },
+  {
+    "objectID": "content/s5_download_prediction_var/index.html#processing-the-raw-netcdf-files",
+    "href": "content/s5_download_prediction_var/index.html#processing-the-raw-netcdf-files",
+    "title": "Download Environmental Variables for Density Prediction",
+    "section": "Processing the raw netCDF files",
+    "text": "Processing the raw netCDF files\n\n# localwd &lt;- here(\"_R_code\",\"task_5_download_prediction_data\")\n# copernicus_data &lt;- file.path(localwd, \"copernicus_data\")\n# pred_dir &lt;- file.path(localwd, \"output\")\n# pred_download &lt;- read.csv(file.path(copernicus_data, \"pred_download.csv\"))\nyears &lt;- pred_download$year\n\nwith_progress({\n  pb &lt;- progressor(along = years) \n  for(i in seq_along(years)){\n    filenm &lt;- pred_download$filename[i]\n    env &lt;- terra::rast(file.path(copernicus_data, filenm))\n    vnms &lt;- terra::varnames(env) \n    new_vnms &lt;- c(\"mld\",\"salinity\",\"sst\",\"ssh\")\n    \n    dates &lt;- time(env) |&gt; unique() |&gt; sort()\n    subs_idx &lt;- which(rep(1:3, length=length(dates))==1)\n    \n    out_env &lt;- NULL\n    for(j in seq_along(vnms)){\n      tmp_env &lt;- toMemory(env[vnms[j]])\n      names(tmp_env) &lt;- rep(new_vnms[j],nlyr(tmp_env))\n      tmp_env &lt;- tmp_env[[subs_idx]]\n      tmp_env &lt;- terra::project(tmp_env, \"+proj=longlat +ellps=WGS84 +lon_wrap=180 +datum=WGS84 +no_defs\")\n      tmp_env &lt;- terra::focal(tmp_env, 3, mean, na.policy=\"only\", na.rm=TRUE) # Make sure there are no cells with missing data\n      out_env &lt;- c(out_env, tmp_env)\n    }\n    out_env &lt;- do.call(c, out_env)\n    # add focal sd\n    for(j in seq_along(vnms)){\n      tmp_env &lt;- out_env[[names(out_env)==new_vnms[j]]]\n      tmp_env_sd &lt;-  focal(tmp_env, 3, sd, na.rm=TRUE)\n      names(tmp_env_sd) &lt;- paste(names(tmp_env_sd),\"sd\",sep=\"_\")\n      out_env &lt;- c(out_env,tmp_env_sd)\n    }\n    writeRaster(out_env, file.path(pred_dir, paste0(\"cenpac_\",years[i], \"_env.tif\")), overwrite=TRUE)\n    pb()\n  }\n})\n\n\nPrediction data view for July, 31 2023",
+    "crumbs": [
+      "5. Download environmental variables for prediction"
     ]
   },
   {
@@ -97,6 +107,46 @@
     "text": "Section",
     "crumbs": [
       "4. Fit DSM models"
+    ]
+  },
+  {
+    "objectID": "content/s1_construct_segs/index.html",
+    "href": "content/s1_construct_segs/index.html",
+    "title": "Segmenting DAS Survey Data",
+    "section": "",
+    "text": "The first step in our workflow is to process raw DAS data collected during ship-based line-transect surveys, and break effort into discrete segments for variance estimation. Here we use swfscdas package tools to load, process, and segment these DAS files, but this functionality exists in other packages such as LTabundR.",
+    "crumbs": [
+      "1. Segmenting DAS Survey Data"
+    ]
+  },
+  {
+    "objectID": "content/s1_construct_segs/index.html#load-packages-and-define-working-directory",
+    "href": "content/s1_construct_segs/index.html#load-packages-and-define-working-directory",
+    "title": "Segmenting DAS Survey Data",
+    "section": "Load packages and define working directory",
+    "text": "Load packages and define working directory\n\nlibrary(here)\nlibrary(swfscDAS)\nlibrary(tidyverse)\n\nlocalwd &lt;- here(\"_R_code\",\"task_1_segment_das_data\")\ndas_file &lt;- file.path(localwd, \"CenPac_Toolbox_1997-2023.das\")\nstrata_file &lt;- file.path(localwd, \"CenPac2.csv\")\n# randPics &lt;- readRDS(file.path(localwd, \"output\",\"seg_sight_out.rds\"))[[\"randpicks\"]] # Run this to maintain segments from previous processing of same das file, and load using argument below\nsp.code &lt;- \"033\" # false killer whale species code",
+    "crumbs": [
+      "1. Segmenting DAS Survey Data"
+    ]
+  },
+  {
+    "objectID": "content/s1_construct_segs/index.html#process-raw-das-data-into-segments-for-dsm-analysis",
+    "href": "content/s1_construct_segs/index.html#process-raw-das-data-into-segments-for-dsm-analysis",
+    "title": "Segmenting DAS Survey Data",
+    "section": "Process raw DAS data into segments for DSM analysis",
+    "text": "Process raw DAS data into segments for DSM analysis\n\ny.proc &lt;- swfscDAS::das_process(das_file)\n\ny.eff &lt;- swfscDAS::das_effort(\n  y.proc, \n  method = \"equallength\", \n  seg.km = 10,\n  dist.method = \"greatcircle\",\n  num.cores = 1, \n  strata_files = strata_file\n  # , randpicks.load = randPics \n)\n\ny.eff.sight &lt;- swfscDAS::das_effort_sight(y.eff, sp.codes = sp.code, sp.events = \"S\") # Arguments define which sightings to summarize \n\ny.eff.sight.strata &lt;- swfscDAS::das_intersects_strata(y.eff.sight, list(InPoly = strata_file)) # Provides logical column to filter for strata \n\n#Filter for study area\ny.eff.sight.strata$segdata &lt;- y.eff.sight.strata$segdata %&gt;% filter(InPoly == 1)\ny.eff.sight.strata$sightinfo &lt;- y.eff.sight.strata$sightinfo %&gt;% filter(InPoly == 1)\n\n#filter sighting info for S,G events\ny.eff.sight.strata$sightinfo &lt;- y.eff.sight.strata$sightinfo%&gt;%filter(Event %in% c(\"S\",\"G\"))\n\n\nData editing, filtering for errors\n\n#Filter for segment lengths &gt; 0 that do not have an associated sighting (threshold distance  = 0.1)\nzero_dist_segs &lt;- y.eff.sight.strata$segdata$segnum[y.eff.sight.strata$segdata$dist&lt;0.1] #define which segments are less than threshold\n\n\nfor(k in 1:length(zero_dist_segs)){ # For those segments less than threshold, \n  segnum_k &lt;- zero_dist_segs[k]\n  y.eff.sight.strata$segdata$dist[y.eff.sight.strata$segdata$segnum==segnum_k] &lt;-  ifelse(y.eff.sight.strata$segdata$nSI_033[y.eff.sight.strata$segdata$segnum==segnum_k] &gt; 0, 0.11,0) # If there is a sighting, increase distance to 0.11 to avoid filtering out\n}\n\ny.eff.sight.strata$segdata &lt;- y.eff.sight.strata$segdata %&gt;% filter(dist &gt; 0.1)\n\n# Error in data entry resulted in NA values in avgBft -- fix with Bft values provided from das file \nif(any(is.na(y.eff.sight.strata$segdata$avgBft))){\n  fix_bft&lt;-data.frame(NA_bft = which(is.na(y.eff.sight.strata$segdata$avgBft)), fixed = c(5,6,6,5,5,4,4)) \n  y.eff.sight.strata$segdata[fix_bft$NA_bft,\"avgBft\"] &lt;- fix_bft$fixed\n}",
+    "crumbs": [
+      "1. Segmenting DAS Survey Data"
+    ]
+  },
+  {
+    "objectID": "content/s1_construct_segs/index.html#save-processed-segment-data",
+    "href": "content/s1_construct_segs/index.html#save-processed-segment-data",
+    "title": "Segmenting DAS Survey Data",
+    "section": "Save processed segment data",
+    "text": "Save processed segment data\n\nif (!dir.exists(file.path(localwd,\"output\"))) {\n  dir.create(file.path(localwd,\"output\"))\n}\n\nsaveRDS(y.eff.sight.strata, file.path(localwd,\"output\", \"seg_sight_out.rds\"))",
+    "crumbs": [
+      "1. Segmenting DAS Survey Data"
     ]
   },
   {
