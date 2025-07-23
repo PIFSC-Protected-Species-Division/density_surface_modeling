@@ -154,6 +154,7 @@ with_progress({
 #| echo: false
 
 library(paletteer)
+library(tidyterra)
 
 localwd <- here("_R_code","task_5_download_prediction_data")
 copernicus_data <- file.path(localwd, "copernicus_data")
@@ -166,7 +167,7 @@ r <- r[[time(r)==as.Date("2023-07-31")]] %>% toMemory()
 ppp <- vector("list",nlyr(r))
 for(i in 1:nlyr(r)){
   ppp[[i]] <- ggplot() + layer_spatial(r[[i]]) + 
-    paletteer::scale_fill_paletteer_c("viridis::plasma", name=names(r)[i]) + 
+    scale_fill_princess_c(palette = "maori", name=names(r)[i]) + 
     scale_x_continuous(breaks=c(175, 228)) + scale_y_continuous(breaks=c(0, 40)) + theme_bw()
   print(ppp[[i]])
 }
