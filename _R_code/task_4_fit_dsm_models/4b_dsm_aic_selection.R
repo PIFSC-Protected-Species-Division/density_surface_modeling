@@ -7,9 +7,6 @@ library(future)
 library(doFuture)
 library(progressr)
 
-#  For AUC calcs
-library(ROCR)
-
 #' -----------------------------------------------------------------------------
 #' Load and process modeling data
 #' -----------------------------------------------------------------------------
@@ -17,7 +14,7 @@ library(ROCR)
 local_wd <- file.path(here(), "_R_code", "task_4_fit_dsm_models")
 fkw_dsm_data <- readRDS(file.path(local_wd, "output", "fkw_dsm_data_1997to2024.rds"))
 
-#' Extract species data for modeling
+#' Add effort data
 fkw_dsm_data <- fkw_dsm_data %>% mutate(
   effort = g0_033 * 2 * esw_033 * dist
 )
@@ -29,9 +26,13 @@ nz_sight <- fkw_dsm_data %>% group_by(year) %>% summarize(sightings = sum(nSI_03
 fkw_dsm_data <- fkw_dsm_data %>% filter(year%in%nz_sight$year, beaufort<7, effort>0)
 fkw_gs <- fkw_dsm_data %>% filter(nSI_033 > 0)# Just segments with sightings
 
+#' Filter out cruise 1004
+# fkw_dsm_data <- fkw_dsm_data %>% filter(Cruise==1004)
+
 #' -----------------------------------------------------------------------------
 #' Add augmented data for pelagic probabilty weighting
 #' -----------------------------------------------------------------------------
+
 nonpel <- fkw_dsm_data %>% filter(ProbPel<1)
 nonpel <- nonpel %>% mutate(
   nSI_033 = 0,
@@ -43,16 +44,6 @@ fkw_dsm_data <- bind_rows(fkw_dsm_data, nonpel) %>%
   mutate(
     augment = ifelse(is.na(augment), 0, 1)
   )
-
-#' -----------------------------------------------------------------------------
-#' Extract sample size summaries
-#' -----------------------------------------------------------------------------
-
-# Need to modify with new dplyr tools!
-# yearly.ss <- HIeez %>% group_by(year) %>%
-#   summarize(
-#     sightings = sum(.data[[nSI.col]])
-#     )
 
 #' -----------------------------------------------------------------------------
 #' Create models to select from 
@@ -96,9 +87,6 @@ for(i in seq_along(form_hab)){
   forms_er <- c(forms_er, tmp)
 }
 
-# form_hab_sd <- paste(paste0("s(", hab_var_sd, ",bs=spline2use,k=5)"), collapse = " + ")
-# forms_er <- paste(form_hab, form_hab_sd, sep=" + ")
-
 #' -----------------------------------------------------------------------------
 #' Loop over all model combinations
 #' -----------------------------------------------------------------------------
@@ -137,34 +125,10 @@ mod_df <- data.frame(
   waic = exp(-0.5*(aic-min(aic))),
   waic = waic/sum(waic)
 ) %>% arrange(desc(waic))
-write.csv(mod_df, file = file.path(local_wd,"full_mod_selection.csv"))
 
-top_aic <- mod_df[1:10,]
-mod_df <- mod_df %>% arrange(desc(dev_expl))
-top_dev <- mod_df[1:10,]
-
-write.csv(top_aic, file = file.path(local_wd,"top_aic.csv"))
-write.csv(top_dev, file = file.path(local_wd,"top_dev.csv"))
-
-
-
-
-old_ergam <- gam(nSI_033 ~ s(sst, bs="ts") + s(sst_sd, bs="ts") + te(ssh, Latitude, bs="ts", k=5)
-             , offset = log(effort),
-             family = tw(),
-             method="REML", 
-             data = fkw_dsm_data, weights = ProbPel)
-plot(old_ergam,scale=0, shade=TRUE, scheme=2, contour.col = 1, rug=TRUE)
-
-
-new_ergam <- gam(as.formula(top_aic$form[1])
-                 , offset = log(effort),
-                 family = tw(), 
-                 method="REML", 
-                 data = fkw_dsm_data, weights = ProbPel)
-plot(new_ergam,scale=0, shade=TRUE, scheme=2, contour.col = 1, rug=TRUE)
-
-
+#' -----------------------------------------------------------------------------
+#' Group size model selection
+#' -----------------------------------------------------------------------------
 
 hab_inc_gs <- expand.grid(rep(list(0:1), length(hab_var)))
 forms_gs <- apply(hab_inc_gs, 1, function(row) {
@@ -181,7 +145,7 @@ forms_gs[1] <- "log(ANI_033) ~ 1"
 
 gsgam_list <- foreach(
   i = seq_along(forms_gs), .options.future = list(seed = TRUE), 
-  .errorhandling = "pass") %dofuture% {
+  .errorhandling = "pass") %do% {
     spline2use <- spline2use
     gam_fit <- gam(formula = as.formula(forms_gs[i]),
                    method="REML", 
@@ -199,89 +163,14 @@ mod_df_gs <- data.frame(
   waic = waic/sum(waic)
 ) %>% arrange(desc(waic))
 
-write.csv(mod_df_gs, file = file.path(local_wd,"top_gs.csv"))
-
-
-
-old_gsgam <- gam(formula = log(ANI_033) ~ s(mld, bs=spline2use)
-             , family = gaussian,
-             method="REML", 
-             data =  fkw_gs, weights = ProbPel)
-plot(old_gsgam,scale=0,scheme=2, shade=TRUE)
-
-new_gsgam <- gam(formula = as.formula(mod_df_gs$form[1])
-                 , family = gaussian,
-                 method="REML", 
-                 data =  fkw_gs, weights = ProbPel)
-plot(new_gsgam,scale=0,scheme=2, shade=TRUE)
-
-##############################################################
-## MODEL SUMMARIES AND PLOTS  
-
-summary(ergam.HIeez)
-summary(gsgam.HIeez.log)
-
-rqgam.check (ergam) # Function operates as gam.check but uses randomized quantile residuals
-gam.check(gsgam.HIeez.log)
-
-sqrt(mean(residuals.gam(ergam.HIeez,type="response")^2)) #Model error as root mean squared error (RMSE) 
-sqrt(mean(residuals.gam(gsgam.HIeez.log,type="response")^2)) #Model error as root mean squared error (RMSE) 
-
-
-# plot(ergam.HIeez,scale=0,residuals=TRUE)
-# par(mfrow=c(2,2))
-plot(ergam,scale=0, shade=TRUE, scheme=2, contour.col = 1, rug=TRUE)
-
-# plot(gsgam.HIeez.log,scale=0,residuals=TRUE)
-# par(mfrow=c(1,1))
-plot(gsgam,scale=0,scheme=2, shade=TRUE)
-
-save(HIeez, HIeez.no0, ergam.HIeez, gsgam.HIeez.log, spline2use, file=file.path("output","sdm_model_results.RData"))
-
-
 #' -----------------------------------------------------------------------------
-#' Attempt new predictions with terra::predict
+#' Save model selection output
 #' -----------------------------------------------------------------------------
 
-# eez <- picMaps::hawaii_eez()
-# env <- rast(file.path(local_wd, "2017_test", "cenpac_pred_grid_2017.nc"))
-# lat_r <- rast(env, nlyr=1)
-# values(lat_r) <- crds(lat_r)[,"y"]
-# pt <- read_xlsx(file.path(local_wd, "2017_test","Original_SDM_Tri_Daily_Pred_Dates.xlsx"), col_names = FALSE) %>% 
-#   pull(2)
-# pt <- pt[year(pt)==2017]
-# 
-# 
-# cp_abund_r <- eez_abund_r <- rast(env, nlyrs=length(pt))
-# time(cp_abund_r) <- pt
-# time(eez_abund_r) <- pt
-# cp_area <- cellSize(env, unit="km")
-# eez_r <- rasterize(vect(eez), env, cover=T) 
-# cp_abund <- eez_abund <- rep(NA, length(pt))
-# 
-# 
-# 
-# for(i in seq_along(pt)){
-#   env_tmp <- env[[time(env)==pt[i]]]
-#   names(env_tmp) <- c("mld","sal","sst","u","v","ssh")
-#   env_tmp$sst_sd <- focal(env_tmp$sst, 3, sd, na.rm=TRUE)
-#   env_tmp$ssh_sd <- focal(env_tmp$ssh, 3, sd, na.rm=TRUE)
-#   env_tmp$sal_sd <- focal(env_tmp$sal, 3, sd, na.rm=TRUE)
-#   env_tmp$Latitude <- lat_r
-#   pred_er <- terra::predict(env_tmp, ergam.HIeez, type="response")
-#   pred_gs <- terra::predict(env_tmp, gsgam.HIeez.log, type="response") %>% exp()
-#   pred <- pred_er * pred_gs
-#   cp_abund_r[[i]] <- cp_area * pred
-#   cp_abund[i] <- as.numeric(global(pred, "sum", weights=cp_area, na.rm=TRUE))
-#   eez_abund_r[[i]] <- eez_r * cp_abund_r[[i]]
-#   eez_abund[i] <- as.numeric(global(pred, "sum", cp_area*eez_r, na.rm=TRUE)) #sum(values(eez_abund_r[[i]]), na.rm=T)
-#   cat(i," ")
-# }
-# 
-# cp_abund_r <- wrap(cp_abund_r)
-# eez_abund_r <- wrap(eez_abund_r)
-# 
-# save(list=ls(), file="saved.RData")
+write.csv(mod_df, file = file.path(local_wd, "output", "aic_er.csv"))
+write.csv(mod_df_gs, file = file.path(local_wd, "output" "aic_gs.csv"))
+save( fkw_dsm_data, fkw_gs, spline2use, file=file.path(local_wd, "output","dsm_model_data.RData"))
+
 
 
 

@@ -152,6 +152,7 @@ with_progress({
 
 ```{r}
 #| echo: false
+#| message: false
 
 library(paletteer)
 library(tidyterra)

@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Fit Density Surface Models (DSM) using GAMs – PIFSC PSD Density Surface Modeling</title>
+<title>Fit and Select Density Surface Models (DSM) using GAMs – PIFSC PSD Density Surface Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,6 +19,40 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { display: inline-block; text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -173,8 +207,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#section" id="toc-section" class="nav-link active" data-scroll-target="#section">Section</a></li>
-  <li><a href="#section-1" id="toc-section-1" class="nav-link" data-scroll-target="#section-1">Section</a></li>
+  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link active" data-scroll-target="#data-preparation">Data Preparation</a>
+  <ul class="collapse">
+  <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data">Load data</a></li>
+  <li><a href="#attach-environmental-data-and-save-for-dsm-fitting" id="toc-attach-environmental-data-and-save-for-dsm-fitting" class="nav-link" data-scroll-target="#attach-environmental-data-and-save-for-dsm-fitting">Attach environmental data and save for DSM fitting</a></li>
+  </ul></li>
+  <li><a href="#dsm-formulation-and-fitting" id="toc-dsm-formulation-and-fitting" class="nav-link" data-scroll-target="#dsm-formulation-and-fitting">DSM Formulation And Fitting</a>
+  <ul class="collapse">
+  <li><a href="#load-and-add-effort-calculation-to-data" id="toc-load-and-add-effort-calculation-to-data" class="nav-link" data-scroll-target="#load-and-add-effort-calculation-to-data">Load and add effort calculation to data</a></li>
+  <li><a href="#add-augmented-data-for-pelagic-probabilty-weighting" id="toc-add-augmented-data-for-pelagic-probabilty-weighting" class="nav-link" data-scroll-target="#add-augmented-data-for-pelagic-probabilty-weighting">Add augmented data for pelagic probabilty weighting</a></li>
+  <li><a href="#create-model-list-and-fit" id="toc-create-model-list-and-fit" class="nav-link" data-scroll-target="#create-model-list-and-fit">Create model list and fit</a></li>
+  <li><a href="#aic-tables" id="toc-aic-tables" class="nav-link" data-scroll-target="#aic-tables">AIC tables</a></li>
+  </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s4_fit_models/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -183,7 +227,7 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Fit Density Surface Models (DSM) using GAMs</h1>
+<h1 class="title">Fit and Select Density Surface Models (DSM) using GAMs</h1>
 </div>
 
 
@@ -200,13 +244,265 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="section" class="level2">
-<h2 class="anchored" data-anchor-id="section">Section</h2>
+<section id="data-preparation" class="level2">
+<h2 class="anchored" data-anchor-id="data-preparation">Data Preparation</h2>
+<section id="load-data" class="level3">
+<h3 class="anchored" data-anchor-id="load-data">Load data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_4_fit_dsm_models"</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>segDataESWg0 <span class="ot">&lt;-</span> <span class="fu">readRDS</span>( <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_2_est_g0_esw"</span>,<span class="st">"output"</span>,<span class="st">"seg_sight_out_g0_ESW.rds"</span>) )</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#' Read table defining which sightings are from the pelagic population</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fkw_popData <span class="ot">&lt;-</span> <span class="fu">readRDS</span>( <span class="fu">here</span>(<span class="st">"_R_code"</span>, <span class="st">"task_4_fit_dsm_models"</span>, <span class="st">"FKWsights_DSM_1997to2023.rds"</span>) ) </span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>spcode <span class="ot">&lt;-</span> <span class="st">'033'</span> <span class="co"># FKW code</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>sightinfo <span class="ot">&lt;-</span> segDataESWg0<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SpCode<span class="sc">==</span>spcode)<span class="sc">%&gt;%</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">CruiseSightNo =</span> <span class="fu">paste</span>(Cruise,SightNo,<span class="at">sep=</span><span class="st">"-"</span>))<span class="sc">%&gt;%</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CruiseSightNo <span class="sc">%in%</span> fkw_popData<span class="sc">$</span>CruiseSightNo)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#' Add probability sighting is pelagic stock </span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>sightinfo <span class="ot">&lt;-</span> segDataESWg0<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(.,fkw_popData[,<span class="fu">c</span>(<span class="st">"CruiseSightNo"</span>,<span class="st">"ProbPel"</span>,<span class="st">"EffGrpSizeFull"</span>,<span class="st">"EffGrpSizePelagic"</span>)], <span class="at">by=</span><span class="st">"CruiseSightNo"</span>) </span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>sightinfo<span class="sc">$</span>nSI_033 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>sightinfo<span class="sc">$</span>ANI_033 <span class="ot">&lt;-</span> segDataESWg0<span class="sc">$</span>sightinfo<span class="sc">$</span>EffGrpSizeFull</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>sightinfo <span class="ot">&lt;-</span> segDataESWg0<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> <span class="fu">select</span>(segnum, ProbPel, nSI_033, ANI_033)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>segdata <span class="ot">&lt;-</span> <span class="fu">select</span>(segDataESWg0<span class="sc">$</span>segdata, <span class="sc">-</span>nSI_033, <span class="sc">-</span>ANI_033)</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>segdata <span class="ot">&lt;-</span> <span class="fu">left_join</span>(segDataESWg0<span class="sc">$</span>segdata, sightinfo)</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>segdata <span class="ot">&lt;-</span> segDataESWg0<span class="sc">$</span>segdata <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">nSI_033 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(nSI_033), <span class="dv">0</span>, nSI_033),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">ANI_033 =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(ANI_033), <span class="dv">0</span>, ANI_033),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">ProbPel =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(ProbPel), <span class="dv">1</span>, ProbPel)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(segDataESWg0<span class="sc">$</span>sightinfo, <span class="fu">file.path</span>(localwd, <span class="st">"output"</span>, <span class="st">"sightinfo_033.csv"</span> ), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 </section>
-<section id="section-1" class="level2">
-<h2 class="anchored" data-anchor-id="section-1">Section</h2>
+<section id="attach-environmental-data-and-save-for-dsm-fitting" class="level3">
+<h3 class="anchored" data-anchor-id="attach-environmental-data-and-save-for-dsm-fitting">Attach environmental data and save for DSM fitting</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>segEnvData <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(<span class="fu">here</span>(), <span class="st">"_R_code"</span>,<span class="st">"task_3_download_env_data"</span>,<span class="st">"output"</span>,<span class="st">"segdata_env.rds"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(segnum, Latitude, Longitude, UTC, sst<span class="sc">:</span>ssh_sd)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>segdata <span class="ot">&lt;-</span> <span class="fu">left_join</span>(segDataESWg0<span class="sc">$</span>segdata, segEnvData, <span class="at">by=</span><span class="st">"segnum"</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">saveRDS</span>(segdata, <span class="fu">file.path</span>(localwd, <span class="st">"output"</span>, <span class="st">"fkw_dsm_data_1997to2024.rds"</span>) )</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(segdata, <span class="fu">file.path</span>(localwd, <span class="st">"output"</span>, <span class="st">"fkw_dsm_data_1997to2024.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="dsm-formulation-and-fitting" class="level2">
+<h2 class="anchored" data-anchor-id="dsm-formulation-and-fitting">DSM Formulation And Fitting</h2>
+<section id="load-and-add-effort-calculation-to-data" class="level3">
+<h3 class="anchored" data-anchor-id="load-and-add-effort-calculation-to-data">Load and add effort calculation to data</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>local_wd <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">here</span>(), <span class="st">"_R_code"</span>, <span class="st">"task_4_fit_dsm_models"</span>)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fkw_dsm_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>, <span class="st">"fkw_dsm_data_1997to2024.rds"</span>))</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">#' Add effort data</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>fkw_dsm_data <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">effort =</span> g0_033 <span class="sc">*</span> <span class="dv">2</span> <span class="sc">*</span> esw_033 <span class="sc">*</span> dist</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#' Filter out years without any sightings</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>nz_sight <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">sightings =</span> <span class="fu">sum</span>(nSI_033)) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(sightings<span class="sc">&gt;</span><span class="dv">0</span>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>fkw_dsm_data <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(year<span class="sc">%in%</span>nz_sight<span class="sc">$</span>year, beaufort<span class="sc">&lt;</span><span class="dv">7</span>, effort<span class="sc">&gt;</span><span class="dv">0</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>fkw_gs <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(nSI_033 <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="co"># Just segments with sightings</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="add-augmented-data-for-pelagic-probabilty-weighting" class="level3">
+<h3 class="anchored" data-anchor-id="add-augmented-data-for-pelagic-probabilty-weighting">Add augmented data for pelagic probabilty weighting</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nonpel <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ProbPel<span class="sc">&lt;</span><span class="dv">1</span>)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nonpel <span class="ot">&lt;-</span> nonpel <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">nSI_033 =</span> <span class="dv">0</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ProbPel =</span> <span class="dv">1</span><span class="sc">-</span>ProbPel,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">augment=</span><span class="dv">1</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>fkw_dsm_data <span class="ot">&lt;-</span> <span class="fu">bind_rows</span>(fkw_dsm_data, nonpel) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">augment =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(augment), <span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="create-model-list-and-fit" class="level3">
+<h3 class="anchored" data-anchor-id="create-model-list-and-fit">Create model list and fit</h3>
+<section id="encounter-rate-models" class="level4">
+<h4 class="anchored" data-anchor-id="encounter-rate-models">Encounter rate models</h4>
+<p><code>forms_er</code> and <code>forms_gs</code></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hab_var <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sst"</span>,<span class="st">"ssh"</span>,<span class="st">"mld"</span>,<span class="st">"salinity"</span>)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>hab_var_sd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sst_sd"</span>,<span class="st">"ssh_sd"</span>,<span class="st">"mld_sd"</span>,<span class="st">"salinity_sd"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>hab_inc <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="fu">rep</span>(<span class="fu">list</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">2</span>), <span class="fu">length</span>(hab_var)))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>hab_inc <span class="ot">&lt;-</span> hab_inc[<span class="fu">apply</span>(hab_inc<span class="sc">==</span><span class="dv">2</span>, <span class="dv">1</span>, sum)<span class="sc">&lt;</span><span class="dv">2</span>,]</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>hab_sd_inc <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="fu">rep</span>(<span class="fu">list</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>), <span class="fu">length</span>(hab_var_sd)))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>form_hab <span class="ot">&lt;-</span> <span class="fu">apply</span>(hab_inc, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(choice, var) {</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"s("</span>,var,<span class="st">",bs=spline2use,k=5)"</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">2</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"te("</span>, var, <span class="st">",Latitude,bs=spline2use,k=5)"</span>))</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  }, row, hab_var)</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">unlist</span>(terms)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">length</span>(terms) <span class="sc">==</span> <span class="dv">0</span>) <span class="fu">return</span>(<span class="st">"nSI_033 ~ "</span>)  <span class="co"># skip null model</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(<span class="st">"nSI_033 ~"</span>, <span class="fu">paste</span>(terms, <span class="at">collapse =</span> <span class="st">" + "</span>))</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>()</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>form_hab_sd <span class="ot">&lt;-</span> <span class="fu">apply</span>(hab_sd_inc, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(choice, var) {</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"s("</span>,var,<span class="st">",bs=spline2use,k=5)"</span>))</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  }, row, hab_var_sd)</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">unlist</span>(terms)</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># if (length(terms) == 0) return(NULL)  # skip null model</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(terms, <span class="at">collapse =</span> <span class="st">" + "</span>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>()</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>forms_er <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="fu">seq_along</span>(form_hab)){</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span>(i <span class="sc">==</span><span class="dv">1</span>) {</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">&lt;-</span> <span class="fu">paste</span>(form_hab[i], form_hab_sd[<span class="sc">-</span><span class="dv">1</span>], <span class="at">sep=</span><span class="st">""</span>)</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    tmp <span class="ot">&lt;-</span> <span class="fu">c</span>(form_hab[i], <span class="fu">paste</span>(form_hab[i], form_hab_sd[<span class="sc">-</span><span class="dv">1</span>], <span class="at">sep=</span><span class="st">" + "</span>))</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>  forms_er <span class="ot">&lt;-</span> <span class="fu">c</span>(forms_er, tmp)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="fit-all-er-models" class="level4">
+<h4 class="anchored" data-anchor-id="fit-all-er-models">Fit all ER models</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Select spline type</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' 'ts'= thin plate splines ("shrinkage approach" applies additional smoothing penalty)</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' "tp" is default for s()</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>spline2use <span class="ot">&lt;-</span> <span class="st">"ts"</span> </span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>workers <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"multisession"</span>, <span class="at">workers=</span>workers)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># forms &lt;- split(forms, cut(seq_along(forms), breaks = workers, labels = FALSE))</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">with_progress</span>({</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  pb <span class="ot">&lt;-</span> <span class="fu">progressor</span>(<span class="at">along =</span> forms_er) </span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  ergam_list <span class="ot">&lt;-</span> <span class="fu">foreach</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="fu">seq_along</span>(forms_er), <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">.errorhandling =</span> <span class="st">"pass"</span>) <span class="sc">%dofuture%</span> {</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      spline2use <span class="ot">&lt;-</span> spline2use</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      gam_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> <span class="fu">as.formula</span>(forms_er[i]), <span class="at">offset =</span> <span class="fu">log</span>(effort),</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">family =</span> <span class="fu">tw</span>(),</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method=</span><span class="st">"REML"</span>, </span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> fkw_dsm_data, <span class="at">weights =</span> ProbPel)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pb</span>()</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">summary =</span> <span class="fu">summary</span>(gam_fit), <span class="at">aic=</span>gam_fit<span class="sc">$</span>aic)</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"sequential"</span>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>mod_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">idx =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(ergam_list),</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">form =</span> forms_er, </span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">aic =</span> <span class="fu">sapply</span>(ergam_list, \(x) x<span class="sc">$</span>aic), </span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">dev_expl=</span><span class="fu">sapply</span>(ergam_list, \(x) x<span class="sc">$</span>summary<span class="sc">$</span>dev.expl<span class="sc">*</span><span class="dv">100</span>)</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">waic =</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.5</span><span class="sc">*</span>(aic<span class="sc">-</span><span class="fu">min</span>(aic))),</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">waic =</span> waic<span class="sc">/</span><span class="fu">sum</span>(waic)</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(waic))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="group-size-model" class="level4">
+<h4 class="anchored" data-anchor-id="group-size-model">Group size model</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hab_inc_gs <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="fu">rep</span>(<span class="fu">list</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>), <span class="fu">length</span>(hab_var)))</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>forms_gs <span class="ot">&lt;-</span> <span class="fu">apply</span>(hab_inc_gs, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(choice, var) {</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"s("</span>,var,<span class="st">",bs=spline2use,k=5)"</span>))</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  }, row, hab_var)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">unlist</span>(terms)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># if (length(terms) == 0) return(NULL)  # skip null model</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste</span>(terms, <span class="at">collapse =</span> <span class="st">" + "</span>)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">%&gt;%</span> <span class="fu">unlist</span>()</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>forms_gs <span class="ot">&lt;-</span> <span class="fu">paste</span>(<span class="st">"log(ANI_033)"</span>, forms_gs, <span class="at">sep=</span><span class="st">" ~ "</span>)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>forms_gs[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"log(ANI_033) ~ 1"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="fit-all-gs-models" class="level4">
+<h4 class="anchored" data-anchor-id="fit-all-gs-models">Fit all GS models</h4>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>gsgam_list <span class="ot">&lt;-</span> <span class="fu">foreach</span>(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">i =</span> <span class="fu">seq_along</span>(forms_gs), <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">.errorhandling =</span> <span class="st">"pass"</span>) <span class="sc">%do%</span> {</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    spline2use <span class="ot">&lt;-</span> spline2use</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    gam_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> <span class="fu">as.formula</span>(forms_gs[i]),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>                   <span class="at">method=</span><span class="st">"REML"</span>, </span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>                   <span class="at">data =</span> fkw_gs, <span class="at">weights =</span> ProbPel)</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">list</span>(<span class="at">summary =</span> <span class="fu">summary</span>(gam_fit), <span class="at">aic=</span>gam_fit<span class="sc">$</span>aic)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>mod_df_gs <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">idx =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(gsgam_list),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">form =</span> forms_gs, </span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">aic =</span> <span class="fu">sapply</span>(gsgam_list, \(x) x<span class="sc">$</span>aic), </span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">dev_expl=</span><span class="fu">sapply</span>(gsgam_list, \(x) x<span class="sc">$</span>summary<span class="sc">$</span>dev.expl<span class="sc">*</span><span class="dv">100</span>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">waic =</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.5</span><span class="sc">*</span>(aic<span class="sc">-</span><span class="fu">min</span>(aic))),</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">waic =</span> waic<span class="sc">/</span><span class="fu">sum</span>(waic)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(waic))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="aic-tables" class="level3">
+<h3 class="anchored" data-anchor-id="aic-tables">AIC tables</h3>
+<div class="cell" data-messages="false">
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 767 × 6
+    ...1   idx form                                         aic dev_expl    waic
+   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                                      &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
+ 1     1    90 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+ 2     2    91 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+ 3     3   411 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+ 4     4    94 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+ 5     5   218 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+ 6     6   219 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+ 7     7   414 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+ 8     8   410 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+ 9     9    95 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+10    10   538 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+# ℹ 757 more rows</code></pre>
+</div>
+<div class="cell-output cell-output-stdout">
+<pre><code># A tibble: 16 × 5
+     idx form                                              aic  dev_expl    waic
+   &lt;dbl&gt; &lt;chr&gt;                                           &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+ 1     7 log(ANI_033) ~ s(ssh,bs=spline2use,k=5) + s(ml…  85.7  2.88e+ 1 2.38e-1
+ 2     8 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ss…  85.7  2.88e+ 1 2.38e-1
+ 3    16 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ss…  85.7  2.88e+ 1 2.38e-1
+ 4    15 log(ANI_033) ~ s(ssh,bs=spline2use,k=5) + s(ml…  85.7  2.88e+ 1 2.38e-1
+ 5    13 log(ANI_033) ~ s(mld,bs=spline2use,k=5) + s(sa…  92.8  1.24e+ 1 6.81e-3
+ 6    14 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ml…  92.8  1.24e+ 1 6.81e-3
+ 7     5 log(ANI_033) ~ s(mld,bs=spline2use,k=5)          92.8  1.23e+ 1 6.81e-3
+ 8     6 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ml…  92.8  1.23e+ 1 6.81e-3
+ 9     3 log(ANI_033) ~ s(ssh,bs=spline2use,k=5)          93.6  1.07e+ 1 4.63e-3
+10    11 log(ANI_033) ~ s(ssh,bs=spline2use,k=5) + s(sa…  93.6  1.07e+ 1 4.63e-3
+11     4 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ss…  93.6  1.07e+ 1 4.63e-3
+12    12 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ss…  93.6  1.07e+ 1 4.63e-3
+13     1 log(ANI_033) ~ 1                                 96.9 -3.62e-14 8.85e-4
+14     9 log(ANI_033) ~ s(salinity,bs=spline2use,k=5)     96.9  1.73e- 3 8.85e-4
+15    10 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(sa…  96.9  4.62e- 4 8.85e-4
+16     2 log(ANI_033) ~ s(sst,bs=spline2use,k=5)          96.9  1.45e- 4 8.85e-4</code></pre>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mod_df, <span class="at">file =</span> <span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>, <span class="st">"aic_er.csv"</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mod_df_gs, <span class="at">file =</span> <span class="fu">file.path</span>(local_wd, <span class="st">"output"</span> <span class="st">"aic_gs.csv"</span>))</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>( fkw_dsm_data, fkw_gs, spline2use, <span class="at">file=</span><span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>,<span class="st">"dsm_model_data.RData"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->

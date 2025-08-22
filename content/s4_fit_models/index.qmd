@@ -1,7 +1,264 @@
 ---
-title: "Fit Density Surface Models (DSM) using GAMs"
+title: "Fit and Select Density Surface Models (DSM) using GAMs"
 ---
 
-## Section
+## Data Preparation
 
-## Section
+### Load data
+
+```{r}
+#| eval: false
+
+localwd <- here("_R_code","task_4_fit_dsm_models")
+
+segDataESWg0 <- readRDS( here("_R_code","task_2_est_g0_esw","output","seg_sight_out_g0_ESW.rds") )
+
+#' Read table defining which sightings are from the pelagic population
+fkw_popData <- readRDS( here("_R_code", "task_4_fit_dsm_models", "FKWsights_DSM_1997to2023.rds") ) 
+
+spcode <- '033' # FKW code
+segDataESWg0$sightinfo <- segDataESWg0$sightinfo %>% filter(SpCode==spcode)%>%
+  dplyr::mutate(CruiseSightNo = paste(Cruise,SightNo,sep="-"))%>%
+  filter(CruiseSightNo %in% fkw_popData$CruiseSightNo)
+
+#' Add probability sighting is pelagic stock 
+segDataESWg0$sightinfo <- segDataESWg0$sightinfo %>% left_join(.,fkw_popData[,c("CruiseSightNo","ProbPel","EffGrpSizeFull","EffGrpSizePelagic")], by="CruiseSightNo") 
+segDataESWg0$sightinfo$nSI_033 <- 1
+segDataESWg0$sightinfo$ANI_033 <- segDataESWg0$sightinfo$EffGrpSizeFull
+
+sightinfo <- segDataESWg0$sightinfo %>% select(segnum, ProbPel, nSI_033, ANI_033)
+
+segDataESWg0$segdata <- select(segDataESWg0$segdata, -nSI_033, -ANI_033)
+segDataESWg0$segdata <- left_join(segDataESWg0$segdata, sightinfo)
+segDataESWg0$segdata <- segDataESWg0$segdata %>% mutate(
+  nSI_033 = ifelse(is.na(nSI_033), 0, nSI_033),
+  ANI_033 = ifelse(is.na(ANI_033), 0, ANI_033),
+  ProbPel = ifelse(is.na(ProbPel), 1, ProbPel)
+)
+
+write.csv(segDataESWg0$sightinfo, file.path(localwd, "output", "sightinfo_033.csv" ), row.names = FALSE)
+```
+
+### Attach environmental data and save for DSM fitting
+
+```{r}
+#| eval: false
+
+segEnvData <- readRDS(file.path(here(), "_R_code","task_3_download_env_data","output","segdata_env.rds")) %>% 
+  select(segnum, Latitude, Longitude, UTC, sst:ssh_sd)
+segdata <- left_join(segDataESWg0$segdata, segEnvData, by="segnum")
+
+saveRDS(segdata, file.path(localwd, "output", "fkw_dsm_data_1997to2024.rds") )
+write.csv(segdata, file.path(localwd, "output", "fkw_dsm_data_1997to2024.csv"), row.names = FALSE)
+```
+
+
+## DSM Formulation And Fitting
+
+### Load and add effort calculation to data
+
+```{r}
+#| eval: false
+
+local_wd <- file.path(here(), "_R_code", "task_4_fit_dsm_models")
+fkw_dsm_data <- readRDS(file.path(local_wd, "output", "fkw_dsm_data_1997to2024.rds"))
+
+#' Add effort data
+fkw_dsm_data <- fkw_dsm_data %>% mutate(
+  effort = g0_033 * 2 * esw_033 * dist
+)
+
+#' Filter out years without any sightings
+nz_sight <- fkw_dsm_data %>% group_by(year) %>% summarize(sightings = sum(nSI_033)) %>% 
+  filter(sightings>0)
+
+fkw_dsm_data <- fkw_dsm_data %>% filter(year%in%nz_sight$year, beaufort<7, effort>0)
+fkw_gs <- fkw_dsm_data %>% filter(nSI_033 > 0)# Just segments with sightings
+```
+
+### Add augmented data for pelagic probabilty weighting
+
+```{r}
+#| eval: false
+
+nonpel <- fkw_dsm_data %>% filter(ProbPel<1)
+nonpel <- nonpel %>% mutate(
+  nSI_033 = 0,
+  ProbPel = 1-ProbPel,
+  augment=1
+)
+
+fkw_dsm_data <- bind_rows(fkw_dsm_data, nonpel) %>% 
+  mutate(
+    augment = ifelse(is.na(augment), 0, 1)
+  )
+```
+
+### Create model list and fit
+
+#### Encounter rate models
+
+`forms_er` and `forms_gs`
+
+```{r}
+#| eval: false
+
+hab_var <- c("sst","ssh","mld","salinity")
+hab_var_sd <- c("sst_sd","ssh_sd","mld_sd","salinity_sd")
+
+hab_inc <- expand.grid(rep(list(0:2), length(hab_var)))
+hab_inc <- hab_inc[apply(hab_inc==2, 1, sum)<2,]
+hab_sd_inc <- expand.grid(rep(list(0:1), length(hab_var_sd)))
+
+form_hab <- apply(hab_inc, 1, function(row) {
+  terms <- mapply(function(choice, var) {
+    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
+    if (choice == 2) return(paste0("te(", var, ",Latitude,bs=spline2use,k=5)"))
+    return(NULL)
+  }, row, hab_var)
+  terms <- unlist(terms)
+  if (length(terms) == 0) return("nSI_033 ~ ")  # skip null model
+  paste("nSI_033 ~", paste(terms, collapse = " + "))
+}) %>% unlist()
+
+form_hab_sd <- apply(hab_sd_inc, 1, function(row) {
+  terms <- mapply(function(choice, var) {
+    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
+    return(NULL)
+  }, row, hab_var_sd)
+  terms <- unlist(terms)
+  # if (length(terms) == 0) return(NULL)  # skip null model
+  paste(terms, collapse = " + ")
+}) %>% unlist()
+
+forms_er <- NULL
+for(i in seq_along(form_hab)){
+  if(i ==1) {
+    tmp <- paste(form_hab[i], form_hab_sd[-1], sep="")
+  } else {
+    tmp <- c(form_hab[i], paste(form_hab[i], form_hab_sd[-1], sep=" + "))
+  }
+  forms_er <- c(forms_er, tmp)
+}
+```
+
+####  Fit all ER models
+
+```{r}
+#| eval: false
+
+#' Select spline type
+#' 'ts'= thin plate splines ("shrinkage approach" applies additional smoothing penalty)
+#' "tp" is default for s()
+spline2use <- "ts" 
+
+workers <- 8
+plan("multisession", workers=workers)
+# forms <- split(forms, cut(seq_along(forms), breaks = workers, labels = FALSE))
+
+with_progress({
+  pb <- progressor(along = forms_er) 
+  ergam_list <- foreach(
+    i = seq_along(forms_er), .options.future = list(seed = TRUE), 
+    .errorhandling = "pass") %dofuture% {
+      spline2use <- spline2use
+      gam_fit <- gam(formula = as.formula(forms_er[i]), offset = log(effort),
+                     family = tw(),
+                     method="REML", 
+                     data = fkw_dsm_data, weights = ProbPel)
+      pb()
+      list(summary = summary(gam_fit), aic=gam_fit$aic)
+    }
+})
+plan("sequential")
+
+mod_df <- data.frame(
+  idx = 1:length(ergam_list),
+  form = forms_er, 
+  aic = sapply(ergam_list, \(x) x$aic), 
+  dev_expl=sapply(ergam_list, \(x) x$summary$dev.expl*100)
+) %>% mutate(
+  waic = exp(-0.5*(aic-min(aic))),
+  waic = waic/sum(waic)
+) %>% arrange(desc(waic))
+```
+
+#### Group size model
+
+```{r}
+#| eval: false
+
+hab_inc_gs <- expand.grid(rep(list(0:1), length(hab_var)))
+forms_gs <- apply(hab_inc_gs, 1, function(row) {
+  terms <- mapply(function(choice, var) {
+    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
+    return(NULL)
+  }, row, hab_var)
+  terms <- unlist(terms)
+  # if (length(terms) == 0) return(NULL)  # skip null model
+  paste(terms, collapse = " + ")
+}) %>% unlist()
+forms_gs <- paste("log(ANI_033)", forms_gs, sep=" ~ ")
+forms_gs[1] <- "log(ANI_033) ~ 1"
+```
+
+#### Fit all GS models
+
+```{r}
+#| eval: false
+
+gsgam_list <- foreach(
+  i = seq_along(forms_gs), .options.future = list(seed = TRUE), 
+  .errorhandling = "pass") %do% {
+    spline2use <- spline2use
+    gam_fit <- gam(formula = as.formula(forms_gs[i]),
+                   method="REML", 
+                   data = fkw_gs, weights = ProbPel)
+    list(summary = summary(gam_fit), aic=gam_fit$aic)
+  }
+
+mod_df_gs <- data.frame(
+  idx = 1:length(gsgam_list),
+  form = forms_gs, 
+  aic = sapply(gsgam_list, \(x) x$aic), 
+  dev_expl=sapply(gsgam_list, \(x) x$summary$dev.expl*100)
+) %>% mutate(
+  waic = exp(-0.5*(aic-min(aic))),
+  waic = waic/sum(waic)
+) %>% arrange(desc(waic))
+```
+
+### AIC tables
+
+```{r}
+#| echo: false
+#| messages: false
+suppressPackageStartupMessages({
+  library(here)
+  library(tidyverse)
+})
+local_wd <- here("_R_code", "task_4_fit_dsm_models")
+suppressMessages({
+  aic_er <- read_csv(file.path(local_wd, "output","aic_er.csv"))
+  aic_gs <- read_csv(file.path(local_wd, "output","aic_gs.csv"))
+})
+
+aic_er
+aic_gs
+```
+
+```{r}
+#| eval: false
+
+write.csv(mod_df, file = file.path(local_wd, "output", "aic_er.csv"))
+write.csv(mod_df_gs, file = file.path(local_wd, "output" "aic_gs.csv"))
+save( fkw_dsm_data, fkw_gs, spline2use, file=file.path(local_wd, "output","dsm_model_data.RData"))
+```
+
+
+## Model Selection and Evaluation
+
+### Top AIC models
+
+
+
