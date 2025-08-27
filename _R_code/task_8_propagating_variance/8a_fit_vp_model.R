@@ -32,7 +32,7 @@ load(here("_R_code","task_4_fit_dsm_models","output","dsm_fit_final.RData"))
 #' Fit model with Jacobian based RE
 #' -----------------------------------------------------------------------------
 
-ergam_vp <- add_varprop(er_fit,
+er_fit_vp <- add_varprop(er_fit,
                         beaufort_data = select(fkw_dsm_data, beaufort), 
                         varprop_list, trace=TRUE)
 
@@ -42,23 +42,17 @@ ergam_vp <- add_varprop(er_fit,
 
 set.seed(8675309)
 
-beta_er_samp <- gam.imp(ergam.vp, 10000)
+beta_er_samp <- gam.imp(er_fit_vp, 10000)
 beta_er_samp$wts <- beta_er_samp$wts/sum(beta_er_samp$wts)
 # 1/sum(beta_er_samp$wts^2) # Check effective sample size
 idx <- sample(1:nrow(beta_er_samp$bs), 199, TRUE, prob = beta_er_samp$wts)
-bs_er <- rbind(ergam.vp$coefficients, beta_er_samp$bs[idx,])
-
-beta_er_samp_HIeez <- gam.imp(ergam.HIeez, 10000)
-beta_er_samp_HIeez$wts <- beta_er_samp_HIeez$wts/sum(beta_er_samp_HIeez$wts)
-# 1/sum(beta_er_samp_HIeez$wts^2) # Check effective sample size
-idx <- sample(1:nrow(beta_er_samp_HIeez$bs), 199, TRUE, prob = beta_er_samp_HIeez$wts)
-bs_er_HIeez <- rbind(ergam.HIeez$coefficients, beta_er_samp_HIeez$bs[idx,])
+bs_er <- rbind(er_fit_vp$coefficients, beta_er_samp$bs[idx,])
 
 
-beta_gs_samp <- gam.imp(gsgam.HIeez.log, 10000)
+beta_gs_samp <- gam.imp(gs_fit, 10000)
 beta_gs_samp$wts <- beta_gs_samp$wts/sum(beta_gs_samp$wts)
 # 1/sum(beta_gs_samp$wts^2) # Check effective sample size
 idx <- sample(1:nrow(beta_gs_samp$bs), 199, TRUE, prob = beta_gs_samp$wts)
-bs_gs <- rbind(gsgam.HIeez.log$coefficients, beta_gs_samp$bs[idx,])
+bs_gs <- rbind(gs_fit$coefficients, beta_gs_samp$bs[idx,])
 
-save(ergam_vp, bs_er, bs_er_HIeez, bs_gs, file=file.path(getwd(), "output","varprop_results.RData"))
+save(er_fit_vp, bs_er, bs_gs, file=file.path(local_wd, "output","varprop_fit_sample.RData"))

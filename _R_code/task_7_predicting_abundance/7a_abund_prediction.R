@@ -32,10 +32,9 @@ area <- cellSize(area, unit="km")
 hi_r <-  picMaps::hawaii_coast() %>% rasterize(area, touches=TRUE, cover=TRUE, background=0)
 hi_r <- 1-hi_r
 hi_r <- ifel(hi_r==min(values(hi_r)), 0, hi_r)
-cenpac_r <-  picMaps::cenpac() %>% rasterize(area, touches=TRUE, cover=TRUE)
-cenpac_r <- cenpac_r * hi_r
-eez_r <- picMaps::hawaii_eez() %>% rasterize(area, touches=TRUE, cover=TRUE)
-fkw_mgmt_r <- picMaps::pfkw_mgmt() %>% rasterize(area, touches=TRUE, cover=TRUE)
+cenpac_r <-  picMaps::cenpac() %>% rasterize(area, touches=TRUE, cover=TRUE) * hi_r
+eez_r <- picMaps::hawaii_eez() %>% rasterize(area, touches=TRUE, cover=TRUE) * hi_r
+fkw_mgmt_r <- picMaps::pfkw_mgmt() %>% rasterize(area, touches=TRUE, cover=TRUE) * hi_r
 
 #' -----------------------------------------------------------------------------
 #' Determine clamping and truncating values 
@@ -50,7 +49,7 @@ for(i in 1:nrow(clamp_df)){
   clamp_df$trunc_low[i] <- 0.5*min(v)
   clamp_df$trunc_high[i] <- 1.5*max(v)
 }
-
+save(clamp_df, file=file.path(local_wd,"output","clamp_df.RData"))
 
 #' ----------------------------------------------------------------------------
 #' Loop over years and parameters to make predictions
@@ -77,9 +76,9 @@ for(i in seq_along(years)){
     # Predict er and gs
     pred_er <- terra::predict(env_j, er_fit, type="response")
     pred_gs <- exp(terra::predict(env_j, gs_fit) + 0.5*gs_fit$sig2) * gs_bias_corr
-    pred <- pred_er * pred_gs * area * cenpac_r
+    pred <- pred_er * pred_gs * area
     pred <- ifel(is.na(pred), 0, pred)
-    N_cenpac <- as.numeric(global(pred, "sum", na.rm=TRUE))
+    N_cenpac <- as.numeric(global(pred, "sum", weights=cenpac_r, na.rm=TRUE))
     N_eez <- as.numeric(global(pred, "sum", weights=eez_r, na.rm=TRUE))
     N_fkw <- as.numeric(global(pred, "sum", weights=fkw_mgmt_r, na.rm=TRUE))
     outfile <- paste0("N_",times[j],"_file.tif")
