@@ -11,6 +11,7 @@ library(mvnfast)
 library(picMaps)
 library(future)
 library(doFuture)
+library(coda)
 
 localwd <- here("_R_code","task_2_est_g0_esw")
 sp.code <- "033"
@@ -146,4 +147,29 @@ varprop_list <- list(
 )
 
 saveRDS(varprop_list, file = file.path(localwd, "output","varprop_list.rds"))
+
+#' -----------------------------------------------------------------------------
+#' Compute SDs and CIs for ESW and g(0) estimates
+#' -----------------------------------------------------------------------------
+
+g0_sim <- matrix(nrow=nrow(alpha_star), ncol=8)
+for(i in 1:nrow(g0_sim)){
+  g0_sim[i,] <- exp(Lp%*%alpha_star[i,])/exp(Lp%*%alpha_star[i,])[1]
+}
+## g(0) standard error
+round(apply(g0_sim, 2, sd), 3)
+## g(0) CI
+round(HPDinterval(mcmc(g0_sim)),2)
+
+esw_sim <- matrix(nrow=nrow(alpha_star), ncol=8)
+for(i in 1:nrow(g0_sim)){
+  detfun_sim <- detfun
+  detfun_sim$ddf$par <- theta_star[i,]
+  esw_sim[i,] <- predict(detfun_sim, newdata = newdata_g0, compute=TRUE, esw = TRUE)$fitted 
+}
+## ESW standard error
+round(apply(esw_sim, 2, sd), 2)
+## ESW CI
+round(HPDinterval(mcmc(esw_sim)),2)
+
 
