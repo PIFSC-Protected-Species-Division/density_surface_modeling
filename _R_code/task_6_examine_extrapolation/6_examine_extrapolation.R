@@ -25,7 +25,6 @@ library(dsmextraLite)
 local_wd <- here("_R_code","task_6_examine_extrapolation")
 ocean_dir <- here("_R_code","task_5_download_prediction_data","output")
 load(here("_R_code","task_4_fit_dsm_models","output","dsm_fit_final.RData"))
-
 ocean_files <- paste(ocean_dir,list.files(ocean_dir), sep="/")
 
 #' -----------------------------------------------------------------------------
@@ -60,7 +59,7 @@ extrapolation <- foreach(
   extrap_i <- wrap(extrap_i)
   extrap_i
 }
-plan("sequential")q
+plan("sequential")
 
 extrapolation <- lapply(extrapolation, unwrap)
 extrapolation <- do.call(c, extrapolation)
@@ -72,28 +71,22 @@ writeRaster(extrapolation, file=file.path(local_wd, "output", "extrapolation.tif
 hi <- hawaii_coast()
 eez <- hawaii_eez()
 fkwm <- pfkw_mgmt()
-
-e_mean <- mean(extrapolation)
-
+em17 <- extrapolation[[year(time(extrapolation))!=2017]]
+e_mean <- mean(em17)
 ppp <- vector("list",length(ocean_files)+1)
 
 ppp[[1]] <- ggplot() + geom_spatraster(data=e_mean) +
   layer_spatial(hi, fill="black", color=NA) +
-  layer_spatial(eez, color="black", fill=NA) +
-  layer_spatial(fkwm, color="black", fill=NA, linetype="dashed") +
-  # scale_fill_viridis(option="H", name="% Extrapolation") +
-  # scale_fill_princess_c("maori",name="% Extrapolation") + 
+  layer_spatial(eez, color="black", fill=NA, linetype="dashed", lwd=0.5) +
+  layer_spatial(fkwm, color="black", fill=NA,lwd=0.5) +
   scale_fill_grass_c("reds",name="% Extrapolation") + 
   scale_x_continuous(breaks=c(175, 228)) + scale_y_continuous(breaks=c(0, 40)) + 
   theme_bw() + #theme(legend.position="none") +
   theme(axis.text = element_blank(), axis.ticks = element_blank()) +
   coord_sf(expand = FALSE) + 
-  ggtitle("All Years")
-
+  ggtitle("Avg. 2020-2024")
 lll <- get_legend(ppp[[1]])
-
 ppp[[1]] <- ppp[[1]] + theme(legend.position="none")
-
 years <- time(extrapolation) %>% year %>% unique
 
 for(i in seq_along(years)){
@@ -101,8 +94,8 @@ for(i in seq_along(years)){
   e <- mean(e)
   ppp[[i+1]] <- ggplot() + geom_spatraster(data=e) +
     layer_spatial(hi, fill="black", color=NA) +
-    layer_spatial(eez, color="black", fill=NA) +
-    layer_spatial(fkwm, color="black", fill=NA, linetype="dashed") +
+    layer_spatial(eez, color="black", fill=NA, linetype="dashed", lwd=0.5) +
+    layer_spatial(fkwm, color="black", fill=NA, lwd=0.5) +
     # scale_fill_viridis(option="H", name="% Extrapolation") +
     # scale_fill_princess_c("maori",name="% Extrapolation") + 
     scale_fill_grass_c("reds",name="% Extrapolation") + 
@@ -115,4 +108,4 @@ for(i in seq_along(years)){
 }
 
 pout <- ggarrange(ppp[[1]], ppp[[2]], ppp[[3]], ppp[[4]], ppp[[5]], ppp[[6]], ppp[[7]],lll)
-ggsave(pout, file=file.path(local_wd, "output","extrap_fig.png"), width=6.5, height=6.5)
+ggsave(pout, file=file.path(local_wd, "output","extrap_fig.png"), width=6.5, height=6.2)

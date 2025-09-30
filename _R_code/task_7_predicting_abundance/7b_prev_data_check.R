@@ -106,11 +106,11 @@ for(j in seq_along(times)){
                N_fkw_mgmt=N_fkw, file=outfile
     )
   )
-  writeRaster(pred, file.path(local_wd,"output","predictions","2017",outfile), overwrite=TRUE)
+  # writeRaster(pred, file.path(local_wd,"output","predictions","previous_data",outfile), overwrite=TRUE)
   cat(j," ")
 }
 
-save(N_data, clamp_df, file=file.path(local_wd, "output","2017","N_est_df.RData"))
+save(N_data, clamp_df, file=file.path(local_wd, "output","previous_data","N_est_df.RData"))
 
 N_summ <- N_data %>% group_by(year) %>% 
   summarize(
@@ -122,4 +122,4 @@ N_summ <- N_data %>% group_by(year) %>%
     N_fkw_mgmt_sd = round(sd(N_fkw_mgmt))
   )
 
-write_csv(N_summ, file=file.path(local_wd,"output","2017","N_summ.csv"))
+write_csv(N_summ, file=file.path(local_wd,"output","previous_data","N_summ.csv"))

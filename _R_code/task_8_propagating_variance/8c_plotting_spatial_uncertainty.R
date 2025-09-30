@@ -48,7 +48,7 @@ var_20_24 <- app(var_raster[[-1]], mean) + app(mean_raster[[-1]], var)
 mean_20_24 <- app(mean_raster[[-1]], mean)
 cv_20_24 <- app(var_20_24, sqrt)/mean_20_24
 cv_raster <- c(cv_20_24, cv_raster)
-names(cv_raster)[1] <- "Average 2020-2024"
+names(cv_raster)[1] <- "Avg 2020-2024"
 
 writeRaster(cv_raster, file.path(local_wd, "output","yearly_cv.tif"), overwrite=T)
 
@@ -65,16 +65,12 @@ ppp[[1]] <- ggplot() + geom_spatraster(data=cv_raster[[1]]) +
   layer_spatial(hi, fill="white", color=NA) +
   layer_spatial(eez, color="white", fill=NA, linetype="dashed",lwd=0.5) +
   layer_spatial(fkwm, color="white", fill=NA,lwd=0.5) +
-  scale_fill_viridis_b(option = "E", na.value = NA) + 
-  # scale_fill_princess_c("maori",name="% Extrapolation") +
-  # scale_fill_grass_c("reds",name="CV") +
-  # scale_fill_nmfs(palette = "coral", discrete = FALSE, name="CV", na.value=NA) + 
-  # scale_fill_gradientn(colors=c("white","bisque", "red","darkred"), name="CV", na.value = NA) +
+  scale_fill_viridis_c(option = "H", na.value = NA, name="CV") +
   scale_x_continuous(breaks=c(175, 228)) + scale_y_continuous(breaks=c(0, 40)) + 
   theme_bw() + #theme(legend.position="none") +
   theme(axis.text = element_blank(), axis.ticks = element_blank()) +
   coord_sf(expand = FALSE) + 
-  ggtitle("Average 2020-2024")
+  ggtitle("Avg. 2020-2024")
 
 lll <- get_legend(ppp[[1]])
 ppp[[1]] <- ppp[[1]] + theme(legend.position="none")
@@ -85,11 +81,7 @@ for(i in 2:nlyr(cv_raster)){
     layer_spatial(hi, fill="white", color=NA) +
     layer_spatial(eez, color="white", fill=NA, linetype="dashed",lwd=0.5) +
     layer_spatial(fkwm, color="white", fill=NA,lwd=0.5) +
-    scale_fill_viridis_b(option = "E", na.value = NA) + 
-    # scale_fill_princess_c("maori",name="% Extrapolation") +
-    # scale_fill_grass_c("reds",name="CV") +
-    # scale_fill_nmfs(palette = "coral", discrete = FALSE, name="CV", na.value=NA) + 
-    # scale_fill_gradientn(colors=c("white","bisque", "red","darkred"), name="CV", na.value = NA) +
+    scale_fill_viridis_c(option = "H", na.value = NA, name="CV") + 
     scale_x_continuous(breaks=c(175, 228)) + scale_y_continuous(breaks=c(0, 40)) + 
     theme_bw() + theme(legend.position="none") +
     theme(axis.ticks = element_blank()) + 
@@ -99,4 +91,39 @@ for(i in 2:nlyr(cv_raster)){
 }
 
 pout <- ggarrange(ppp[[1]], ppp[[2]], ppp[[3]], ppp[[4]], ppp[[5]], ppp[[6]], ppp[[7]],lll)
-ggsave(pout, file=file.path(local_wd, "output","yearly_cv_fig.png"), width=6.5, height=6.5)
+ggsave(pout, file=file.path(local_wd, "output","cenpac_cv_fig.png"), width=6.5, height=6.2)
+
+## EEZ and Assessment areas
+ppp <- vector("list",nlyr(cv_raster))
+eez_asses <- st_union(eez, fkwm) %>% st_shift_longitude()
+bound  <- eez_asses %>% st_buffer(100000) %>% st_shift_longitude()
+cv_clip <- crop(cv_raster, vect(bound)) %>% mask(eez_asses)
+
+ppp[[1]] <- ggplot() + geom_spatraster(data=cv_clip[[1]]) +
+  layer_spatial(hi, fill="black", color=NA) +
+  layer_spatial(eez, color="black", fill=NA, linetype="dashed",lwd=0.5) +
+  layer_spatial(fkwm, color="black", fill=NA,lwd=0.5) +
+  scale_fill_viridis_c(option = "H", na.value = NA, name="CV") +
+  theme_bw() + 
+  theme(axis.text = element_blank(), axis.ticks = element_blank(), panel.grid.major = element_blank()) +
+  coord_sf(expand = FALSE) + 
+  ggtitle("Avg. 2020-2024")
+
+lll <- get_legend(ppp[[1]])
+ppp[[1]] <- ppp[[1]] + theme(legend.position="none")
+
+
+for(i in 2:nlyr(cv_raster)){
+  ppp[[i]] <- ggplot() + geom_spatraster(data=cv_clip[[i]]) +
+    layer_spatial(hi, fill="black", color=NA) +
+    layer_spatial(eez, color="black", fill=NA, linetype="dashed",lwd=0.5) +
+    layer_spatial(fkwm, color="black", fill=NA, lwd=0.5) +
+    scale_fill_viridis_c(option = "H", na.value = NA, name="CV") + 
+    theme_bw() + theme(legend.position="none") +
+    theme(axis.text = element_blank(), axis.ticks = element_blank(), panel.grid.major = element_blank()) +
+    coord_sf(expand = FALSE) + 
+    ggtitle(names(cv_raster)[i])
+}
+
+pout <- ggarrange(ppp[[1]], ppp[[2]], ppp[[3]], ppp[[4]], ppp[[5]], ppp[[6]], ppp[[7]],lll)
+ggsave(pout, file=file.path(local_wd, "output","eez_assess_cv_fig.png"), width=6.5, height=4.5)

@@ -3,11 +3,17 @@ library(here)
 library(tidyverse)
 library(sf)
 library(terra)
+library(tidyterra)
 library(lubridate)
 library(picMaps)
+library(ggspatial)
+library(viridisLite)
+library(viridis)
+library(ggpubr)
 library(mapview)
 library(doFuture)
 library(foreach)
+
 
 local_wd <- here("_R_code","task_7_predicting_abundance")
 dir.create(file.path(local_wd, "output"))
@@ -106,6 +112,18 @@ N_summ <- N_data %>% group_by(year) %>%
     N_fkw_mgmt_est = round(mean(N_fkw_mgmt)),
     N_fkw_mgmt_sd = round(sd(N_fkw_mgmt))
   )
+N_avg <- N_data %>% filter(year!=2017) %>% 
+  summarize(
+    N_cenpac_est = round(mean(N_cenpac)),
+    N_cenpac_sd = round(sd(N_cenpac)),
+    N_eez_est = round(mean(N_eez)),
+    N_eez_sd = round(sd(N_eez)),
+    N_fkw_mgmt_est = round(mean(N_fkw_mgmt)),
+    N_fkw_mgmt_sd = round(sd(N_fkw_mgmt))
+  )
+N_summ$year <- as.character(N_summ$year)
+N_avg <- bind_cols(year="avg 2020-2024", N_avg)
+N_summ <- bind_rows(N_avg, N_summ)
 
 write_csv(N_summ, file=file.path(local_wd,"output","N_summ.csv"))
 
@@ -127,4 +145,92 @@ pred_avg <- do.call(c, pred_avg)
 names(pred_avg) <- years
 
 writeRaster(pred_avg, file.path(local_wd,"output","yearly_avg_abund.tif"), overwrite=TRUE)
+
+#' -----------------------------------------------------------------------------
+#' Create abundance plots
+#' -----------------------------------------------------------------------------
+
+hi <- hawaii_coast()
+eez <- hawaii_eez()
+fkwm <- pfkw_mgmt()
+
+p_mean <- mean(pred_avg[[2:6]])
+
+ppp <- vector("list",nlyr(pred_avg)+1)
+
+ppp[[1]] <- ggplot() + geom_spatraster(data=p_mean) +
+  layer_spatial(hi, fill="white", color=NA) +
+  layer_spatial(eez, color="white", fill=NA, linetype="dashed", lwd=0.5) +
+  layer_spatial(fkwm, color="white", fill=NA, lwd=0.5) +
+  scale_fill_viridis(option="H", name="Abundance") +
+  scale_x_continuous(breaks=c(175, 228)) + scale_y_continuous(breaks=c(0, 40)) + 
+  theme_bw() + 
+  theme(axis.text = element_blank(), axis.ticks = element_blank()) +
+  coord_sf(expand = FALSE) + 
+  ggtitle("Avg. 2020-2024")
+
+lll <- get_legend(ppp[[1]])
+
+ppp[[1]] <- ppp[[1]] + theme(legend.position="none")
+
+years <- names(pred_avg) 
+
+for(i in seq_along(years)){
+  ppp[[i+1]] <- ggplot() + geom_spatraster(data=pred_avg[[i]]) +
+    layer_spatial(hi, fill="white", color=NA) +
+    layer_spatial(eez, color="white", fill=NA, linetype="dashed", lwd=0.5) +
+    layer_spatial(fkwm, color="white", fill=NA, lwd=0.5) +
+    scale_fill_viridis(option="H", name="Abundance") +
+    scale_x_continuous(breaks=c(175, 228)) + scale_y_continuous(breaks=c(0, 40)) + 
+    theme_bw() + theme(legend.position="none") +
+    theme(axis.ticks = element_blank()) + 
+    theme(axis.text = element_blank(), axis.ticks = element_blank()) +
+    coord_sf(expand = FALSE) + 
+    ggtitle(years[i])
+}
+
+pout <- ggarrange(ppp[[1]], ppp[[2]], ppp[[3]], ppp[[4]], ppp[[5]], ppp[[6]], ppp[[7]],lll)
+ggsave(pout, file=file.path(local_wd, "output","cenpac_abund.png"), width=6.5, height=6.2)
+
+## Assessment area
+ppp <- vector("list",nlyr(pred_avg)+1)
+eez_asses <- st_union(eez, fkwm) %>% st_shift_longitude()
+bound  <- eez_asses %>% st_buffer(100000) %>% st_shift_longitude()
+pred_clip <- crop(pred_avg, vect(bound)) %>% mask(eez_asses)
+pmean_clip <- crop(p_mean, vect(bound)) %>% mask(eez_asses)
+
+ppp[[1]] <- ggplot() + geom_spatraster(data=pmean_clip) +
+  layer_spatial(hi, fill="black", color=NA) +
+  layer_spatial(eez, color="black", fill=NA, linetype="dashed", lwd=0.5) +
+  layer_spatial(fkwm, color="black", fill=NA, lwd=0.5) +
+  scale_fill_viridis(option="H", name="Abundance", na.value=NA) +
+  theme_bw() +
+  theme(axis.text = element_blank(), axis.ticks = element_blank(), panel.grid.major = element_blank()) +
+  coord_sf(expand = FALSE) + 
+  ggtitle("Avg. 2020-2024")
+
+lll <- get_legend(ppp[[1]])
+
+ppp[[1]] <- ppp[[1]] + theme(legend.position="none")
+
+years <- names(pred_avg) 
+
+for(i in seq_along(years)){
+  ppp[[i+1]] <- ggplot() + geom_spatraster(data=pred_clip[[i]]) +
+    layer_spatial(hi, fill="black", color=NA) +
+    layer_spatial(eez, color="black", fill=NA, linetype="dashed", lwd=0.5) +
+    layer_spatial(fkwm, color="black", fill=NA, lwd=0.5) +
+    scale_fill_viridis(option="H", name="Abundance", na.value=NA) +
+    theme_bw() + theme(legend.position="none") +
+    theme(axis.ticks = element_blank()) + 
+    theme(axis.text = element_blank(), axis.ticks = element_blank(), panel.grid.major = element_blank()) +
+    coord_sf(expand = FALSE) + 
+    ggtitle(years[i])
+}
+
+pout <- ggarrange(ppp[[1]], ppp[[2]], ppp[[3]], ppp[[4]], ppp[[5]], ppp[[6]], ppp[[7]],lll)
+ggsave(pout, file=file.path(local_wd, "output","assess_abund.png"), width=6.5, height=4.5)
+
+
+
 

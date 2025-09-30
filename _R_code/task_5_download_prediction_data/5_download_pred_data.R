@@ -38,16 +38,24 @@ lg$getLogger("copernicusmarine")$setLevel('WARN')
 #' -----------------------------------------------------------------------------
 
 cenpac <- picMaps::cenpac()
+eez <- picMaps::hawaii_eez()
+assess <- picMaps::pfkw_mgmt()
 
 ### Plot-- can skip if desired
 cenpac <- st_transform(cenpac, 3832)
-cp_buff <- st_buffer(cenpac, 4000000)
+eez <- st_transform(eez, 3832)
+assess <- st_transform(assess, 3832)
+cp_buff <- st_buffer(cenpac, 2000000)
 land <- ne_countries(scale="medium")
 ggplot() + layer_spatial(cp_buff, fill=NA, color=NA) + 
-  layer_spatial(cenpac, fill="darkred", alpha=0.3) + annotation_spatial(land) +
+  layer_spatial(cenpac, fill="darkred", alpha=0.3) + 
+  layer_spatial(eez, color="black", fill=NA, linetype="dashed", lwd=0.5) +
+  layer_spatial(assess, color="black", fill=NA, lwd=0.5) +
+  annotation_spatial(land) +
   scale_x_continuous(breaks=c(175, 228)) +
   scale_y_continuous(breaks=c(0, 40)) +
   theme_bw()
+ggsave(filename = file.path(localwd,"cenpac_sa.png"), width=6.5, height=6.5)
 cenpac <- st_transform(cenpac, 4326) %>% st_shift_longitude()
 ###
 

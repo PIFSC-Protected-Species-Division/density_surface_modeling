@@ -64,7 +64,7 @@ ltdens/preddens
 
 #  Set up presence and absence points as 0's and 1's
 sightings <- as.numeric(fkw_dsm_data$nSI_033>=1)
-pred_seg <- predict(er_fit, type="response") * pred_gs * gs_bias_corr
+pred_seg <- predict(er_fit, type="response") * pred_gs * gs_bias_corr 
 
 rocr <- WeightedROC(pred_seg, sightings, weight = fkw_dsm_data$ProbPel)
 
@@ -87,13 +87,65 @@ TSS
 # 0.3626605
 
 #' -----------------------------------------------------------------------------
+#' ROSE Bootstrap
+#' -----------------------------------------------------------------------------
+
+rose_df <- fkw_dsm_data %>% select(
+  nSI_033, sst, sst_sd, salinity, salinity_sd, mld, mld_sd, ssh, ssh_sd, Latitude, Longitude, effort
+) %>% rename(cls = nSI_033)
+
+auc_stor <- rep(NA, 50)
+tss_stor <- rep(NA, 50)
+for(i in 1:50){
+  resamp <- ROSE(cls~., data=rose_df, hmult.majo=0.25, hmult.mino=0.25, seed=i)$data
+  er_fit_rose <- gam(formula = cls ~ te(sst, Latitude, bs = spline2use, k = 5),
+                     family = tw(),
+                     method="REML", 
+                     data = resamp)
+  mu <- predict(er_fit_rose, newdata = fkw_dsm_data, type="response")
+  phi <- er_fit_rose$sig2
+  theta <- er_fit_rose$family$getTheta()
+  p <- (1+2*exp(theta))/(1+exp(theta)); p <- max(1.01, p); p <- min(1.99, p)
+  pnz <- 1 - exp(- (mu^(2-p)/(phi*(2-p))))
+  rrr <-  WeightedROC(pnz, sightings, weight = fkw_dsm_data$ProbPel)
+  auc_stor[i] <- WeightedAUC(rrr)
+  tss_stor[i] <- max(rrr$TPR + (1-rrr$FPR) -1, na.rm=T)
+  cat(i," ")
+}
+mean(auc_stor)
+# 0.7626317
+range(auc_stor)
+# 0.7581797 0.7666302
+
+mean(tss_stor)
+# 0.4331774
+range(tss_stor)
+# 0.4144445 0.4537293
+
+
+#' -----------------------------------------------------------------------------
 #' Save results
 #' -----------------------------------------------------------------------------
 
 #' plots
-draw(er_fit) + coord_cartesian(expand = FALSE) + scale_fill_distiller(palette="BrBG",na.value = "transparent")
+sm_grid <- smooth_estimates(er_fit, select = "te(sst,Latitude)")
+out <- exclude.too.far(sm_grid$sst, sm_grid$Latitude, fkw_dsm_data$sst, fkw_dsm_data$Latitude, 0.1)
+sm_grid$.estimate[out] <- NA
+ggplot(data = sm_grid) +
+  geom_raster(aes(x = sst, y = Latitude, fill = .estimate)) +
+  geom_contour(aes(x = sst, y = Latitude, z = .estimate), colour = "black") +
+  geom_point(
+    data = dat_res,
+    aes(x = sst, y = Latitude),
+    size = 0.25, 
+    alpha = 0.25 
+  ) +
+  labs(title = "te(sst, Latitude)") + 
+  scale_fill_distiller(palette = "RdBu", type = "div", name = "effect", na.value = NA) +
+  coord_cartesian(expand = FALSE) +  theme_bw()
 ggsave(file=file.path(local_wd,"output","er_fit.png"),width=6.5, height=4)
-draw(gs_fit)
+
+draw(gs_fit) & theme_bw()
 ggsave(file=file.path(local_wd,"output","gs_fit.png"),width=6.5, height=4)
 
 save(er_fit, gs_fit, gs_bias_corr, opt_rocr, fkw_dsm_data, fkw_gs, A, ltdens, spline2use,

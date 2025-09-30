@@ -131,7 +131,22 @@ N_cv <- N_storage %>% group_by(year) %>%
     N_cenpac_cv = N_cenpac_sd/N_cenpac_m,
     N_eez_cv = N_eez_sd/N_eez_m,
     N_assess_cv = N_assess_sd/N_assess_m
-  )
+  ) %>% mutate(year = as.character(year))
+
+N_cv_avg <- filter(N_storage, year!=2017) %>% 
+  summarise(
+    N_cenpac_m=mean(N_cenpac),  N_cenpac_sd=sd(N_cenpac),
+    N_eez_m=mean(N_eez),  N_eez_sd=sd(N_eez),
+    N_assess_m=mean(N_assess),  N_assess_sd=sd(N_assess),
+  ) %>% mutate(
+    N_cenpac_cv = N_cenpac_sd/N_cenpac_m,
+    N_eez_cv = N_eez_sd/N_eez_m,
+    N_assess_cv = N_assess_sd/N_assess_m
+  ) %>% mutate(year="avg 2020-2024") %>% 
+  relocate(year, .before=1)
+N_cv <- bind_rows(N_cv_avg, N_cv)
+
+
 N_cv <- N_cv %>% select(year, N_cenpac_cv,  N_eez_cv,  N_assess_cv) %>% 
   mutate(
     sigma_cenpac = sqrt(log(1+N_cenpac_cv^2)),

@@ -16,7 +16,7 @@ fkw_dsm_data <- readRDS(file.path(local_wd, "output", "fkw_dsm_data_1997to2024.r
 
 #' Add effort data
 fkw_dsm_data <- fkw_dsm_data %>% mutate(
-  effort = g0_033 * 2 * esw_033 * dist
+  effort = as.vector(g0_033 * 2 * esw_033 * dist)
 )
 
 #' Filter out years without any sightings
