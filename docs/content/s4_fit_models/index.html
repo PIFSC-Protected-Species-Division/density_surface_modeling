@@ -193,8 +193,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="../../content/s7_dsm_selection_fitting/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">7. Fitting and selecting DSMs</span></a>
+  <a href="../../content/s7_predict_abund/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">7. Predicting spatial abundance</span></a>
+  </div>
+</li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="../../content/s8_prop_var/index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">8. Estimting full spatial abundance uncertainty</span></a>
   </div>
 </li>
     </ul>
@@ -218,6 +224,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#add-augmented-data-for-pelagic-probabilty-weighting" id="toc-add-augmented-data-for-pelagic-probabilty-weighting" class="nav-link" data-scroll-target="#add-augmented-data-for-pelagic-probabilty-weighting">Add augmented data for pelagic probabilty weighting</a></li>
   <li><a href="#create-model-list-and-fit" id="toc-create-model-list-and-fit" class="nav-link" data-scroll-target="#create-model-list-and-fit">Create model list and fit</a></li>
   <li><a href="#aic-tables" id="toc-aic-tables" class="nav-link" data-scroll-target="#aic-tables">AIC tables</a></li>
+  </ul></li>
+  <li><a href="#model-selection-and-evaluation" id="toc-model-selection-and-evaluation" class="nav-link" data-scroll-target="#model-selection-and-evaluation">Model Selection and Evaluation</a>
+  <ul class="collapse">
+  <li><a href="#top-aic-models" id="toc-top-aic-models" class="nav-link" data-scroll-target="#top-aic-models">Top AIC models</a></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s4_fit_models/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -500,6 +510,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mod_df_gs, <span class="at">file =</span> <span class="fu">file.path</span>(local_wd, <span class="st">"output"</span> <span class="st">"aic_gs.csv"</span>))</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>( fkw_dsm_data, fkw_gs, spline2use, <span class="at">file=</span><span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>,<span class="st">"dsm_model_data.RData"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+</section>
+</section>
+<section id="model-selection-and-evaluation" class="level2">
+<h2 class="anchored" data-anchor-id="model-selection-and-evaluation">Model Selection and Evaluation</h2>
+<section id="top-aic-models" class="level3">
+<h3 class="anchored" data-anchor-id="top-aic-models">Top AIC models</h3>
 
 
 </section>
