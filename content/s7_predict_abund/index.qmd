@@ -7,6 +7,8 @@ title: "Predicting Spatial Abundance"
 ## Packages and set up
 
 ```{r}
+#| message: false
+#| warning: false
 
 library(mgcv)
 library(here)
