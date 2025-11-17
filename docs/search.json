@@ -290,11 +290,121 @@
     ]
   },
   {
-    "objectID": "content/s8_prop_var/index.html#section-1",
-    "href": "content/s8_prop_var/index.html#section-1",
-    "title": "Fitting and Selecting Density Surface Models",
-    "section": "Section",
-    "text": "Section",
+    "objectID": "content/s8_prop_var/index.html",
+    "href": "content/s8_prop_var/index.html",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "",
+    "text": "library(mgcv)\nlibrary(dsm)\nlibrary(numDeriv)\nlibrary(here)\nlibrary(tidyverse)\nlibrary(Distance)\n\nlocal_wd &lt;- here(\"_R_code\",\"task_8_propagating_variance\")\n\n# Support scripts\nsupp_files &lt;- list.files(path = file.path(local_wd,\"support_scripts\"), pattern = \"\\\\.R$\", full.names = TRUE)\nfor(i in seq_along(supp_files)) source(supp_files[i])\n\n# Previous results\nvarprop_list &lt;- readRDS(here( \"_R_code\",\"task_2_est_g0_ESW\",\"output\",\"varprop_list.rds\"))\nload(here(\"_R_code\",\"task_4_fit_dsm_models\",\"output\",\"dsm_fit_final.RData\"))\n\n\n\n\n\ner_fit_vp &lt;- add_varprop(er_fit,\n                        beaufort_data = select(fkw_dsm_data, beaufort), \n                        varprop_list, trace=TRUE)\n\n\n\n\n\nset.seed(8675309)\n\nbeta_er_samp &lt;- gam.imp(er_fit_vp, 10000)\nbeta_er_samp$wts &lt;- beta_er_samp$wts/sum(beta_er_samp$wts)\n# 1/sum(beta_er_samp$wts^2) # Check effective sample size\nidx &lt;- sample(1:nrow(beta_er_samp$bs), 199, TRUE, prob = beta_er_samp$wts)\nbs_er &lt;- rbind(er_fit_vp$coefficients, beta_er_samp$bs[idx,])\n\n\nbeta_gs_samp &lt;- gam.imp(gs_fit, 10000)\nbeta_gs_samp$wts &lt;- beta_gs_samp$wts/sum(beta_gs_samp$wts)\n# 1/sum(beta_gs_samp$wts^2) # Check effective sample size\nidx &lt;- sample(1:nrow(beta_gs_samp$bs), 199, TRUE, prob = beta_gs_samp$wts)\nbs_gs &lt;- rbind(gs_fit$coefficients, beta_gs_samp$bs[idx,])\n\nsave(er_fit_vp, bs_er, bs_gs, file=file.path(local_wd, \"output\",\"varprop_fit_sample.RData\"))",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#load-r-packages-necessary-files-and-supporting-r-scripts",
+    "href": "content/s8_prop_var/index.html#load-r-packages-necessary-files-and-supporting-r-scripts",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "",
+    "text": "library(mgcv)\nlibrary(dsm)\nlibrary(numDeriv)\nlibrary(here)\nlibrary(tidyverse)\nlibrary(Distance)\n\nlocal_wd &lt;- here(\"_R_code\",\"task_8_propagating_variance\")\n\n# Support scripts\nsupp_files &lt;- list.files(path = file.path(local_wd,\"support_scripts\"), pattern = \"\\\\.R$\", full.names = TRUE)\nfor(i in seq_along(supp_files)) source(supp_files[i])\n\n# Previous results\nvarprop_list &lt;- readRDS(here( \"_R_code\",\"task_2_est_g0_ESW\",\"output\",\"varprop_list.rds\"))\nload(here(\"_R_code\",\"task_4_fit_dsm_models\",\"output\",\"dsm_fit_final.RData\"))",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#fit-extended-model-with-jacobian-based-random-effects",
+    "href": "content/s8_prop_var/index.html#fit-extended-model-with-jacobian-based-random-effects",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "",
+    "text": "er_fit_vp &lt;- add_varprop(er_fit,\n                        beaufort_data = select(fkw_dsm_data, beaufort), \n                        varprop_list, trace=TRUE)",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#draw-empiricl-bayes-posterior-sample-using-importance-sampling",
+    "href": "content/s8_prop_var/index.html#draw-empiricl-bayes-posterior-sample-using-importance-sampling",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "",
+    "text": "set.seed(8675309)\n\nbeta_er_samp &lt;- gam.imp(er_fit_vp, 10000)\nbeta_er_samp$wts &lt;- beta_er_samp$wts/sum(beta_er_samp$wts)\n# 1/sum(beta_er_samp$wts^2) # Check effective sample size\nidx &lt;- sample(1:nrow(beta_er_samp$bs), 199, TRUE, prob = beta_er_samp$wts)\nbs_er &lt;- rbind(er_fit_vp$coefficients, beta_er_samp$bs[idx,])\n\n\nbeta_gs_samp &lt;- gam.imp(gs_fit, 10000)\nbeta_gs_samp$wts &lt;- beta_gs_samp$wts/sum(beta_gs_samp$wts)\n# 1/sum(beta_gs_samp$wts^2) # Check effective sample size\nidx &lt;- sample(1:nrow(beta_gs_samp$bs), 199, TRUE, prob = beta_gs_samp$wts)\nbs_gs &lt;- rbind(gs_fit$coefficients, beta_gs_samp$bs[idx,])\n\nsave(er_fit_vp, bs_er, bs_gs, file=file.path(local_wd, \"output\",\"varprop_fit_sample.RData\"))",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#load-necessary-results-and-r-packages",
+    "href": "content/s8_prop_var/index.html#load-necessary-results-and-r-packages",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "Load necessary results and R packages",
+    "text": "Load necessary results and R packages\n\nlibrary(mgcv)\nlibrary(here)\nlibrary(tidyverse)\nlibrary(sf)\nlibrary(terra)\nlibrary(lubridate)\nlibrary(picMaps)\nlibrary(mapview)\nlibrary(foreach)\nlibrary(doFuture)\n\nlocal_wd &lt;- here(\"_R_code\",\"task_8_propagating_variance\")\n\n#' Load model output\nvarprop_list &lt;- readRDS(here( \"_R_code\",\"task_2_est_g0_ESW\",\"output\",\"varprop_list.rds\"))\nload(here( \"_R_code\",\"task_4_fit_dsm_models\",\"output\",\"dsm_fit_final.RData\"))\nload(file.path(local_wd, \"output\",\"varprop_fit_sample.RData\"))\nload(here( \"_R_code\",\"task_7_predicting_abundance\",\"output\",\"clamp_df.RData\"))\n\n#' Locate environmental data for prediction\nenv_dir &lt;- here(\"_R_code\",\"task_5_download_prediction_data\",\"output\")\ntif_files &lt;- list.files(path = env_dir, pattern = \"\\\\.tif$\", full.names = TRUE)",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#create-raster-and-abundnace-storage-objects",
+    "href": "content/s8_prop_var/index.html#create-raster-and-abundnace-storage-objects",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "Create raster and abundnace storage objects",
+    "text": "Create raster and abundnace storage objects\n\nreps &lt;- nrow(bs_gs)\n\nenv_tmp &lt;- rast(tif_files[1])[[1]]\narea &lt;- rast(ext(env_tmp), resolution=res(env_tmp)); crs(area) &lt;- crs(env_tmp)\narea &lt;- cellSize(area, unit=\"km\")\nhi_r &lt;-  picMaps::hawaii_coast() %&gt;% rasterize(area, touches=TRUE, cover=TRUE, background=0)\nhi_r &lt;- 1-hi_r\nhi_r &lt;- ifel(hi_r==min(values(hi_r)), 0, hi_r)\ncenpac_r &lt;-  picMaps::cenpac() %&gt;% rasterize(area, touches=TRUE, cover=TRUE) * hi_r\nnames(cenpac_r) &lt;- \"cenpac_wt\"\neez_r &lt;- picMaps::hawaii_eez() %&gt;% rasterize(area, touches=TRUE, cover=TRUE) * hi_r\nnames(eez_r) &lt;- \"hi_eez_wt\"\nfkw_mgmt_r &lt;- picMaps::pfkw_mgmt() %&gt;% rasterize(area, touches=TRUE, cover=TRUE) * hi_r\nnames(fkw_mgmt_r) &lt;- \"fkw_assess_wt\"\npred_mult_r &lt;- c(area, cenpac_r, eez_r, fkw_mgmt_r)\npred_mult_df &lt;- as.data.frame(pred_mult_r, xy=TRUE, cells=TRUE)\n\nL_gs_data &lt;- predict(gs_fit, type=\"lpmatrix\")\nobs_gs &lt;- weighted.mean(fkw_gs$ANI_033,w=fkw_gs$ProbPel)\n\n#' -----------------------------------------------------------------------------\n#' Model covariate names\n#' -----------------------------------------------------------------------------\ner_vars &lt;- all.vars(as.list(er_fit$call)$formula[[3]])\ner_vars &lt;- er_vars[er_vars!=\"spline2use\"]\ngs_vars &lt;- all.vars(as.list(gs_fit$call)$formula[[3]])\ngs_vars &lt;- gs_vars[gs_vars!=\"spline2use\"]\nvar_nms &lt;- c(er_vars, gs_vars)\n\nclamp_df &lt;- filter(clamp_df, var%in%var_nms, var!=\"Latitude\")",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#loop-over-years-and-parameters-to-make-predictions",
+    "href": "content/s8_prop_var/index.html#loop-over-years-and-parameters-to-make-predictions",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "Loop over years and parameters to make predictions",
+    "text": "Loop over years and parameters to make predictions\n\nplan(\"multisession\",workers=length(tif_files))\n\nN_storage &lt;- foreach(i = 1:length(tif_files), .options.future=list(seed = TRUE)) %dofuture% { #i=year\n  env_yr &lt;- rast(tif_files[i])\n  env_yr &lt;- env_yr[[names(env_yr)%in%var_nms]]\n  dates &lt;- time(env_yr) %&gt;% unique()\n  year_i &lt;- year(dates)[1]\n  pred_est_r &lt;- rast(ext(env_yr), resolution=res(env_yr), nlyr=length(dates)); crs(pred_est_r) &lt;- crs(env_yr)\n  pred_var_r &lt;- pred_est_r\n  N_stor &lt;- expand.grid(par_rep=1:reps, date=dates) %&gt;% mutate(\n    N_cenpac = as.numeric(NA),\n    N_eez = as.numeric(NA),\n    N_assess = as.numeric(NA)\n  ) %&gt;% group_nest(date)\n  for(j in 1:length(dates)){ # j=day\n    env &lt;- env_yr[[time(env_yr)==dates[j]]]\n    env_df &lt;- as.data.frame(env, xy=TRUE, cells=TRUE, na.rm=FALSE)\n    pred_r &lt;- rast(ext(env_yr), resolution=res(env_yr), nlyr=reps); crs(pred_r) &lt;- crs(env_yr)\n    for(l in 1:nrow(clamp_df)){\n      env_df[clamp_df$var[l]] &lt;- ifelse( env_df[[clamp_df$var[l]]]&gt;clamp_df[l,\"high\"], clamp_df[l,\"high\"], env_df[[clamp_df$var[l]]])\n      env_df[clamp_df$var[l]] &lt;- ifelse( env_df[[clamp_df$var[l]]]&lt;clamp_df[l,\"low\"], clamp_df[l,\"low\"], env_df[[clamp_df$var[l]]])\n    }\n    env_df$Latitude &lt;- env_df$y\n    env_df[[\"Jmat\"]] &lt;- matrix(0, nrow(env_df), 5)\n    L_er_vp &lt;-  predict(er_fit_vp, newdata=env_df, type=\"lpmatrix\")\n    L_gs &lt;- predict(gs_fit, newdata=env_df, type=\"lpmatrix\")\n    for(k in 1:reps){ # k=par_rep\n      pred_gs_bias &lt;- exp(L_gs_data%*%bs_gs[k,])\n      gs_bias_corr &lt;- obs_gs/mean(pred_gs_bias)\n      pred_k &lt;-  as.vector(exp(L_er_vp %*% bs_er[k,]) * exp(L_gs %*% bs_gs[k,])) * gs_bias_corr\n      pred_k &lt;- pred_k * pred_mult_df$area\n      pred_r[[k]][env_df$cell] &lt;- pred_k\n      N_stor$data[[j]]$N_cenpac[k] &lt;-  sum(pred_k* pred_mult_df$cenpac_wt, na.rm=T)\n      N_stor$data[[j]]$N_eez[k] &lt;-  sum(pred_k* pred_mult_df$hi_eez_wt, na.rm=T)\n      N_stor$data[[j]]$N_assess[k] &lt;- sum(pred_k* pred_mult_df$fkw_assess_wt, na.rm=T)\n    } # end k\n    pred_est_r[[j]] &lt;- app(pred_r, mean)\n    pred_var_r[[j]] &lt;- app(pred_r, var)\n  } # end j\ntime(pred_est_r) &lt;- dates\nest_outfile &lt;-  paste0(\"pred_est_\",year_i,\".tif\")\nvar_outfile &lt;- paste0(\"pred_var_\",year_i,\".tif\")\nwriteRaster(pred_est_r, file.path(local_wd,\"output\",\"predictions\", est_outfile), overwrite=TRUE)\nwriteRaster(pred_var_r, file.path(local_wd,\"output\",\"predictions\", var_outfile), overwrite=TRUE)\n\ntibble(year=year_i, data=list(N_stor), est_file=est_outfile, var_file=var_outfile)\n} # end i\nplan(\"sequential\")\n\nN_storage &lt;- do.call(bind_rows, N_storage)\n\nN_storage &lt;- N_storage %&gt;% unnest(cols=data) %&gt;% unnest(cols=data)\nwrite_csv(N_storage, file=file.path(local_wd,\"output\",\"N_varprop.csv\"))",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#calculate-cvs-and-interval-estimates",
+    "href": "content/s8_prop_var/index.html#calculate-cvs-and-interval-estimates",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "Calculate CVs and Interval Estimates",
+    "text": "Calculate CVs and Interval Estimates\n\nN_cv &lt;- N_storage %&gt;% group_by(year) %&gt;% \n  summarise(\n    N_cenpac_m=mean(N_cenpac),  N_cenpac_sd=sd(N_cenpac),\n    N_eez_m=mean(N_eez),  N_eez_sd=sd(N_eez),\n    N_assess_m=mean(N_assess),  N_assess_sd=sd(N_assess),\n  ) %&gt;% mutate(\n    N_cenpac_cv = N_cenpac_sd/N_cenpac_m,\n    N_eez_cv = N_eez_sd/N_eez_m,\n    N_assess_cv = N_assess_sd/N_assess_m\n  ) %&gt;% mutate(year = as.character(year))\n\nN_cv_avg &lt;- filter(N_storage, year!=2017) %&gt;% \n  summarise(\n    N_cenpac_m=mean(N_cenpac),  N_cenpac_sd=sd(N_cenpac),\n    N_eez_m=mean(N_eez),  N_eez_sd=sd(N_eez),\n    N_assess_m=mean(N_assess),  N_assess_sd=sd(N_assess),\n  ) %&gt;% mutate(\n    N_cenpac_cv = N_cenpac_sd/N_cenpac_m,\n    N_eez_cv = N_eez_sd/N_eez_m,\n    N_assess_cv = N_assess_sd/N_assess_m\n  ) %&gt;% mutate(year=\"avg 2020-2024\") %&gt;% \n  relocate(year, .before=1)\nN_cv &lt;- bind_rows(N_cv_avg, N_cv)\n\n\nN_cv &lt;- N_cv %&gt;% select(year, N_cenpac_cv,  N_eez_cv,  N_assess_cv) %&gt;% \n  mutate(\n    sigma_cenpac = sqrt(log(1+N_cenpac_cv^2)),\n    sigma_eez = sqrt(log(1+N_eez_cv^2)),\n    sigma_assess = sqrt(log(1+N_assess_cv^2))\n  )\nN_summ &lt;- read_csv(here(\"_R_code\",\"task_7_predicting_abundance\",\"output\",\"N_summ.csv\"))\nN_cv &lt;- N_cv %&gt;% full_join(N_summ)\nN_cv &lt;- N_cv %&gt;% mutate(\n  mu_cenpac = log(N_cenpac_est)-sigma_cenpac^2/2,\n  mu_eez = log(N_eez_est)-sigma_eez^2/2,\n  mu_assess = log(N_fkw_mgmt_est)-sigma_assess^2/2,\n  CI_low_cenpac = exp(mu_cenpac - 1.96*sigma_cenpac),\n  CI_hi_cenpac = exp(mu_cenpac + 1.96*sigma_cenpac),\n  CI_low_eez = exp(mu_eez - 1.96*sigma_eez),\n  CI_hi_eez = exp(mu_eez + 1.96*sigma_eez),\n  CI_low_assess = exp(mu_assess - 1.96*sigma_assess),\n  CI_hi_assess = exp(mu_assess + 1.96*sigma_assess)\n)\nN_cv &lt;- N_cv %&gt;% select(year, \n                        N_cenpac_est, CI_low_cenpac, CI_hi_cenpac, N_cenpac_cv,\n                        N_eez_est, CI_low_eez, CI_hi_eez, N_eez_cv,\n                        N_fkw_mgmt_est, CI_low_assess, CI_hi_assess, N_assess_cv)\nwrite_csv(N_cv, file=file.path(local_wd,\"output\",\"N_cv_varprop.csv\"))\n\n\nAbundance uncertainty results\n\n\nCentral Pacific Area Results\n\n\n# A tibble: 7 × 5\n  year          N_cenpac_est CI_low_cenpac CI_hi_cenpac N_cenpac_cv\n  &lt;chr&gt;                &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;\n1 avg 2020-2024        33227         9826.       83426.       0.589\n2 2017                 32481        10952.       75564.       0.524\n3 2020                 30971        10350.       72438.       0.529\n4 2021                 29092        10146.       66317.       0.508\n5 2022                 24825         8851.       55835.       0.497\n6 2023                 45604        15329.      106296.       0.526\n7 2024                 35645        11914.       83362.       0.528\n\n\n\n\nFKW Assessment Area Results\n\n\n# A tibble: 7 × 5\n  year          N_fkw_mgmt_est CI_low_assess CI_hi_assess N_assess_cv\n  &lt;chr&gt;                  &lt;dbl&gt;         &lt;dbl&gt;        &lt;dbl&gt;       &lt;dbl&gt;\n1 avg 2020-2024           4526         1548.       10440.       0.517\n2 2017                    4648         1461.       11268.       0.559\n3 2020                    4934         1685.       11392.       0.518\n4 2021                    4124         1474.        9260.       0.496\n5 2022                    4466         1487.       10469.       0.530\n6 2023                    4262         1481.        9737.       0.510\n7 2024                    4843         1721.       10915.       0.499\n\n\n\n\nHawaii EEZ Results\n\n\n# A tibble: 7 × 5\n  year          N_eez_est CI_low_eez CI_hi_eez N_eez_cv\n  &lt;chr&gt;             &lt;dbl&gt;      &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;\n1 avg 2020-2024      1745       531.     4310.    0.574\n2 2017               1828       498.     4804.    0.630\n3 2020               1950       589.     4839.    0.579\n4 2021               1545       508.     3649.    0.537\n5 2022               1744       489.     4509.    0.615\n6 2023               1639       525.     3930.    0.549\n7 2024               1848       609.     4357.    0.535",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#load-r-packages-and-previous-results",
+    "href": "content/s8_prop_var/index.html#load-r-packages-and-previous-results",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "Load R packages and previous results",
+    "text": "Load R packages and previous results\n\nlibrary(here)\nlibrary(tidyverse)\nlibrary(sf)\nlibrary(terra)\nlibrary(lubridate)\nlibrary(picMaps)\nlibrary(mapview)\nlibrary(tidyterra)\nlibrary(ggspatial)\nlibrary(ggpubr)\nlibrary(nmfspalette)\n\nlocal_wd &lt;- here(\"_R_code\",\"task_8_propagating_variance\")\n\n#' -----------------------------------------------------------------------------\n#' Load varprop prediction output file names\n#' -----------------------------------------------------------------------------\n\npred_files &lt;- list.files(file.path(local_wd, \"output\",\"predictions\"))\nest_files &lt;- pred_files[grep(\"est\", pred_files)]\nvar_files &lt;- pred_files[grep(\"var\", pred_files)]",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#calculate-cvs-for-each-ratser-cell",
+    "href": "content/s8_prop_var/index.html#calculate-cvs-for-each-ratser-cell",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "Calculate CVs for each ratser cell",
+    "text": "Calculate CVs for each ratser cell\n\nyears &lt;- NULL\ncv_raster &lt;- NULL\nmean_raster &lt;- NULL\nvar_raster &lt;- NULL\n\nfor(i in 1:length(est_files)){\n  est_r &lt;- rast(file.path(local_wd, \"output\",\"predictions\",est_files[i]))\n  years[i] &lt;- time(est_r)[1] %&gt;% year()\n  var_r &lt;- rast(file.path(local_wd, \"output\",\"predictions\",var_files[i]))\n  var_raster[[i]] &lt;- app(var_r, mean) + app(est_r,var)\n  mean_raster[[i]] &lt;- app(est_r,mean)\n  cv_raster[[i]] &lt;- app(var_raster[[i]], sqrt) / mean_raster[[i]]\n}\ncv_raster &lt;- do.call(c, cv_raster)\nnames(cv_raster) &lt;- years\nmean_raster &lt;- do.call(c, mean_raster)\nnames(mean_raster) &lt;- years\nvar_raster &lt;- do.call(c, var_raster)\nnames(var_raster) &lt;- years\n\nvar_20_24 &lt;- app(var_raster[[-1]], mean) + app(mean_raster[[-1]], var)\nmean_20_24 &lt;- app(mean_raster[[-1]], mean)\ncv_20_24 &lt;- app(var_20_24, sqrt)/mean_20_24\ncv_raster &lt;- c(cv_20_24, cv_raster)\nnames(cv_raster)[1] &lt;- \"Avg 2020-2024\"\n\nwriteRaster(cv_raster, file.path(local_wd, \"output\",\"yearly_cv.tif\"), overwrite=T)",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#create-yearly-spatial-cv-plots",
+    "href": "content/s8_prop_var/index.html#create-yearly-spatial-cv-plots",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "Create yearly spatial CV plots",
+    "text": "Create yearly spatial CV plots\n\nhi &lt;- picMaps::hawaii_coast()\neez &lt;- picMaps::hawaii_eez()\nfkwm &lt;- picMaps::pfkw_mgmt()\n\nppp &lt;- vector(\"list\",nlyr(cv_raster))\n\nppp[[1]] &lt;- ggplot() + geom_spatraster(data=cv_raster[[1]]) +\n  layer_spatial(hi, fill=\"white\", color=NA) +\n  layer_spatial(eez, color=\"white\", fill=NA, linetype=\"dashed\",lwd=0.5) +\n  layer_spatial(fkwm, color=\"white\", fill=NA,lwd=0.5) +\n  scale_fill_viridis_c(option = \"H\", na.value = NA, name=\"CV\") +\n  scale_x_continuous(breaks=c(175, 228)) + scale_y_continuous(breaks=c(0, 40)) + \n  theme_bw() + #theme(legend.position=\"none\") +\n  theme(axis.text = element_blank(), axis.ticks = element_blank()) +\n  coord_sf(expand = FALSE) + \n  ggtitle(\"Avg. 2020-2024\")\n\nlll &lt;- get_legend(ppp[[1]])\nppp[[1]] &lt;- ppp[[1]] + theme(legend.position=\"none\")\n\n\nfor(i in 2:nlyr(cv_raster)){\n  ppp[[i]] &lt;- ggplot() + geom_spatraster(data=cv_raster[[i]]) +\n    layer_spatial(hi, fill=\"white\", color=NA) +\n    layer_spatial(eez, color=\"white\", fill=NA, linetype=\"dashed\",lwd=0.5) +\n    layer_spatial(fkwm, color=\"white\", fill=NA,lwd=0.5) +\n    scale_fill_viridis_c(option = \"H\", na.value = NA, name=\"CV\") + \n    scale_x_continuous(breaks=c(175, 228)) + scale_y_continuous(breaks=c(0, 40)) + \n    theme_bw() + theme(legend.position=\"none\") +\n    theme(axis.ticks = element_blank()) + \n    theme(axis.text = element_blank(), axis.ticks = element_blank()) +\n    coord_sf(expand = FALSE) + \n    ggtitle(names(cv_raster)[i])\n}\n\npout &lt;- ggarrange(ppp[[1]], ppp[[2]], ppp[[3]], ppp[[4]], ppp[[5]], ppp[[6]], ppp[[7]],lll)\nggsave(pout, file=file.path(local_wd, \"output\",\"cenpac_cv_fig.png\"), width=6.5, height=6.2)\n\n## EEZ and Assessment areas\nppp &lt;- vector(\"list\",nlyr(cv_raster))\neez_asses &lt;- st_union(eez, fkwm) %&gt;% st_shift_longitude()\nbound  &lt;- eez_asses %&gt;% st_buffer(100000) %&gt;% st_shift_longitude()\ncv_clip &lt;- crop(cv_raster, vect(bound)) %&gt;% mask(eez_asses)\n\nppp[[1]] &lt;- ggplot() + geom_spatraster(data=cv_clip[[1]]) +\n  layer_spatial(hi, fill=\"black\", color=NA) +\n  layer_spatial(eez, color=\"black\", fill=NA, linetype=\"dashed\",lwd=0.5) +\n  layer_spatial(fkwm, color=\"black\", fill=NA,lwd=0.5) +\n  scale_fill_viridis_c(option = \"H\", na.value = NA, name=\"CV\") +\n  theme_bw() + \n  theme(axis.text = element_blank(), axis.ticks = element_blank(), panel.grid.major = element_blank()) +\n  coord_sf(expand = FALSE) + \n  ggtitle(\"Avg. 2020-2024\")\n\nlll &lt;- get_legend(ppp[[1]])\nppp[[1]] &lt;- ppp[[1]] + theme(legend.position=\"none\")\n\n\nfor(i in 2:nlyr(cv_raster)){\n  ppp[[i]] &lt;- ggplot() + geom_spatraster(data=cv_clip[[i]]) +\n    layer_spatial(hi, fill=\"black\", color=NA) +\n    layer_spatial(eez, color=\"black\", fill=NA, linetype=\"dashed\",lwd=0.5) +\n    layer_spatial(fkwm, color=\"black\", fill=NA, lwd=0.5) +\n    scale_fill_viridis_c(option = \"H\", na.value = NA, name=\"CV\") + \n    theme_bw() + theme(legend.position=\"none\") +\n    theme(axis.text = element_blank(), axis.ticks = element_blank(), panel.grid.major = element_blank()) +\n    coord_sf(expand = FALSE) + \n    ggtitle(names(cv_raster)[i])\n}\n\npout &lt;- ggarrange(ppp[[1]], ppp[[2]], ppp[[3]], ppp[[4]], ppp[[5]], ppp[[6]], ppp[[7]],lll)\nggsave(pout, file=file.path(local_wd, \"output\",\"eez_assess_cv_fig.png\"), width=6.5, height=4.5)",
+    "crumbs": [
+      "8. Estimting full spatial abundance uncertainty"
+    ]
+  },
+  {
+    "objectID": "content/s8_prop_var/index.html#spatial-cv-figures",
+    "href": "content/s8_prop_var/index.html#spatial-cv-figures",
+    "title": "Assessing Abundance Prediction Uncertainty",
+    "section": "Spatial CV figures",
+    "text": "Spatial CV figures\n\nCentral Pacfic region\n\n\n\n\n\n\n\n\n\n\n\nFKW Assessment Area and Hawaii EEZ",
     "crumbs": [
       "8. Estimting full spatial abundance uncertainty"
     ]
