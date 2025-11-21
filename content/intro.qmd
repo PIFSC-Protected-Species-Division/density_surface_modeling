@@ -2,6 +2,17 @@
 title: "Introduction"
 ---
 
+## Density Surface Modeling
+
 ## False Killer Whales
 
-## Density Surface Modeling
+False killer whales (*Pseudorca crassidens*) are a large toothed whale that inhabit sub-tropical and tropical oceanic domains worldwide, and considered rare throughout their range. Three distinct populations of false killer whales are found within the waters of the Hawaiian Exclusive Economic Zone (EEZ): two insular populations, one around the main Hawaiian Islands (MHI) and one around the Northwestern Hawaiian Islands (NWHI), and one wide-ranging pelagic population. 
+
+(add stock figure here)
+
+Pelagic false killer whales experience a greater degree of overlap with pelagic fishing vessels, and have a history of depredating bait and catch. Bycatch of false killer whales has exceeded allowable levels, leading to the formation of a Take Reduction Team and Take Reduction Plan to reduce serious injury and mortality from fishing operations, as required by the Marine Mammal Protection Act. NOAA Fisheries typically assesses marine mammal stocks at the EEZ level, however, as the EEZ represents a political boundary rather than a biological one, an assessment area beyond the EEZ was developed in an effort for a more comprehensive evaluation of the population. The assessment area for Hawaiʻi pelagic false killer whales is defined by a minimum convex polygon of a 35-km buffer around all genetic, telemetry, sighting, and bycatch location data known or assumed to be of Hawaiʻi pelagic stock animals. Assessing abundance and distribution of pelagic false killer whales throughout their range would improve ongoing efforts to measure and mitigate impacts from fisheries interactions.
+
+
+Here, we use density surface modeling to obtain abundance estimates for pelagic false killer whales in three regions: the U.S. Hawaiian EEZ, the pelagic stock assessment area, and the broader central Pacific. 
+
+(add all study areas here)
