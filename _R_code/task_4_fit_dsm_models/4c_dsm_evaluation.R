@@ -22,6 +22,12 @@ aic_gs <- read_csv(file.path(local_wd, "output","aic_gs.csv"))
 
 # Use top AIC model minus non-significant terms
 
+# er_fit <- gam(formula =as.formula(aic_er$form[1]),
+#               offset = log(effort),
+#               family = tw(),
+#               method="REML", 
+#               data = fkw_dsm_data, weights = ProbPel)
+
 er_fit <- gam(formula = nSI_033 ~ te(sst, Latitude, bs = spline2use, k = 5),
               offset = log(effort),
               family = tw(),

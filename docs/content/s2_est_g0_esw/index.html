@@ -102,6 +102,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -302,7 +331,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" class="level1">
 <h1>B. Estimate ESW and <em>g</em>(0) Relative to Beaufort Sea State</h1>
-<p>If you are not continuing from step A in the same session, the following code must be executed to load the appropriate packages and processed data from setp A. Otherwise, this code chunk can be skipped.</p>
+<p>If you are not continuing from step A in the same session, the following code must be executed to load the appropriate packages and processed data from step A. Otherwise, this code chunk can be skipped.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' load packages</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
@@ -323,6 +352,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="estimate-effective-strip-width-esw-relative-to-beaufort-sea-state" class="level3">
 <h3 class="anchored" data-anchor-id="estimate-effective-strip-width-esw-relative-to-beaufort-sea-state">Estimate Effective Strip Width (ESW) relative to Beaufort sea state</h3>
+<p>Here we are using the <code>distance</code> package to fit a half-normal detection function: <span class="math display">\[
+p_i(x|\boldsymbol{\theta}_d) = \exp(-x/2\sigma_i^2)
+\]</span> where the detection range parameter is a function of the Beaufort sea state, <span class="math inline">\(b_i\)</span>, on survey segment <span class="math inline">\(i\)</span>, <span class="math display">\[
+\log \sigma_i = \theta_{d,0} + \theta_{d,b} b_i.
+\]</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">distance =</span> input_dat<span class="sc">$</span>esw.dat<span class="sc">$</span>PerpDistKm, <span class="at">beaufort =</span> input_dat<span class="sc">$</span>esw.dat<span class="sc">$</span>Bft)</span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> df[<span class="fu">complete.cases</span>(df),]</span>
@@ -371,6 +405,9 @@ N in covered region 274.6616170 24.21359682 0.08815792</code></pre>
 </div>
 </div>
 <p><strong>Estimate ESW for all segments</strong></p>
+<p>In this step the effective strip width (<span class="math inline">\(ESW_i\)</span>) is calculated for each survey segment, <span class="math display">\[
+ESW_i = \int_0^wp_i(x|\boldsymbol{\theta}_d)dx
+\]</span> where <span class="math inline">\(w\)</span> is the truncation width of the transects, here is is 5.5km as can be seen in the previous code. The <span class="math inline">\(ESW\)</span> is the width of the strip that would result from a survey with perfect detection. Now the fitted <span class="math inline">\(ESW\)</span> are saved for future if the user is not continuing on to estimate <span class="math inline">\(g(0;b_i)\)</span>, the probability of detection on the trackline when Beaufort sea state equals <span class="math inline">\(b_i\)</span>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>modeling_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(<span class="fu">here</span>(), <span class="st">"_R_code"</span>, <span class="st">"task_1_segment_das_data"</span>, <span class="st">"output"</span>,<span class="st">"seg_sight_out.rds"</span>))</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>modeling_data<span class="sc">$</span>segdata <span class="ot">&lt;-</span> modeling_data<span class="sc">$</span>segdata <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">beaufort =</span> avgBft)</span>
@@ -379,6 +416,11 @@ N in covered region 274.6616170 24.21359682 0.08815792</code></pre>
 </section>
 <section id="estimate-g0-relative-to-beaufort-sea-state" class="level3">
 <h3 class="anchored" data-anchor-id="estimate-g0-relative-to-beaufort-sea-state">Estimate <em>g</em>(0) relative to Beaufort sea state</h3>
+<p>Now we can use the <span class="math inline">\(ESW\)</span> results to fit a very general DSM model over FKW detections. The density model includes a Beaufort sea state effect so we can assess the relative density of detections in different sea states. By assuming that detection along the trackline is <span class="math inline">\(g(0;b)=1\)</span> for <span class="math inline">\(b = 0\)</span> or <span class="math inline">\(1\)</span> (the calmest seas) we can estimate trackline detection probability for FKW surveys. For the DSM model we need to add the effective survey area, <span class="math display">\[
+ESA_i = 2 \times ESW_i \times L_i
+\]</span> this is used to assess the observed density, <span class="math inline">\(y_i\)</span> of FKW for each segment. Then a generalized additive model (GAM) is fitted to the observed densities with log expected value <span class="math display">\[
+\log E(y_i) = \log ESA_i + f(b_i) + f(Lon_i,Lat_i) + f(year_i)
+\]</span> the <span class="math inline">\(f(\dots)\)</span> terms are nonparametric function effects. To enforce the conditions that <span class="math inline">\(f(b)\)</span> should be monotonically decreasing as sea state increases the <code>scam</code> package is used instead of <code>mgcv</code>. When the smooth formulation <code>bs='mpd'</code> is used this monotonicity is enforced.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>g0_dat <span class="ot">&lt;-</span> input_dat<span class="sc">$</span>g0.dat</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>g0_dat<span class="sc">$</span>resp <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(g0_dat[,<span class="fu">paste0</span>(<span class="st">"nSI_"</span>,sp.code)])</span>
@@ -399,6 +441,11 @@ N in covered region 274.6616170 24.21359682 0.08815792</code></pre>
 <span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gamma=</span><span class="fl">1.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 <p><strong>Estimate relative <em>g</em>(0) for each Beaufort sea state</strong></p>
+<p>Now that the model is fit, we can estimate <span class="math inline">\(g(0;b)\)</span> by examining the relative expected density for any specific segment under different Beaufort conditions. Because the <span class="math inline">\(f(b_i)\)</span> term is additive it does not matter which is used because they will all be the same. So, we just formulate a generic segment with varying Beaufort states. For the predicted density, <span class="math display">\[
+\mu_b = E(y_*) = \exp( \log ESA_* + f(b) + f(Lon_*,Lat_*) + f(year_*)),
+\]</span> the estimated trackline probability is <span class="math display">\[
+g(0;b) = \mu_b / \mu_0
+\]</span></p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>newdata_g0 <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">beaufort =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">7</span>,</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">mlat =</span> <span class="fu">mean</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>mlat, <span class="at">na.rm=</span><span class="cn">TRUE</span>),</span>
@@ -415,7 +462,7 @@ N in covered region 274.6616170 24.21359682 0.08815792</code></pre>
 </div>
 </div>
 <p><strong>Add <em>g</em>(0) estimate to all segments and save final modeling data set</strong></p>
-<p>Linear interpolation when Beaufort sea state changed during the segment.</p>
+<p>To account for survey segments with noninteger Beaufort states, becuase it changed over the course of the segment, the <span class="math inline">\(g(0;b)\)</span> value was linearly interpolated between the adjacent <span class="math inline">\(b\)</span> values. Then model data for the current survey is exported for use in the Hawaii pelagic false killer whale density surface model. The <span class="math inline">\(g(0;b_i)\)</span> and <span class="math inline">\(ESW_i\)</span> will serve as an effort offset.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>BFlow <span class="ot">&lt;-</span> <span class="fu">floor</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>beaufort <span class="sc">+</span> <span class="dv">1</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>BFhigh <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>beaufort <span class="sc">+</span> <span class="dv">1</span>)</span>

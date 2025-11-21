@@ -86,7 +86,7 @@ saveRDS(input_dat, file.path(localwd, "output","esw_g0_input.rds"))
 
 # B. Estimate ESW and *g*(0) Relative to Beaufort Sea State
 
-If you are not continuing from step A in the same session, the following code must be executed to load the appropriate packages and processed data from setp A. Otherwise, this code chunk can be skipped.
+If you are not continuing from step A in the same session, the following code must be executed to load the appropriate packages and processed data from step A. Otherwise, this code chunk can be skipped.
 
 ```{r}
 #| eval: true
@@ -112,6 +112,14 @@ input_dat <- readRDS(file.path(localwd, "output","esw_g0_input.rds"))
 
 ### Estimate Effective Strip Width (ESW) relative to Beaufort sea state
 
+Here we are using the `distance` package to fit a half-normal detection function:
+$$
+p_i(x|\boldsymbol{\theta}_d) = \exp(-x/2\sigma_i^2)
+$$
+where the detection range parameter is a function of the Beaufort sea state, $b_i$, on survey segment $i$,
+$$
+\log \sigma_i = \theta_{d,0} + \theta_{d,b} b_i.
+$$
 ```{r}
 #| eval: true
 #| output: true
@@ -126,6 +134,12 @@ plot(detfun, showpoints = TRUE)
 
 **Estimate ESW for all segments**
 
+In this step the effective strip width ($ESW_i$) is calculated for each survey segment, 
+$$
+ESW_i = \int_0^wp_i(x|\boldsymbol{\theta}_d)dx
+$$
+where $w$ is the truncation width of the transects, here is is 5.5km as can be seen in the previous code. The $ESW$ is the width of the strip that would result from a survey with perfect detection. Now the fitted $ESW$ are saved for future if the user is not continuing on to estimate $g(0;b_i)$, the probability of detection on the trackline when Beaufort sea state equals $b_i$.
+
 ```{r}
 #| output: false
 
@@ -135,6 +149,16 @@ modeling_data$segdata[paste0("esw","_",sp.code)] <- predict(detfun, modeling_dat
 ```
 
 ### Estimate *g*(0) relative to Beaufort sea state
+
+Now we can use the $ESW$ results to fit a very general DSM model over FKW detections. The density model includes a Beaufort sea state effect so we can assess the relative density of detections in different sea states. By assuming that detection along the trackline is $g(0;b)=1$ for $b = 0$ or $1$ (the calmest seas) we can estimate trackline detection probability for FKW surveys. For the DSM model we need to add the effective survey area,
+$$
+ESA_i = 2 \times ESW_i \times L_i
+$$
+this is used to assess the observed density, $y_i$ of FKW for each segment. Then a generalized additive model (GAM) is fitted to the observed densities with log expected value
+$$
+\log E(y_i) = \log ESA_i + f(b_i) + f(Lon_i,Lat_i) + f(year_i) 
+$$
+the $f(\dots)$ terms are nonparametric function effects. To enforce the conditions that $f(b)$ should be monotonically decreasing as sea state increases the `scam` package is used instead of `mgcv`. When the smooth formulation `bs='mpd'` is used this monotonicity is enforced.
 
 ```{r}
 #| output: false
@@ -160,6 +184,15 @@ g0_est<-scam::scam(formula = resp ~ s(I(pmax(beaufort-1,0)), bs='mpd', k=4)
 
 **Estimate relative *g*(0) for each Beaufort sea state**
 
+Now that the model is fit, we can estimate $g(0;b)$ by examining the relative expected density for any specific segment under different Beaufort conditions. Because the $f(b_i)$ term is additive it does not matter which is used because they will all be the same. So, we just formulate a generic segment with varying Beaufort states. For the predicted density, 
+$$
+\mu_b = E(y_*) = \exp( \log ESA_* + f(b) + f(Lon_*,Lat_*) + f(year_*)),
+$$
+the estimated trackline probability is
+$$
+g(0;b) = \mu_b / \mu_0
+$$
+
 ```{r}
 newdata_g0 <- data.frame(beaufort = 0:7,
                          mlat = mean(modeling_data$segdata$mlat, na.rm=TRUE),
@@ -174,7 +207,7 @@ round(Rg0,2) # for display only
 
 **Add *g*(0) estimate to all segments and save final modeling data set**
 
-Linear interpolation when Beaufort sea state changed during the segment.
+To account for survey segments with noninteger Beaufort states, becuase it changed over the course of the segment, the $g(0;b)$ value was linearly interpolated between the adjacent $b$ values. Then model data for the current survey is exported for use in the Hawaii pelagic false killer whale density surface model. The $g(0;b_i)$ and $ESW_i$ will serve as an effort offset. 
 
 ```{r}
 #| output: false
