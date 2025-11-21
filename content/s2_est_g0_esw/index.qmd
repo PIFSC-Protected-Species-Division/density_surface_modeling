@@ -223,6 +223,11 @@ saveRDS(modeling_data, file.path(localwd, "output","seg_sight_out_g0_ESW.rds"))
 
 # C. Monte Carlo Estimation of ESW and *g*(0) Parameter Covariance Matrix
 
+To propagate the uncertainly for effort terms into the FKW DSM model the covariance matrix for the detection terms needs to be estimated. Because the $g(0;b)$ model depends on the $ESA_i$ values calculated from distance model. Therefore, the most straightforward method to account for the covariance between the distance sampling parameters, $\theta_d$ and the $g(0,b)$ parameters, $\theta_g$ is to perform a Monte Carlo simulation. First, we sample 5,000 $\theta_d$ replications from its large sample distribution, $N(\hat{\theta}_d, V_d)$ where $\hat{\theta}_d$ are the estimated distance function parameters and $V_d$ is the estimated covariance matrix. For each replication we calculate $ESA_i$ for the survey segments and fit the scam model to estimate the $f(b)$ parameters, $\theta_g$. The full estimated covariance matrix, $V_\theta$, for  = $\hat{\theta}=(\hat{\theta}_d, \hat{\theta}_g)$ was estimated with the empirical covariance matrix of the 5,000  samples. 
+
+**Warning!!!** The following Monte Carlo code takes a very long time to run for the FKW analysis. To improve speed of the simulation we have looped over blocks of smaller simulation in parallel. For the code below we use `npar <- 10` separate `R` instances, each sampling `samps <- 500` $\theta$ values for a total of 5,000 $\theta$ replications. If you want to see the code in action we suggest that you dramatically reduce the overall sample size to assess how long it will take the full sample to execute. 
+
+
 ```{r}
 #| eval: false
 
@@ -265,6 +270,8 @@ g0_par_sim <- foreach(i = 1:npar,  .options.future = list(seed = TRUE), .errorha
 }
 plan("sequential")
 ```
+
+Here we are combining the parallel samples back together and calculating the covatiance matrix $V_\theta$. Then exporting the results for use in the abundance prediction uncertainty assessment stage. 
 
 ```{r}
 #| eval: false
