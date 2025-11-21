@@ -2,11 +2,12 @@
 title: "Download and Merge Environmental data to segments"
 ---
 
+**Note!!!** *Currently this is the way that PIFSC PSD has downloaded oceanographic model data from Copernicus Marine Service ([https://marine.copernicus.eu/](https://marine.copernicus.eu/)). This, more complicated, method was necessary because the `CopernicusMarine`package did not have the ability to download ocean product data subsets. However, as of September 2025 this capability was repaired. So, the `CopernicusMarine` package (available from [https://pepijn-devries.github.io/CopernicusMarine/](https://pepijn-devries.github.io/CopernicusMarine/)) is probably a more efficient way to download the data and we will investigate this further.*
+
+
 # A. Setup Python Environment 
 
-Code to download data from the Copernicus Marine Data Store
-The user must create a login with a username and password to access their data.
-Username and password is required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.
+Copernicus Marine Service has created a python API for downloading subsets of their data products. To use this through `R` the user has to install python on their machine as well as the `reticulate` package for `R`. The user has to create a user name and password for Copernicus Marine Service account, these will be required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.
 
 ```{r}
 #| eval: false
@@ -14,7 +15,7 @@ Username and password is required in the code below. This step is run only the f
 library(reticulate) 
 
 ## Run this if Python is not installed on the machine
-install_python() 
+# install_python() 
 
 reticulate::virtualenv_create(envname = "cm_py")
 reticulate::virtualenv_install("cm_py", packages = c("copernicusmarine"))
@@ -26,6 +27,8 @@ cm$login("username","password")
 ```
 
 # B. Download Copernicus Marine Data
+
+After the python connections are established above, we can then download the ocean model data.
 
 ```{r}
 #| eval: false
@@ -62,6 +65,8 @@ segdata <- segdata %>% mutate(
   UTC = as.POSIXct(paste(year, month, day, sep = "-"), format = "%Y-%m-%d", tz = "UTC") + hms(mtime)
 ) %>% arrange(UTC)
 ```
+
+The downloading and merging process is time consuming. Therefore we set up a parallel loop to download the data for each year simultaneously. 
 
 ```{r}
 #| eval: false

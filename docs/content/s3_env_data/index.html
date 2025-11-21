@@ -241,14 +241,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
+<p><strong>Note!!!</strong> <em>Currently this is the way that PIFSC PSD has downloaded oceanographic model data from Copernicus Marine Service (<a href="https://marine.copernicus.eu/">https://marine.copernicus.eu/</a>). This, more complicated, method was necessary because the <code>CopernicusMarine</code>package did not have the ability to download ocean product data subsets. However, as of September 2025 this capability was repaired. So, the <code>CopernicusMarine</code> package (available from <a href="https://pepijn-devries.github.io/CopernicusMarine/">https://pepijn-devries.github.io/CopernicusMarine/</a>) is probably a more efficient way to download the data and we will investigate this further.</em></p>
 <section id="a.-setup-python-environment" class="level1">
 <h1>A. Setup Python Environment</h1>
-<p>Code to download data from the Copernicus Marine Data Store The user must create a login with a username and password to access their data. Username and password is required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.</p>
+<p>Copernicus Marine Service has created a python API for downloading subsets of their data products. To use this through <code>R</code> the user has to install python on their machine as well as the <code>reticulate</code> package for <code>R</code>. The user has to create a user name and password for Copernicus Marine Service account, these will be required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate) </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="do">## Run this if Python is not installed on the machine</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">install_python</span>() </span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># install_python() </span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">virtualenv_create</span>(<span class="at">envname =</span> <span class="st">"cm_py"</span>)</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>reticulate<span class="sc">::</span><span class="fu">virtualenv_install</span>(<span class="st">"cm_py"</span>, <span class="at">packages =</span> <span class="fu">c</span>(<span class="st">"copernicusmarine"</span>))</span>
@@ -261,6 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="b.-download-copernicus-marine-data" class="level1">
 <h1>B. Download Copernicus Marine Data</h1>
+<p>After the python connections are established above, we can then download the ocean model data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
@@ -291,6 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">UTC =</span> <span class="fu">as.POSIXct</span>(<span class="fu">paste</span>(year, month, day, <span class="at">sep =</span> <span class="st">"-"</span>), <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>, <span class="at">tz =</span> <span class="st">"UTC"</span>) <span class="sc">+</span> <span class="fu">hms</span>(mtime)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(UTC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
+<p>The downloading and merging process is time consuming. Therefore we set up a parallel loop to download the data for each year simultaneously.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">unique</span>(segdata<span class="sc">$</span>year)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
