@@ -2,6 +2,15 @@
 title: "Assessing Areas of Extrapolation"
 ---
 
+**Alert!!!** *Here we use the methods within the `dsmextra` R package to examine spatial areas of extrapolation. However, at the time this code was written, the `dsmextra` package was not functioning due to recent changes in the R spatial data ecosystem. Therefore, we pulled the necessary components from the package and repackaged them as `dsmextraLite` available for download and installation with the code snippet:*
+```{r}
+#| eval: false
+install.packages('dsmextraLite', 
+repos=c('https://pifsc-protected-species-division.r-universe.dev',
+        'https://cloud.r-project.org')
+)
+```
+
 ## Packages and Preparation
 
 ```{r}
@@ -20,11 +29,6 @@ library(here)
 library(sf)
 library(ggpubr)
 
-
-#' Package avaialble at 
-#' install.packages('dsmextraLite', 
-#' repos=c('https://pifsc-protected-species-division.r-universe.dev','https://cloud.r-project.org')
-#' )
 library(dsmextraLite)
 ```
 
@@ -40,6 +44,8 @@ ocean_files <- paste(ocean_dir,list.files(ocean_dir), sep="/")
 ```
 
 ## Examine Extrapolation Regions with dsmExtraLite
+
+For every day in the prediction data set we used `dsmextraLite` to determine if the oceanographic variables in that cell were outside the values that were used to fit the model. For each year and grid cell we summarized the proportion of the prediction days that were classified as either univariate or multivariate extrapolation conditions.
 
 ```{r}
 #| output: false
@@ -131,6 +137,8 @@ ggsave(pout, file=file.path(local_wd, "output","extrap_fig.png"), width=6.5, hei
 
 
 ## Visual Extrapolation Assessment
+
+Proportion of days each year where grid cells were classified as having extrapolation conditions. 
 
 ```{r}
 #| echo: false

@@ -213,21 +213,42 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#data-preparation" id="toc-data-preparation" class="nav-link active" data-scroll-target="#data-preparation">Data Preparation</a>
+  <li><a href="#a.-data-preparation" id="toc-a.-data-preparation" class="nav-link active" data-scroll-target="#a.-data-preparation">A. Data Preparation</a>
   <ul class="collapse">
   <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data">Load data</a></li>
   <li><a href="#attach-environmental-data-and-save-for-dsm-fitting" id="toc-attach-environmental-data-and-save-for-dsm-fitting" class="nav-link" data-scroll-target="#attach-environmental-data-and-save-for-dsm-fitting">Attach environmental data and save for DSM fitting</a></li>
   </ul></li>
-  <li><a href="#dsm-formulation-and-fitting" id="toc-dsm-formulation-and-fitting" class="nav-link" data-scroll-target="#dsm-formulation-and-fitting">DSM Formulation And Fitting</a>
+  <li><a href="#b.-dsm-formulation-and-fitting" id="toc-b.-dsm-formulation-and-fitting" class="nav-link" data-scroll-target="#b.-dsm-formulation-and-fitting">B. DSM Formulation And Fitting</a>
   <ul class="collapse">
   <li><a href="#load-and-add-effort-calculation-to-data" id="toc-load-and-add-effort-calculation-to-data" class="nav-link" data-scroll-target="#load-and-add-effort-calculation-to-data">Load and add effort calculation to data</a></li>
   <li><a href="#add-augmented-data-for-pelagic-probabilty-weighting" id="toc-add-augmented-data-for-pelagic-probabilty-weighting" class="nav-link" data-scroll-target="#add-augmented-data-for-pelagic-probabilty-weighting">Add augmented data for pelagic probabilty weighting</a></li>
-  <li><a href="#create-model-list-and-fit" id="toc-create-model-list-and-fit" class="nav-link" data-scroll-target="#create-model-list-and-fit">Create model list and fit</a></li>
+  <li><a href="#create-model-list-and-fit" id="toc-create-model-list-and-fit" class="nav-link" data-scroll-target="#create-model-list-and-fit">Create model list and fit</a>
+  <ul class="collapse">
+  <li><a href="#encounter-rate-models" id="toc-encounter-rate-models" class="nav-link" data-scroll-target="#encounter-rate-models">Encounter rate models</a></li>
+  <li><a href="#fit-all-er-models" id="toc-fit-all-er-models" class="nav-link" data-scroll-target="#fit-all-er-models">Fit all ER models</a></li>
+  <li><a href="#group-size-model" id="toc-group-size-model" class="nav-link" data-scroll-target="#group-size-model">Group size model</a></li>
+  <li><a href="#fit-all-gs-models" id="toc-fit-all-gs-models" class="nav-link" data-scroll-target="#fit-all-gs-models">Fit all GS models</a></li>
+  </ul></li>
   <li><a href="#aic-tables" id="toc-aic-tables" class="nav-link" data-scroll-target="#aic-tables">AIC tables</a></li>
   </ul></li>
-  <li><a href="#model-selection-and-evaluation" id="toc-model-selection-and-evaluation" class="nav-link" data-scroll-target="#model-selection-and-evaluation">Model Selection and Evaluation</a>
+  <li><a href="#c.-model-evaluation" id="toc-c.-model-evaluation" class="nav-link" data-scroll-target="#c.-model-evaluation">C. Model Evaluation</a>
   <ul class="collapse">
-  <li><a href="#top-aic-models" id="toc-top-aic-models" class="nav-link" data-scroll-target="#top-aic-models">Top AIC models</a></li>
+  <li><a href="#load-previous-aic-results-and-data" id="toc-load-previous-aic-results-and-data" class="nav-link" data-scroll-target="#load-previous-aic-results-and-data">Load previous AIC results and data</a></li>
+  <li><a href="#fit-top-models-and-examine" id="toc-fit-top-models-and-examine" class="nav-link" data-scroll-target="#fit-top-models-and-examine">Fit top models and examine</a></li>
+  <li><a href="#evaluate-chosen-models" id="toc-evaluate-chosen-models" class="nav-link" data-scroll-target="#evaluate-chosen-models">Evaluate chosen models</a>
+  <ul class="collapse">
+  <li><a href="#evaluate-ratio-of-design-based-to-model-based-predicted-density" id="toc-evaluate-ratio-of-design-based-to-model-based-predicted-density" class="nav-link" data-scroll-target="#evaluate-ratio-of-design-based-to-model-based-predicted-density">Evaluate ratio of design-based to model-based predicted density</a></li>
+  </ul></li>
+  <li><a href="#prediction-metrics" id="toc-prediction-metrics" class="nav-link" data-scroll-target="#prediction-metrics">Prediction metrics</a>
+  <ul class="collapse">
+  <li><a href="#auc-and-tss" id="toc-auc-and-tss" class="nav-link" data-scroll-target="#auc-and-tss">AUC and TSS</a></li>
+  <li><a href="#rose-bootstrap-sample-auc-and-tss" id="toc-rose-bootstrap-sample-auc-and-tss" class="nav-link" data-scroll-target="#rose-bootstrap-sample-auc-and-tss">ROSE bootstrap sample AUC and TSS</a></li>
+  </ul></li>
+  <li><a href="#examine-model-effects" id="toc-examine-model-effects" class="nav-link" data-scroll-target="#examine-model-effects">Examine model effects</a>
+  <ul class="collapse">
+  <li><a href="#encounter-rate-model" id="toc-encounter-rate-model" class="nav-link" data-scroll-target="#encounter-rate-model">Encounter rate model</a></li>
+  <li><a href="#group-size-model-1" id="toc-group-size-model-1" class="nav-link" data-scroll-target="#group-size-model-1">Group size model</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s4_fit_models/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -254,10 +275,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="data-preparation" class="level2">
-<h2 class="anchored" data-anchor-id="data-preparation">Data Preparation</h2>
-<section id="load-data" class="level3">
-<h3 class="anchored" data-anchor-id="load-data">Load data</h3>
+<section id="a.-data-preparation" class="level1">
+<h1>A. Data Preparation</h1>
+<section id="load-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-data">Load data</h2>
+<p>Here we load the survey segment data and sightings datq from steps 1 and 2 and clean it up for DSM fitting with the <code>mgcv</code> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_4_fit_dsm_models"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -289,8 +311,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(segDataESWg0<span class="sc">$</span>sightinfo, <span class="fu">file.path</span>(localwd, <span class="st">"output"</span>, <span class="st">"sightinfo_033.csv"</span> ), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="attach-environmental-data-and-save-for-dsm-fitting" class="level3">
-<h3 class="anchored" data-anchor-id="attach-environmental-data-and-save-for-dsm-fitting">Attach environmental data and save for DSM fitting</h3>
+<section id="attach-environmental-data-and-save-for-dsm-fitting" class="level2">
+<h2 class="anchored" data-anchor-id="attach-environmental-data-and-save-for-dsm-fitting">Attach environmental data and save for DSM fitting</h2>
+<p>Now we attached the oceanographic data to the model data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>segEnvData <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(<span class="fu">here</span>(), <span class="st">"_R_code"</span>,<span class="st">"task_3_download_env_data"</span>,<span class="st">"output"</span>,<span class="st">"segdata_env.rds"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(segnum, Latitude, Longitude, UTC, sst<span class="sc">:</span>ssh_sd)</span>
@@ -301,10 +324,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="dsm-formulation-and-fitting" class="level2">
-<h2 class="anchored" data-anchor-id="dsm-formulation-and-fitting">DSM Formulation And Fitting</h2>
-<section id="load-and-add-effort-calculation-to-data" class="level3">
-<h3 class="anchored" data-anchor-id="load-and-add-effort-calculation-to-data">Load and add effort calculation to data</h3>
+<section id="b.-dsm-formulation-and-fitting" class="level1">
+<h1>B. DSM Formulation And Fitting</h1>
+<section id="load-and-add-effort-calculation-to-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-and-add-effort-calculation-to-data">Load and add effort calculation to data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>local_wd <span class="ot">&lt;-</span> <span class="fu">file.path</span>(<span class="fu">here</span>(), <span class="st">"_R_code"</span>, <span class="st">"task_4_fit_dsm_models"</span>)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>fkw_dsm_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>, <span class="st">"fkw_dsm_data_1997to2024.rds"</span>))</span>
@@ -322,8 +345,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>fkw_gs <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(nSI_033 <span class="sc">&gt;</span> <span class="dv">0</span>)<span class="co"># Just segments with sightings</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="add-augmented-data-for-pelagic-probabilty-weighting" class="level3">
-<h3 class="anchored" data-anchor-id="add-augmented-data-for-pelagic-probabilty-weighting">Add augmented data for pelagic probabilty weighting</h3>
+<section id="add-augmented-data-for-pelagic-probabilty-weighting" class="level2">
+<h2 class="anchored" data-anchor-id="add-augmented-data-for-pelagic-probabilty-weighting">Add augmented data for pelagic probabilty weighting</h2>
+<p>Here we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic stock animals is less than 1. For all sightings with <code>ProbPel</code> &lt; 1, we add an additional line of data for each segment where the number of groups detected is <code>nSI_033 &lt;- 0</code> and <code>ProbPel &lt;- 1-ProbPel</code> for the observed encounter.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nonpel <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ProbPel<span class="sc">&lt;</span><span class="dv">1</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nonpel <span class="ot">&lt;-</span> nonpel <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
@@ -338,11 +362,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  )</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="create-model-list-and-fit" class="level3">
-<h3 class="anchored" data-anchor-id="create-model-list-and-fit">Create model list and fit</h3>
-<section id="encounter-rate-models" class="level4">
-<h4 class="anchored" data-anchor-id="encounter-rate-models">Encounter rate models</h4>
-<p><code>forms_er</code> and <code>forms_gs</code></p>
+<section id="create-model-list-and-fit" class="level2">
+<h2 class="anchored" data-anchor-id="create-model-list-and-fit">Create model list and fit</h2>
+<p>I this section of code we construct a list for all desired encounters and groups size model specifications. We then fit all the models and produce a table of models and AIC values.</p>
+<section id="encounter-rate-models" class="level3">
+<h3 class="anchored" data-anchor-id="encounter-rate-models">Encounter rate models</h3>
+<p>Specification of the encounter rate model set is somewhat tricky due to the fact there are are several restrictions on the set of all possible models, namely due to the inclusion of Latitude interaction effects. The encounter rate models included all combinations of the 4 oceanographic variables: <code>sst</code>, <code>ssh</code>, <code>mld</code>, and <code>salinity</code> (including none) along with all combinations of the focal standard deviation versions: <code>sst_sd</code>, <code>ssh_sd</code>, <code>mld_sd</code>, and <code>salinity_sd</code>. The <code>_sd</code> versions are meant to examine the effect of fronts within the gradients of these variables. In addition to this model set we also added an interaction term of the form <code>te(var,Latitude)</code> for interaction effects of Latitude on the main variables. Only 1 main variable was allowed to interact with Latitude at a time. The reulting list is comprised of 767 models.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hab_var <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sst"</span>,<span class="st">"ssh"</span>,<span class="st">"mld"</span>,<span class="st">"salinity"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>hab_var_sd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sst_sd"</span>,<span class="st">"ssh_sd"</span>,<span class="st">"mld_sd"</span>,<span class="st">"salinity_sd"</span>)</span>
@@ -383,8 +408,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="fit-all-er-models" class="level4">
-<h4 class="anchored" data-anchor-id="fit-all-er-models">Fit all ER models</h4>
+<section id="fit-all-er-models" class="level3">
+<h3 class="anchored" data-anchor-id="fit-all-er-models">Fit all ER models</h3>
+<p>In this section we fit all 767 encounter rate models to determine the AIC optimal model as well as the relative rankings of different models, etc.</p>
+<p><strong>Warning!!!</strong> This takes a while to implement so it was partitioned and chunks of models were fit in parallel.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Select spline type</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' 'ts'= thin plate splines ("shrinkage approach" applies additional smoothing penalty)</span></span>
@@ -422,8 +449,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(waic))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="group-size-model" class="level4">
-<h4 class="anchored" data-anchor-id="group-size-model">Group size model</h4>
+<section id="group-size-model" class="level3">
+<h3 class="anchored" data-anchor-id="group-size-model">Group size model</h3>
+<p>The group size model set is relatively easy to for as it simply consists of every combination of the 4 oceanographic variables for a total of 16 models.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hab_inc_gs <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="fu">rep</span>(<span class="fu">list</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>), <span class="fu">length</span>(hab_var)))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>forms_gs <span class="ot">&lt;-</span> <span class="fu">apply</span>(hab_inc_gs, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
@@ -439,8 +467,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>forms_gs[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"log(ANI_033) ~ 1"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="fit-all-gs-models" class="level4">
-<h4 class="anchored" data-anchor-id="fit-all-gs-models">Fit all GS models</h4>
+<section id="fit-all-gs-models" class="level3">
+<h3 class="anchored" data-anchor-id="fit-all-gs-models">Fit all GS models</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>gsgam_list <span class="ot">&lt;-</span> <span class="fu">foreach</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">i =</span> <span class="fu">seq_along</span>(forms_gs), <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>), </span>
@@ -464,8 +492,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="aic-tables" class="level3">
-<h3 class="anchored" data-anchor-id="aic-tables">AIC tables</h3>
+<section id="aic-tables" class="level2">
+<h2 class="anchored" data-anchor-id="aic-tables">AIC tables</h2>
+<p>A preview of the resulting AIC results is shown below. The full results are in the exported files <code>"output/aic_er.csv"</code> and <code>"output/aic_gs.csv"</code>.</p>
 <div class="cell" data-messages="false">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 767 × 6
@@ -512,12 +541,195 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="model-selection-and-evaluation" class="level2">
-<h2 class="anchored" data-anchor-id="model-selection-and-evaluation">Model Selection and Evaluation</h2>
-<section id="top-aic-models" class="level3">
-<h3 class="anchored" data-anchor-id="top-aic-models">Top AIC models</h3>
+<section id="c.-model-evaluation" class="level1">
+<h1>C. Model Evaluation</h1>
+<section id="load-previous-aic-results-and-data" class="level2">
+<h2 class="anchored" data-anchor-id="load-previous-aic-results-and-data">Load previous AIC results and data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mgcv)</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(picMaps)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(units)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(WeightedROC)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(gratia)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>local_wd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>, <span class="st">"task_4_fit_dsm_models"</span>)</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>,<span class="st">"dsm_model_data.RData"</span>))</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>aic_er <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>,<span class="st">"aic_er.csv"</span>))</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>aic_gs <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>,<span class="st">"aic_gs.csv"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="fit-top-models-and-examine" class="level2">
+<h2 class="anchored" data-anchor-id="fit-top-models-and-examine">Fit top models and examine</h2>
+<p>Here we fit the AIC top models and examine the signicicance of the effects. For the encounter rate model only the <code>te(sst, Latitude)</code> effect was statistically significant so it was retained going forward. For the group size model all terms were ststaistically significant, so it is used as is.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use top AIC model minus non-significant terms</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># er_fit &lt;- gam(formula =as.formula(aic_er$form[1]),</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co">#               offset = log(effort),</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">#               family = tw(),</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#               method="REML", </span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#               data = fkw_dsm_data, weights = ProbPel)</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>er_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> nSI_033 <span class="sc">~</span> <span class="fu">te</span>(sst, Latitude, <span class="at">bs =</span> spline2use, <span class="at">k =</span> <span class="dv">5</span>),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(effort),</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> <span class="fu">tw</span>(),</span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">method=</span><span class="st">"REML"</span>, </span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> fkw_dsm_data, <span class="at">weights =</span> ProbPel)</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>gs_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> <span class="fu">log</span>(ANI_033) <span class="sc">~</span> <span class="fu">s</span>(ssh, <span class="at">bs =</span> spline2use, <span class="at">k =</span> <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">s</span>(mld, <span class="at">bs =</span> spline2use, <span class="at">k =</span> <span class="dv">5</span>),</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">method=</span><span class="st">"REML"</span>, </span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> fkw_gs, <span class="at">weights =</span> ProbPel)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="evaluate-chosen-models" class="level2">
+<h2 class="anchored" data-anchor-id="evaluate-chosen-models">Evaluate chosen models</h2>
+<section id="evaluate-ratio-of-design-based-to-model-based-predicted-density" class="level3">
+<h3 class="anchored" data-anchor-id="evaluate-ratio-of-design-based-to-model-based-predicted-density">Evaluate ratio of design-based to model-based predicted density</h3>
+<p>Here we examine the ratio of density estimates on the survey segments between design and model based estimators.</p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">### CenPac area</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> picMaps<span class="sc">::</span><span class="fu">cenpac</span>() <span class="sc">%&gt;%</span> <span class="fu">st_area</span>() <span class="sc">%&gt;%</span> <span class="fu">set_units</span>(<span class="st">"km^2"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.numeric</span>()</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="do">### model predictions</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>pred_er <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">predict</span>(er_fit) <span class="sc">+</span> <span class="fu">log</span>(fkw_dsm_data<span class="sc">$</span>effort))</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>pred_gs <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">predict</span>(gs_fit) <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>gs_fit<span class="sc">$</span>sig2)</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>gs_bias_corr <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(fkw_gs<span class="sc">$</span>ANI_033,<span class="at">w=</span>fkw_gs<span class="sc">$</span>ProbPel)<span class="sc">/</span><span class="fu">mean</span>(pred_gs)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>pred_gs <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">predict</span>(gs_fit, <span class="at">newdata=</span>fkw_dsm_data) <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>gs_fit<span class="sc">$</span>sig2)</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="do">### Design-based observed and predicted</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>obsdens <span class="ot">&lt;-</span> (fkw_dsm_data<span class="sc">$</span>nSI_033 <span class="sc">*</span> fkw_dsm_data<span class="sc">$</span>ANI_033)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>ltdens <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(obsdens,fkw_dsm_data<span class="sc">$</span>ProbPel)<span class="sc">/</span><span class="fu">weighted.mean</span>(fkw_dsm_data<span class="sc">$</span>effort,fkw_dsm_data<span class="sc">$</span>ProbPel)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>ltdens<span class="sc">*</span>A</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 23441.83</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="do">## model based</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>modeldens <span class="ot">&lt;-</span> pred_er <span class="sc">*</span> pred_gs <span class="sc">*</span> gs_bias_corr</span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>preddens <span class="ot">&lt;-</span> <span class="fu">sum</span>(modeldens)<span class="sc">/</span><span class="fu">sum</span>(fkw_dsm_data<span class="sc">$</span>effort)</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>preddens<span class="sc">*</span>A</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 22154.7</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a><span class="co"># Ratio</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>ltdens<span class="sc">/</span>preddens </span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 1.058097</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="prediction-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="prediction-metrics">Prediction metrics</h2>
+<section id="auc-and-tss" class="level3">
+<h3 class="anchored" data-anchor-id="auc-and-tss">AUC and TSS</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sightings <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(fkw_dsm_data<span class="sc">$</span>nSI_033<span class="sc">&gt;=</span><span class="dv">1</span>)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pred_seg <span class="ot">&lt;-</span> <span class="fu">predict</span>(er_fit, <span class="at">type=</span><span class="st">"response"</span>) <span class="sc">*</span> pred_gs <span class="sc">*</span> gs_bias_corr </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>rocr <span class="ot">&lt;-</span> <span class="fu">WeightedROC</span>(pred_seg, sightings, <span class="at">weight =</span> fkw_dsm_data<span class="sc">$</span>ProbPel)</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="do">## AUC</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>auc <span class="ot">&lt;-</span> <span class="fu">WeightedAUC</span>(rocr)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>auc</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.7119164</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute TSS</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((rocr<span class="sc">$</span>TPR<span class="dv">-1</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> (rocr<span class="sc">$</span>FPR<span class="dv">-0</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="fu">which</span>(d<span class="sc">==</span><span class="fu">min</span>(d))</span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>opt_rocr <span class="ot">&lt;-</span> rocr[<span class="fu">which</span>(d<span class="sc">==</span><span class="fu">min</span>(d)),]</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>TSS <span class="ot">&lt;-</span> opt_rocr<span class="sc">$</span>TPR <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>opt_rocr<span class="sc">$</span>FPR) <span class="sc">-</span><span class="dv">1</span> </span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>TSS</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.3626605</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="rose-bootstrap-sample-auc-and-tss" class="level3">
+<h3 class="anchored" data-anchor-id="rose-bootstrap-sample-auc-and-tss">ROSE bootstrap sample AUC and TSS</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rose_df <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  nSI_033, sst, sst_sd, salinity, salinity_sd, mld, mld_sd, ssh, ssh_sd, Latitude, Longitude, effort</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">cls =</span> nSI_033)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>auc_stor <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">50</span>)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>tss_stor <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="dv">50</span>)</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>){</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>  resamp <span class="ot">&lt;-</span> <span class="fu">ROSE</span>(cls<span class="sc">~</span>., <span class="at">data=</span>rose_df, <span class="at">hmult.majo=</span><span class="fl">0.25</span>, <span class="at">hmult.mino=</span><span class="fl">0.25</span>, <span class="at">seed=</span>i)<span class="sc">$</span>data</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>  er_fit_rose <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> cls <span class="sc">~</span> <span class="fu">te</span>(sst, Latitude, <span class="at">bs =</span> spline2use, <span class="at">k =</span> <span class="dv">5</span>),</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>                     <span class="at">family =</span> <span class="fu">tw</span>(),</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method=</span><span class="st">"REML"</span>, </span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> resamp)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>  mu <span class="ot">&lt;-</span> <span class="fu">predict</span>(er_fit_rose, <span class="at">newdata =</span> fkw_dsm_data, <span class="at">type=</span><span class="st">"response"</span>)</span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>  phi <span class="ot">&lt;-</span> er_fit_rose<span class="sc">$</span>sig2</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>  theta <span class="ot">&lt;-</span> er_fit_rose<span class="sc">$</span>family<span class="sc">$</span><span class="fu">getTheta</span>()</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> (<span class="dv">1</span><span class="sc">+</span><span class="dv">2</span><span class="sc">*</span><span class="fu">exp</span>(theta))<span class="sc">/</span>(<span class="dv">1</span><span class="sc">+</span><span class="fu">exp</span>(theta)); p <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fl">1.01</span>, p); p <span class="ot">&lt;-</span> <span class="fu">min</span>(<span class="fl">1.99</span>, p)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>  pnz <span class="ot">&lt;-</span> <span class="dv">1</span> <span class="sc">-</span> <span class="fu">exp</span>(<span class="sc">-</span> (mu<span class="sc">^</span>(<span class="dv">2</span><span class="sc">-</span>p)<span class="sc">/</span>(phi<span class="sc">*</span>(<span class="dv">2</span><span class="sc">-</span>p))))</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>  rrr <span class="ot">&lt;-</span>  <span class="fu">WeightedROC</span>(pnz, sightings, <span class="at">weight =</span> fkw_dsm_data<span class="sc">$</span>ProbPel)</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>  auc_stor[i] <span class="ot">&lt;-</span> <span class="fu">WeightedAUC</span>(rrr)</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>  tss_stor[i] <span class="ot">&lt;-</span> <span class="fu">max</span>(rrr<span class="sc">$</span>TPR <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>rrr<span class="sc">$</span>FPR) <span class="sc">-</span><span class="dv">1</span>, <span class="at">na.rm=</span>T)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(i,<span class="st">" "</span>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(auc_stor)</span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.7626317</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(auc_stor)</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.7581797 0.7666302</span></span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(tss_stor)</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.4331774</span></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(tss_stor)</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.4144445 0.4537293</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="examine-model-effects" class="level2">
+<h2 class="anchored" data-anchor-id="examine-model-effects">Examine model effects</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>sm_grid <span class="ot">&lt;-</span> <span class="fu">smooth_estimates</span>(er_fit, <span class="at">select =</span> <span class="st">"te(sst,Latitude)"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>out <span class="ot">&lt;-</span> <span class="fu">exclude.too.far</span>(sm_grid<span class="sc">$</span>sst, sm_grid<span class="sc">$</span>Latitude, fkw_dsm_data<span class="sc">$</span>sst, fkw_dsm_data<span class="sc">$</span>Latitude, <span class="fl">0.1</span>)</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>sm_grid<span class="sc">$</span>.estimate[out] <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> sm_grid) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>(<span class="fu">aes</span>(<span class="at">x =</span> sst, <span class="at">y =</span> Latitude, <span class="at">fill =</span> .estimate)) <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_contour</span>(<span class="fu">aes</span>(<span class="at">x =</span> sst, <span class="at">y =</span> Latitude, <span class="at">z =</span> .estimate), <span class="at">colour =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">data =</span> dat_res,</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">x =</span> sst, <span class="at">y =</span> Latitude),</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">size =</span> <span class="fl">0.25</span>, </span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">alpha =</span> <span class="fl">0.25</span> </span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"te(sst, Latitude)"</span>) <span class="sc">+</span> </span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_distiller</span>(<span class="at">palette =</span> <span class="st">"RdBu"</span>, <span class="at">type =</span> <span class="st">"div"</span>, <span class="at">name =</span> <span class="st">"effect"</span>, <span class="at">na.value =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">coord_cartesian</span>(<span class="at">expand =</span> <span class="cn">FALSE</span>) <span class="sc">+</span>  <span class="fu">theme_bw</span>()</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">file=</span><span class="fu">file.path</span>(local_wd,<span class="st">"output"</span>,<span class="st">"er_fit.png"</span>),<span class="at">width=</span><span class="fl">6.5</span>, <span class="at">height=</span><span class="dv">4</span>)</span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a><span class="fu">draw</span>(gs_fit) <span class="sc">&amp;</span> <span class="fu">theme_bw</span>()</span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="at">file=</span><span class="fu">file.path</span>(local_wd,<span class="st">"output"</span>,<span class="st">"gs_fit.png"</span>),<span class="at">width=</span><span class="fl">6.5</span>, <span class="at">height=</span><span class="dv">4</span>)</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>(er_fit, gs_fit, gs_bias_corr, opt_rocr, fkw_dsm_data, fkw_gs, A, ltdens, spline2use,</span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>     <span class="at">file=</span><span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>, <span class="st">"dsm_fit_final.RData"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="encounter-rate-model" class="level3">
+<h3 class="anchored" data-anchor-id="encounter-rate-model">Encounter rate model</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="../../_R_code/task_4_fit_dsm_models/output/er_fit.png" class="img-fluid figure-img" width="975"></p>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="group-size-model-1" class="level3">
+<h3 class="anchored" data-anchor-id="group-size-model-1">Group size model</h3>
+<div class="cell">
+<div class="cell-output-display">
+<div>
+<figure class="figure">
+<p><img src="../../_R_code/task_4_fit_dsm_models/output/gs_fit.png" class="img-fluid figure-img" width="975"></p>
+</figure>
+</div>
+</div>
+</div>
 
 
+</section>
 </section>
 </section>
 

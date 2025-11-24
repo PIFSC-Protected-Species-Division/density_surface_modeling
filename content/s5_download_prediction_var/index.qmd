@@ -2,6 +2,11 @@
 title: "Download Environmental Variables for Density Prediction"
 ---
 
+**Note!!!** *Currently this is the way that PIFSC PSD has downloaded oceanographic model data from Copernicus Marine Service ([https://marine.copernicus.eu/](https://marine.copernicus.eu/)). This, more complicated, method was necessary because the `CopernicusMarine`package did not have the ability to download ocean product data subsets. However, as of September 2025 this capability was repaired. So, the `CopernicusMarine` package (available from [https://pepijn-devries.github.io/CopernicusMarine/](https://pepijn-devries.github.io/CopernicusMarine/)) is probably a more efficient way to download the data and we will investigate this further.*
+
+
+The procedure for downloading the oceanographic prediction data is nearly identical to that in step 3. The only difference is specifying the spatial and temporal grid defined by the Central Pacific study region and the tri-daily grid of days from July 1 through December 31 in the years 2017 and 2020-2024. 
+
 ## Packages and Python Preparation
 
 ```{r}
