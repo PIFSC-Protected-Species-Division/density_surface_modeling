@@ -68,6 +68,35 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN") {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 </head>
 
@@ -179,7 +208,18 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#density-surface-modeling" id="toc-density-surface-modeling" class="nav-link active" data-scroll-target="#density-surface-modeling">Density Surface Modeling</a></li>
+  <li><a href="#density-surface-modeling" id="toc-density-surface-modeling" class="nav-link active" data-scroll-target="#density-surface-modeling">Density Surface Modeling</a>
+  <ul class="collapse">
+  <li><a href="#conceptual-framework" id="toc-conceptual-framework" class="nav-link" data-scroll-target="#conceptual-framework">Conceptual Framework</a></li>
+  <li><a href="#dsm-outline" id="toc-dsm-outline" class="nav-link" data-scroll-target="#dsm-outline">DSM Outline</a>
+  <ul class="collapse">
+  <li><a href="#estimated-effective-strip-width-esw" id="toc-estimated-effective-strip-width-esw" class="nav-link" data-scroll-target="#estimated-effective-strip-width-esw">1. Estimated Effective Strip Width (<span class="math inline">\(ESW\)</span>)</a></li>
+  <li><a href="#spatially-explicit-model-for-encounter-rate-of-groups" id="toc-spatially-explicit-model-for-encounter-rate-of-groups" class="nav-link" data-scroll-target="#spatially-explicit-model-for-encounter-rate-of-groups">2. Spatially Explicit Model for Encounter Rate of Groups</a></li>
+  <li><a href="#spatially-explicit-model-for-group-size" id="toc-spatially-explicit-model-for-group-size" class="nav-link" data-scroll-target="#spatially-explicit-model-for-group-size">4. Spatially Explicit Model for Group Size</a></li>
+  <li><a href="#abundance-estimation" id="toc-abundance-estimation" class="nav-link" data-scroll-target="#abundance-estimation">5. Abundance Estimation</a></li>
+  <li><a href="#uncertainty-assessment" id="toc-uncertainty-assessment" class="nav-link" data-scroll-target="#uncertainty-assessment">6. Uncertainty Assessment</a></li>
+  </ul></li>
+  </ul></li>
   <li><a href="#false-killer-whales" id="toc-false-killer-whales" class="nav-link" data-scroll-target="#false-killer-whales">False Killer Whales</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/intro.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
@@ -206,21 +246,95 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="density-surface-modeling" class="level2">
-<h2 class="anchored" data-anchor-id="density-surface-modeling">Density Surface Modeling</h2>
+<section id="density-surface-modeling" class="level1">
+<h1>Density Surface Modeling</h1>
+<p><strong>Density Surface Modeling (DSM)</strong> is a powerful and increasingly common method used to estimate the abundance of cetaceans and other mobile marine species from <strong>distance sampling</strong> survey data. It provides a spatially explicit approach to modeling animal density, addressing limitations of traditional methods that assume uniform density across the study area.</p>
+<section id="conceptual-framework" class="level2">
+<h2 class="anchored" data-anchor-id="conceptual-framework">Conceptual Framework</h2>
+<p>DSM combines two primary components:</p>
+<ol type="1">
+<li><strong>Detection Function:</strong> Modeling the probability of detecting an animal, which typically decreases with distance from the transect line. This accounts for animals missed during the survey.</li>
+<li><strong>Spatial Density Model:</strong> Modeling the expected density of animals across the study area as a function of environmental and/or spatial covariates (e.g., bathymetry, sea surface temperature, chlorophyll-a).</li>
+</ol>
+<p>The final abundance estimate is derived by integrating the predicted density surface over the entire area.</p>
 </section>
-<section id="false-killer-whales" class="level2">
-<h2 class="anchored" data-anchor-id="false-killer-whales">False Killer Whales</h2>
+<section id="dsm-outline" class="level2">
+<h2 class="anchored" data-anchor-id="dsm-outline">DSM Outline</h2>
+<p>The core of DSM relies on the framework of <strong>Generalized Additive Models (GAMs)</strong> or related regression techniques to link the estimated number of detected animals in a given sampling unit to the effort expended and the predicted detection probability.</p>
+<section id="estimated-effective-strip-width-esw" class="level3">
+<h3 class="anchored" data-anchor-id="estimated-effective-strip-width-esw">1. Estimated Effective Strip Width (<span class="math inline">\(ESW\)</span>)</h3>
+<p>For a standard line-transect survey, the <strong>effective strip width (<span class="math inline">\(ESW\)</span> or <span class="math inline">\(\mu\)</span>)</strong> is estimated from the fitted detection function, <span class="math inline">\(\hat{g}(x)\)</span>, where <span class="math inline">\(x\)</span> is the perpendicular distance from the transect: <span class="math display">\[
+ESW = \int_{0}^{w} g(x) dx
+\]</span> where <span class="math inline">\(w\)</span> is the truncation distance, and <span class="math inline">\(g(x)\)</span> is the estimated probability of detection at distance <span class="math inline">\(x\)</span>. The function <span class="math inline">\(g(x)\)</span> is often modeled using a key function (e.g., half-normal or hazard-rate) with series expansion adjustments. Standard distance sampling methods must assume that <span class="math inline">\(g(0) = 1\)</span> because there is no information in detection distances to estimate this value. So, other data must be used to estimate <span class="math inline">\(g(0)\)</span>. So, we treat this quantity as separate from <span class="math inline">\(ESW\)</span>.</p>
+</section>
+<section id="spatially-explicit-model-for-encounter-rate-of-groups" class="level3">
+<h3 class="anchored" data-anchor-id="spatially-explicit-model-for-encounter-rate-of-groups">2. Spatially Explicit Model for Encounter Rate of Groups</h3>
+<p>DSM typically employs a two-stage approach. The first stage estimates the detection probability. The second stage uses a regression model to predict the <em>expected number of detected animals</em> in each sampling unit (survey segment).</p>
+<p>The model uses the estimated animal density, <span class="math inline">\(D\)</span>, the effective strip width, <span class="math inline">\(ESW\)</span>, the trackline detection probability, <span class="math inline">\(g(0)\)</span>, and the length of the segment, <span class="math inline">\(L\)</span>, to predict the expected number of detected groups (<span class="math inline">\(E[n]\)</span>) in a segment: <span class="math display">\[
+E[n] = g(0) \times ESW \times L \times D
+\]</span> Taking the logarithm (commonly used for count data) yields the linear predictor for the spatial model, <span class="math display">\[
+\log(E[n_i]) = \log (g(0)_i \cdot ESW_i \cdot L_i) + D_i
+\]</span> where <span class="math inline">\(i\)</span> indexed the sample unit (survey segment). This is rearranged for the actual GAM/GLM structure. The term <span class="math inline">\(\log (g(0)_i \cdot ESW_i \cdot L_i) = \log E_i\)</span> is treated as an <strong>offset</strong> in the model to account for detection related effort. This yields the spatially explicit model, <span class="math display">\[
+\log(E[n_i]) = \log E_i + \beta_0 + \sum_{j} f_j(\text{covariates}_{i,j})
+\]</span> where <span class="math inline">\(\beta_0\)</span> is the intercept, and <span class="math inline">\(f_j(\text{covariates}_{i,j})\)</span> are smooth functions of the spatial and environmental covariates (e.g., longitude, latitude, depth, SST) that together model <span class="math inline">\(\log(D)\)</span>.</p>
+</section>
+<section id="spatially-explicit-model-for-group-size" class="level3">
+<h3 class="anchored" data-anchor-id="spatially-explicit-model-for-group-size">4. Spatially Explicit Model for Group Size</h3>
+<p>In addition to encounter rate of groups, abundance also depends on the expected size of detected groups. Often this is modeled as spatially mean. <span class="math inline">\(S\)</span>. However, environmental conditions might affect group size as well. For example beneficial conditons might lead to large aggregations of individuals increaseing the groups size. So, we generalize the group size to also be a function of environmental conditions through the GLM/GAM model <span class="math display">\[
+\log(S_k) = \beta_0 + \sum_{j} f_j(\text{covariates}_{k,j})
+\]</span> where <span class="math inline">\(S_k\)</span> is the observed group size for the <span class="math inline">\(k\)</span>th detected group.</p>
+</section>
+<section id="abundance-estimation" class="level3">
+<h3 class="anchored" data-anchor-id="abundance-estimation">5. Abundance Estimation</h3>
+<p>The final estimated total abundance (<span class="math inline">\(\hat{N}\)</span>) for a region, <span class="math inline">\(\mathcal{R}\)</span>, is obtained by integrating the predicted density surface of groups, <span class="math inline">\(\hat{D}(z)\)</span> times the predicted surface of group size over the entire study area, <span class="math display">\[
+\hat{N} = A\int_{\mathcal{R}} \hat{D}(z) \hat{S}(z) dz
+\]</span> where <span class="math inline">\(\hat{D}(z)\)</span> is the predicted density at a location <span class="math inline">\(z\)</span> (a function of the environmental and spatial covariates), <span class="math inline">\(\hat{S}(z)\)</span> is the predicted group size at location <span class="math inline">\(z\)</span>, <span class="math inline">\(A\)</span> is the total area of . Typically this is executed by calculating abundance over cells of constant covariates, <span class="math display">\[
+\hat{N} = \sum_{j=1}^M \hat{D}(z_j) \hat{S}(z_j) A_j
+\]</span> where <span class="math inline">\(z_j\)</span> is a grid location within <span class="math inline">\(\mathcal{R}\)</span> and <span class="math inline">\(A_j\)</span> is the subarea of the region surrounding <span class="math inline">\(z_j\)</span>.</p>
+</section>
+<section id="uncertainty-assessment" class="level3">
+<h3 class="anchored" data-anchor-id="uncertainty-assessment">6. Uncertainty Assessment</h3>
+<p>There are several aspects contributing to uncertainty in the point estimate of abundance, <span class="math inline">\(\hat{N}\)</span>: uncertainty in GLM/GAM parameters and uncertainty in <span class="math inline">\(ESW\)</span> and <span class="math inline">\(g(0)\)</span> values. These are treated as constants in the encounter rate model. However, they are estimated from data. Also the covariates are dynamic, so there is variation in covariate values through time. To assess the coefficient of variation (CV) for <span class="math inline">\(\hat{N}\)</span> we use the variance propogation procedure of Miller et al.&nbsp;(2022)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> which proceeds as</p>
+<ol type="1">
+<li><p>Fit the extended GLM/GAM model: <span class="math display">\[
+\log(E[n_i]) = \frac{\partial\log E_i(\theta)}{\partial \theta}\delta + \beta_0 + \sum_{j} f_j(\text{covariates}_{i,j})
+\]</span> where <span class="math inline">\(\theta\)</span> are the parameters in the distance sampling and <span class="math inline">\(g(0)\)</span> analysis and <span class="math inline">\(\delta\)</span> is a multivariate normal random effect with fixed variance <span class="math inline">\(V = \text{Var}(\theta)\)</span>. This inflates the other GLM/GAM coefficients to account for <span class="math inline">\(\theta\)</span> (hence <span class="math inline">\(ESW\)</span> and <span class="math inline">\(g(0)\)</span>) uncertainty.</p></li>
+<li><p>Draw <span class="math inline">\(r\)</span> values of the GLM/GAM coefficients from the posterior distribution using importance sampling. Use the extended model for encounter rate and the initial group size model. This accounts for GLM/GAM parameter uncertainty.</p></li>
+<li><p>For <span class="math inline">\(d\)</span> different days of interest predict abundance within the study area using all <span class="math inline">\(r\)</span> parameter values. Then</p></li>
+</ol>
+<p><span class="math display">\[
+\widehat{CV}(\hat{N}) = \frac{\sqrt{Var(\hat{N}_l)}}{Mean(\hat{N}_l)}
+\]</span> over all <span class="math inline">\(r\times d\)</span> estimates.</p>
+</section>
+</section>
+</section>
+<section id="false-killer-whales" class="level1">
+<h1>False Killer Whales</h1>
 <p>False killer whales (<em>Pseudorca crassidens</em>) are a large toothed whale that inhabit sub-tropical and tropical oceanic domains worldwide, and considered rare throughout their range. Three distinct populations of false killer whales are found within the waters of the Hawaiian Exclusive Economic Zone (EEZ): two insular populations, one around the main Hawaiian Islands (MHI) and one around the Northwestern Hawaiian Islands (NWHI), and one wide-ranging pelagic population.</p>
-<p>(add stock figure here)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="fkwpic.png" class="img-fluid quarto-figure quarto-figure-center figure-img" style="width:65.0%"></p>
+</figure>
+</div>
 <p>Pelagic false killer whales experience a greater degree of overlap with pelagic fishing vessels, and have a history of depredating bait and catch. Bycatch of false killer whales has exceeded allowable levels, leading to the formation of a Take Reduction Team and Take Reduction Plan to reduce serious injury and mortality from fishing operations, as required by the Marine Mammal Protection Act. NOAA Fisheries typically assesses marine mammal stocks at the EEZ level, however, as the EEZ represents a political boundary rather than a biological one, an assessment area beyond the EEZ was developed in an effort for a more comprehensive evaluation of the population. The assessment area for Hawaiʻi pelagic false killer whales is defined by a minimum convex polygon of a 35-km buffer around all genetic, telemetry, sighting, and bycatch location data known or assumed to be of Hawaiʻi pelagic stock animals. Assessing abundance and distribution of pelagic false killer whales throughout their range would improve ongoing efforts to measure and mitigate impacts from fisheries interactions.</p>
 <p>Here, we use density surface modeling to obtain abundance estimates for pelagic false killer whales in three regions: the U.S. Hawaiian EEZ, the pelagic stock assessment area, and the broader central Pacific.</p>
-<p>(add all study areas here)</p>
+<div class="quarto-figure quarto-figure-center">
+<figure class="figure">
+<p><img src="cenpac_sa.png" class="img-fluid figure-img" style="width:65.0%"></p>
+<figcaption>Central Pacific study area. The solid line represents the pelagic false killer whale assessment area. The dashed line represents the Hawaiian EEZ. The colored square is the Central Pacific study area in entirety.</figcaption>
+</figure>
+</div>
 
 
 </section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Miller, D.L., Becker, E.A., Forney, K.A., Roberts, J.J., Cañadas, A. and Schick, R.S., (2022) Estimating uncertainty in density surface models. PeerJ, 10, p.e13950.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {
