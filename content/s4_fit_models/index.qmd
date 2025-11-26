@@ -6,7 +6,7 @@ title: "Fit and Select Density Surface Models (DSM) using GAMs"
 
 ## Load data
 
-Here we load the survey segment data and sightings datq from steps 1 and 2 and clean it up for DSM fitting with the `mgcv` package. 
+Here, we load the survey segment data and sightings data from steps 1 and 2 and clean it up for DSM fitting with the `mgcv` package. 
 
 ```{r}
 #| eval: false
@@ -19,11 +19,11 @@ segDataESWg0 <- readRDS( here("_R_code","task_2_est_g0_esw","output","seg_sight_
 fkw_popData <- readRDS( here("_R_code", "task_4_fit_dsm_models", "FKWsights_DSM_1997to2023.rds") ) 
 
 spcode <- '033' # FKW code
-segDataESWg0$sightinfo <- segDataESWg0$sightinfo %>% filter(SpCode==spcode)%>%
-  dplyr::mutate(CruiseSightNo = paste(Cruise,SightNo,sep="-"))%>%
-  filter(CruiseSightNo %in% fkw_popData$CruiseSightNo)
+segDataESWg0$sightinfo <- segDataESWg0$sightinfo %>% filter(SpCode==spcode)%>% #filter for species code
+  dplyr::mutate(CruiseSightNo = paste(Cruise,SightNo,sep="-"))%>% 
+  filter(CruiseSightNo %in% fkw_popData$CruiseSightNo) #filter for selected sightings 
 
-#' Add probability sighting is pelagic stock 
+# Add probability the sighting is of the pelagic stock 
 segDataESWg0$sightinfo <- segDataESWg0$sightinfo %>% left_join(.,fkw_popData[,c("CruiseSightNo","ProbPel","EffGrpSizeFull","EffGrpSizePelagic")], by="CruiseSightNo") 
 segDataESWg0$sightinfo$nSI_033 <- 1
 segDataESWg0$sightinfo$ANI_033 <- segDataESWg0$sightinfo$EffGrpSizeFull
@@ -43,7 +43,7 @@ write.csv(segDataESWg0$sightinfo, file.path(localwd, "output", "sightinfo_033.cs
 
 ## Attach environmental data and save for DSM fitting
 
-Now we attached the oceanographic data to the model data.
+Now, we attach the oceanographic data to the model data.
 
 ```{r}
 #| eval: false
@@ -82,7 +82,7 @@ fkw_gs <- fkw_dsm_data %>% filter(nSI_033 > 0)# Just segments with sightings
 
 ## Add augmented data for pelagic probabilty weighting
 
-Here we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic stock animals is less than 1. For all sightings with `ProbPel` < 1, we add an additional line of data for each segment where the number of groups detected is `nSI_033 <- 0` and `ProbPel <- 1-ProbPel` for the observed encounter. 
+Here, we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic stock animals is less than 1. For all sightings with `ProbPel` < 1, we add an additional line of data for each segment where the number of groups detected is `nSI_033 <- 0` and `ProbPel <- 1-ProbPel` for the observed encounter. 
 
 ```{r}
 #| eval: false
@@ -102,11 +102,11 @@ fkw_dsm_data <- bind_rows(fkw_dsm_data, nonpel) %>%
 
 ## Create model list and fit
 
-I this section of code we construct a list for all desired encounters and groups size model specifications. We then fit all the models and produce a table of models and AIC values. 
+In this section of code we construct a list for all desired encounters and groups size model specifications. We then fit all the models and produce a table of models and AIC values. 
 
 ### Encounter rate models
 
-Specification of the encounter rate model set is somewhat tricky due to the fact there are are several restrictions on the set of all possible models, namely due to the inclusion of Latitude interaction effects. The encounter rate models included all combinations of the 4 oceanographic variables: `sst`, `ssh`, `mld`, and `salinity` (including none) along with all combinations of the focal standard deviation versions: `sst_sd`, `ssh_sd`, `mld_sd`, and `salinity_sd`. The `_sd` versions are meant to examine the effect of fronts within the gradients of these variables. In addition to this model set we also added an interaction term of the form `te(var,Latitude)` for interaction effects of Latitude on the main variables. Only 1 main variable was allowed to interact with Latitude at a time. The reulting list is comprised of 767 models. 
+Specification of the encounter rate model set is somewhat tricky due to the fact there are are several restrictions on the set of all possible models, namely due to the inclusion of Latitude interaction effects. The encounter rate models included all combinations of the 4 oceanographic variables: `sst`, `ssh`, `mld`, and `salinity` (including none) along with all combinations of the focal standard deviation versions: `sst_sd`, `ssh_sd`, `mld_sd`, and `salinity_sd`. The `_sd` versions are meant to examine the effect of fronts within the gradients of these variables. In addition to this model set we also added an interaction term of the form `te(var,Latitude)` for interaction effects of Latitude on the main variables. Only 1 main variable was allowed to interact with Latitude at a time. The resulting list is comprised of 767 models. 
 
 ```{r}
 #| eval: false
@@ -267,7 +267,7 @@ aic_gs
 #| eval: false
 
 write.csv(mod_df, file = file.path(local_wd, "output", "aic_er.csv"))
-write.csv(mod_df_gs, file = file.path(local_wd, "output" "aic_gs.csv"))
+write.csv(mod_df_gs, file = file.path(local_wd, "output", "aic_gs.csv"))
 save( fkw_dsm_data, fkw_gs, spline2use, file=file.path(local_wd, "output","dsm_model_data.RData"))
 ```
 
@@ -296,7 +296,7 @@ aic_gs <- read_csv(file.path(local_wd, "output","aic_gs.csv"))
 
 ## Fit top models and examine 
 
-Here we fit the AIC top models and examine the signicicance of the effects. For the encounter rate model only the `te(sst, Latitude)` effect was statistically significant so it was retained going forward. For the group size model all terms were ststaistically significant, so it is used as is. 
+Here we fit the AIC top models and examine the significance of the effects. For the encounter rate model only the `te(sst, Latitude)` effect was statistically significant so it was retained going forward. For the group size model all terms were statistically significant, so it is used as is. 
 
 ```{r}
 #| eval: false
@@ -319,6 +319,8 @@ gs_fit <- gam(formula = log(ANI_033) ~ s(ssh, bs = spline2use, k = 5) + s(mld, b
 ```
 
 ## Evaluate chosen models
+
+Traditional cross-validation is not possible for this analysis due to limited data availability to discretize into training and testing datasets. So, we use other methods of evaluating model performance.
 
 ### Evaluate ratio of design-based to model-based predicted density
 
@@ -356,6 +358,8 @@ ltdens/preddens
 
 ### AUC and TSS
 
+Here, we calculate the area under the receiver operating characteristic curve (AUC, Fawcett 2006), the true skill statistic (TSS, Allouche et al. 2006). AUC discriminates between true-positive and false-positive rates, and values range from 0 to 1, where a score of > 0.5 indicates better than random discrimination. TSS accounts for both omission and commission errors and ranges from -1 to 1, where 1 indicates perfect agreement and values of zero or less indicate performance no better (or worse) than random. 
+
 ```{r}
 #| eval: false
 sightings <- as.numeric(fkw_dsm_data$nSI_033>=1)
@@ -379,6 +383,9 @@ TSS
 ```
 
 ### ROSE bootstrap sample AUC and TSS
+
+Menardi and Torelli (2014) note that when data are highly imbalanced, performance metrics, such as AUC and TSS, as well as parameter estimation, can be compromised. So, in addition to the AUC and TSS calculations, we also used the ROSE (Random Over-Sampling Examples) sampling bootstrap (Lunardon et al., 2014) to assess the effects that sparse detection of false killer whales might have had on AUC and TSS metrics for the just the encounter rate model as it is the portion that is severely imbalanced. 
+ The ROSE sampling method is described in detail by Menardi and Torelli (2014), but briefly, kernel density estimates are calculated for segments with and without detections. Then a sample is drawn with probability = 0.5 from each KDE till the desired sample size is reached. This produces a balanced sample where the predictive covariates are similar to what was observed for each group (detection vs. nondetection) in the original data.
 
 ```{r}
 #| eval: false
