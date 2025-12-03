@@ -279,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>A. Data Preparation</h1>
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load data</h2>
-<p>Here we load the survey segment data and sightings datq from steps 1 and 2 and clean it up for DSM fitting with the <code>mgcv</code> package.</p>
+<p>Here, we load the survey segment data and sightings data from steps 1 and 2 and clean it up for DSM fitting with the <code>mgcv</code> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_4_fit_dsm_models"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -289,11 +289,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>fkw_popData <span class="ot">&lt;-</span> <span class="fu">readRDS</span>( <span class="fu">here</span>(<span class="st">"_R_code"</span>, <span class="st">"task_4_fit_dsm_models"</span>, <span class="st">"FKWsights_DSM_1997to2023.rds"</span>) ) </span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>spcode <span class="ot">&lt;-</span> <span class="st">'033'</span> <span class="co"># FKW code</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>sightinfo <span class="ot">&lt;-</span> segDataESWg0<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SpCode<span class="sc">==</span>spcode)<span class="sc">%&gt;%</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">CruiseSightNo =</span> <span class="fu">paste</span>(Cruise,SightNo,<span class="at">sep=</span><span class="st">"-"</span>))<span class="sc">%&gt;%</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CruiseSightNo <span class="sc">%in%</span> fkw_popData<span class="sc">$</span>CruiseSightNo)</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>sightinfo <span class="ot">&lt;-</span> segDataESWg0<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> <span class="fu">filter</span>(SpCode<span class="sc">==</span>spcode)<span class="sc">%&gt;%</span> <span class="co">#filter for species code</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  dplyr<span class="sc">::</span><span class="fu">mutate</span>(<span class="at">CruiseSightNo =</span> <span class="fu">paste</span>(Cruise,SightNo,<span class="at">sep=</span><span class="st">"-"</span>))<span class="sc">%&gt;%</span> </span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(CruiseSightNo <span class="sc">%in%</span> fkw_popData<span class="sc">$</span>CruiseSightNo) <span class="co">#filter for selected sightings </span></span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#' Add probability sighting is pelagic stock </span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co"># Add probability the sighting is of the pelagic stock </span></span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>sightinfo <span class="ot">&lt;-</span> segDataESWg0<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> <span class="fu">left_join</span>(.,fkw_popData[,<span class="fu">c</span>(<span class="st">"CruiseSightNo"</span>,<span class="st">"ProbPel"</span>,<span class="st">"EffGrpSizeFull"</span>,<span class="st">"EffGrpSizePelagic"</span>)], <span class="at">by=</span><span class="st">"CruiseSightNo"</span>) </span>
 <span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>sightinfo<span class="sc">$</span>nSI_033 <span class="ot">&lt;-</span> <span class="dv">1</span></span>
 <span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>segDataESWg0<span class="sc">$</span>sightinfo<span class="sc">$</span>ANI_033 <span class="ot">&lt;-</span> segDataESWg0<span class="sc">$</span>sightinfo<span class="sc">$</span>EffGrpSizeFull</span>
@@ -313,7 +313,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="attach-environmental-data-and-save-for-dsm-fitting" class="level2">
 <h2 class="anchored" data-anchor-id="attach-environmental-data-and-save-for-dsm-fitting">Attach environmental data and save for DSM fitting</h2>
-<p>Now we attached the oceanographic data to the model data.</p>
+<p>Now, we attach the oceanographic data to the model data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>segEnvData <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(<span class="fu">here</span>(), <span class="st">"_R_code"</span>,<span class="st">"task_3_download_env_data"</span>,<span class="st">"output"</span>,<span class="st">"segdata_env.rds"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(segnum, Latitude, Longitude, UTC, sst<span class="sc">:</span>ssh_sd)</span>
@@ -347,7 +347,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="add-augmented-data-for-pelagic-probabilty-weighting" class="level2">
 <h2 class="anchored" data-anchor-id="add-augmented-data-for-pelagic-probabilty-weighting">Add augmented data for pelagic probabilty weighting</h2>
-<p>Here we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic stock animals is less than 1. For all sightings with <code>ProbPel</code> &lt; 1, we add an additional line of data for each segment where the number of groups detected is <code>nSI_033 &lt;- 0</code> and <code>ProbPel &lt;- 1-ProbPel</code> for the observed encounter.</p>
+<p>Here, we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic stock animals is less than 1. For all sightings with <code>ProbPel</code> &lt; 1, we add an additional line of data for each segment where the number of groups detected is <code>nSI_033 &lt;- 0</code> and <code>ProbPel &lt;- 1-ProbPel</code> for the observed encounter.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nonpel <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ProbPel<span class="sc">&lt;</span><span class="dv">1</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nonpel <span class="ot">&lt;-</span> nonpel <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
@@ -364,10 +364,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="create-model-list-and-fit" class="level2">
 <h2 class="anchored" data-anchor-id="create-model-list-and-fit">Create model list and fit</h2>
-<p>I this section of code we construct a list for all desired encounters and groups size model specifications. We then fit all the models and produce a table of models and AIC values.</p>
+<p>In this section of code we construct a list for all desired encounters and groups size model specifications. We then fit all the models and produce a table of models and AIC values.</p>
 <section id="encounter-rate-models" class="level3">
 <h3 class="anchored" data-anchor-id="encounter-rate-models">Encounter rate models</h3>
-<p>Specification of the encounter rate model set is somewhat tricky due to the fact there are are several restrictions on the set of all possible models, namely due to the inclusion of Latitude interaction effects. The encounter rate models included all combinations of the 4 oceanographic variables: <code>sst</code>, <code>ssh</code>, <code>mld</code>, and <code>salinity</code> (including none) along with all combinations of the focal standard deviation versions: <code>sst_sd</code>, <code>ssh_sd</code>, <code>mld_sd</code>, and <code>salinity_sd</code>. The <code>_sd</code> versions are meant to examine the effect of fronts within the gradients of these variables. In addition to this model set we also added an interaction term of the form <code>te(var,Latitude)</code> for interaction effects of Latitude on the main variables. Only 1 main variable was allowed to interact with Latitude at a time. The reulting list is comprised of 767 models.</p>
+<p>Specification of the encounter rate model set is somewhat tricky due to the fact there are are several restrictions on the set of all possible models, namely due to the inclusion of Latitude interaction effects. The encounter rate models included all combinations of the 4 oceanographic variables: <code>sst</code>, <code>ssh</code>, <code>mld</code>, and <code>salinity</code> (including none) along with all combinations of the focal standard deviation versions: <code>sst_sd</code>, <code>ssh_sd</code>, <code>mld_sd</code>, and <code>salinity_sd</code>. The <code>_sd</code> versions are meant to examine the effect of fronts within the gradients of these variables. In addition to this model set we also added an interaction term of the form <code>te(var,Latitude)</code> for interaction effects of Latitude on the main variables. Only 1 main variable was allowed to interact with Latitude at a time. The resulting list is comprised of 767 models.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>hab_var <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sst"</span>,<span class="st">"ssh"</span>,<span class="st">"mld"</span>,<span class="st">"salinity"</span>)</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>hab_var_sd <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"sst_sd"</span>,<span class="st">"ssh_sd"</span>,<span class="st">"mld_sd"</span>,<span class="st">"salinity_sd"</span>)</span>
@@ -536,7 +536,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mod_df, <span class="at">file =</span> <span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>, <span class="st">"aic_er.csv"</span>))</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mod_df_gs, <span class="at">file =</span> <span class="fu">file.path</span>(local_wd, <span class="st">"output"</span> <span class="st">"aic_gs.csv"</span>))</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(mod_df_gs, <span class="at">file =</span> <span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>, <span class="st">"aic_gs.csv"</span>))</span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">save</span>( fkw_dsm_data, fkw_gs, spline2use, <span class="at">file=</span><span class="fu">file.path</span>(local_wd, <span class="st">"output"</span>,<span class="st">"dsm_model_data.RData"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
@@ -563,7 +563,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fit-top-models-and-examine" class="level2">
 <h2 class="anchored" data-anchor-id="fit-top-models-and-examine">Fit top models and examine</h2>
-<p>Here we fit the AIC top models and examine the signicicance of the effects. For the encounter rate model only the <code>te(sst, Latitude)</code> effect was statistically significant so it was retained going forward. For the group size model all terms were ststaistically significant, so it is used as is.</p>
+<p>Here we fit the AIC top models and examine the significance of the effects. For the encounter rate model only the <code>te(sst, Latitude)</code> effect was statistically significant so it was retained going forward. For the group size model all terms were statistically significant, so it is used as is.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use top AIC model minus non-significant terms</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -585,6 +585,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="evaluate-chosen-models" class="level2">
 <h2 class="anchored" data-anchor-id="evaluate-chosen-models">Evaluate chosen models</h2>
+<p>Traditional cross-validation is not possible for this analysis due to limited data availability to discretize into training and testing datasets. So, we use other methods of evaluating model performance.</p>
 <section id="evaluate-ratio-of-design-based-to-model-based-predicted-density" class="level3">
 <h3 class="anchored" data-anchor-id="evaluate-ratio-of-design-based-to-model-based-predicted-density">Evaluate ratio of design-based to model-based predicted density</h3>
 <p>Here we examine the ratio of density estimates on the survey segments between design and model based estimators.</p>
@@ -620,6 +621,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="anchored" data-anchor-id="prediction-metrics">Prediction metrics</h2>
 <section id="auc-and-tss" class="level3">
 <h3 class="anchored" data-anchor-id="auc-and-tss">AUC and TSS</h3>
+<p>Here, we calculate the area under the receiver operating characteristic curve (AUC, Fawcett 2006), the true skill statistic (TSS, Allouche et al.&nbsp;2006). AUC discriminates between true-positive and false-positive rates, and values range from 0 to 1, where a score of &gt; 0.5 indicates better than random discrimination. TSS accounts for both omission and commission errors and ranges from -1 to 1, where 1 indicates perfect agreement and values of zero or less indicate performance no better (or worse) than random.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>sightings <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(fkw_dsm_data<span class="sc">$</span>nSI_033<span class="sc">&gt;=</span><span class="dv">1</span>)</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>pred_seg <span class="ot">&lt;-</span> <span class="fu">predict</span>(er_fit, <span class="at">type=</span><span class="st">"response"</span>) <span class="sc">*</span> pred_gs <span class="sc">*</span> gs_bias_corr </span>
@@ -643,6 +645,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="rose-bootstrap-sample-auc-and-tss" class="level3">
 <h3 class="anchored" data-anchor-id="rose-bootstrap-sample-auc-and-tss">ROSE bootstrap sample AUC and TSS</h3>
+<p>Menardi and Torelli (2014) note that when data are highly imbalanced, performance metrics, such as AUC and TSS, as well as parameter estimation, can be compromised. So, in addition to the AUC and TSS calculations, we also used the ROSE (Random Over-Sampling Examples) sampling bootstrap (Lunardon et al., 2014) to assess the effects that sparse detection of false killer whales might have had on AUC and TSS metrics for the just the encounter rate model as it is the portion that is severely imbalanced. The ROSE sampling method is described in detail by Menardi and Torelli (2014), but briefly, kernel density estimates are calculated for segments with and without detections. Then a sample is drawn with probability = 0.5 from each KDE till the desired sample size is reached. This produces a balanced sample where the predictive covariates are similar to what was observed for each group (detection vs.&nbsp;nondetection) in the original data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>rose_df <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(</span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  nSI_033, sst, sst_sd, salinity, salinity_sd, mld, mld_sd, ssh, ssh_sd, Latitude, Longitude, effort</span>
