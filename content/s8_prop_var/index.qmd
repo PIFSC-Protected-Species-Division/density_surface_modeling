@@ -34,7 +34,7 @@ er_fit_vp <- add_varprop(er_fit,
                         varprop_list, trace=TRUE)
 ```
 
-## Draw empiricl Bayes posterior sample using importance sampling
+## Draw empirical Bayes posterior sample using importance sampling
 ```{r}
 #| eval: false
 set.seed(8675309)
@@ -85,7 +85,7 @@ env_dir <- here("_R_code","task_5_download_prediction_data","output")
 tif_files <- list.files(path = env_dir, pattern = "\\.tif$", full.names = TRUE)
 ```
 
-## Create raster and abundnace storage objects
+## Create raster and abundance storage objects
 ```{r}
 #| eval: false
 reps <- nrow(bs_gs)
@@ -292,7 +292,7 @@ est_files <- pred_files[grep("est", pred_files)]
 var_files <- pred_files[grep("var", pred_files)]
 ```
 
-## Calculate CVs for each ratser cell
+## Calculate CVs for each raster cell
 
 ```{r}
 #| eval: false

@@ -2,7 +2,7 @@
 title: "Assessing Areas of Extrapolation"
 ---
 
-**Alert!!!** *Here we use the methods within the `dsmextra` R package to examine spatial areas of extrapolation. However, at the time this code was written, the `dsmextra` package was not functioning due to recent changes in the R spatial data ecosystem. Therefore, we pulled the necessary components from the package and repackaged them as `dsmextraLite` available for download and installation with the code snippet:*
+**Alert!!!** *Here we use the methods within the `dsmextra` R package to examine spatial areas of extrapolation. However, at the time this code was written, the `dsmextra` package was not functioning due to recent changes in the R spatial data ecosystem. Therefore, we pulled the necessary components from the package and repackaged them as `dsmextraLite` - available for download and installation with the code snippet:*
 ```{r}
 #| eval: false
 install.packages('dsmextraLite', 

@@ -37,7 +37,7 @@ website:
       - href: content/s2_est_g0_esw/index.qmd
         text: 2. Estimate g(0) and ESW
       - href: content/s3_env_data/index.qmd
-        text: 3. Dowload envrion. data
+        text: 3. Download environmental data
       - href: content/s4_fit_models/index.qmd
         text: 4. Fit DSM models
       - href: content/s5_download_prediction_var/index.qmd
@@ -47,7 +47,7 @@ website:
       - href: content/s7_predict_abund/index.qmd
         text: 7. Predicting spatial abundance
       - href: content/s8_prop_var/index.qmd
-        text: 8. Estimting full spatial abundance uncertainty
+        text: 8. Estimating full spatial abundance uncertainty
 
 
 format:

@@ -153,7 +153,7 @@ with_progress({
 })
 ```
 
-### Prediction data view for July, 31 2023
+### Prediction data view for July 31, 2023
 
 ```{r}
 #| echo: false
