@@ -199,7 +199,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s3_env_data/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">3. Dowload envrion. data</span></a>
+ <span class="menu-text">3. Download environmental data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -229,7 +229,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s8_prop_var/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">8. Estimting full spatial abundance uncertainty</span></a>
+ <span class="menu-text">8. Estimating full spatial abundance uncertainty</span></a>
   </div>
 </li>
     </ul>
@@ -462,7 +462,7 @@ g(0;b) = \mu_b / \mu_0
 </div>
 </div>
 <p><strong>Add <em>g</em>(0) estimate to all segments and save final modeling data set</strong></p>
-<p>To account for survey segments with noninteger Beaufort states, becuase it changed over the course of the segment, the <span class="math inline">\(g(0;b)\)</span> value was linearly interpolated between the adjacent <span class="math inline">\(b\)</span> values. Then model data for the current survey is exported for use in the Hawaii pelagic false killer whale density surface model. The <span class="math inline">\(g(0;b_i)\)</span> and <span class="math inline">\(ESW_i\)</span> will serve as an effort offset.</p>
+<p>To account for survey segments with non-integer Beaufort states, because it changed over the course of the segment, the <span class="math inline">\(g(0;b)\)</span> value was linearly interpolated between the adjacent <span class="math inline">\(b\)</span> values. Then model data for the current survey is exported for use in the Hawaiʻi pelagic false killer whale density surface model. The <span class="math inline">\(g(0;b_i)\)</span> and <span class="math inline">\(ESW_i\)</span> will serve as an effort offset.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>BFlow <span class="ot">&lt;-</span> <span class="fu">floor</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>beaufort <span class="sc">+</span> <span class="dv">1</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>BFhigh <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>beaufort <span class="sc">+</span> <span class="dv">1</span>)</span>
@@ -476,7 +476,7 @@ g(0;b) = \mu_b / \mu_0
 </section>
 <section id="c.-monte-carlo-estimation-of-esw-and-g0-parameter-covariance-matrix" class="level1">
 <h1>C. Monte Carlo Estimation of ESW and <em>g</em>(0) Parameter Covariance Matrix</h1>
-<p>To propagate the uncertainly for effort terms into the FKW DSM model the covariance matrix for the detection terms needs to be estimated. Because the <span class="math inline">\(g(0;b)\)</span> model depends on the <span class="math inline">\(ESA_i\)</span> values calculated from distance model. Therefore, the most straightforward method to account for the covariance between the distance sampling parameters, <span class="math inline">\(\theta_d\)</span> and the <span class="math inline">\(g(0,b)\)</span> parameters, <span class="math inline">\(\theta_g\)</span> is to perform a Monte Carlo simulation. First, we sample 5,000 <span class="math inline">\(\theta_d\)</span> replications from its large sample distribution, <span class="math inline">\(N(\hat{\theta}_d, V_d)\)</span> where <span class="math inline">\(\hat{\theta}_d\)</span> are the estimated distance function parameters and <span class="math inline">\(V_d\)</span> is the estimated covariance matrix. For each replication we calculate <span class="math inline">\(ESA_i\)</span> for the survey segments and fit the scam model to estimate the <span class="math inline">\(f(b)\)</span> parameters, <span class="math inline">\(\theta_g\)</span>. The full estimated covariance matrix, <span class="math inline">\(V_\theta\)</span>, for = <span class="math inline">\(\hat{\theta}=(\hat{\theta}_d, \hat{\theta}_g)\)</span> was estimated with the empirical covariance matrix of the 5,000 samples.</p>
+<p>To propagate the uncertainty for effort terms into the FKW DSM model, the covariance matrix for the detection terms needs to be estimated because the <span class="math inline">\(g(0;b)\)</span> model depends on the <span class="math inline">\(ESA_i\)</span> values calculated from the distance model. Therefore, the most straightforward method to account for the covariance between the distance sampling parameters, <span class="math inline">\(\theta_d\)</span> and the <span class="math inline">\(g(0,b)\)</span> parameters, <span class="math inline">\(\theta_g\)</span>, is to perform a Monte Carlo simulation. First, we sample 5,000 <span class="math inline">\(\theta_d\)</span> replications from its large sample distribution, <span class="math inline">\(N(\hat{\theta}_d, V_d)\)</span> where <span class="math inline">\(\hat{\theta}_d\)</span> are the estimated distance function parameters and <span class="math inline">\(V_d\)</span> is the estimated covariance matrix. For each replication we calculate <span class="math inline">\(ESA_i\)</span> for the survey segments and fit the scam model to estimate the <span class="math inline">\(f(b)\)</span> parameters, <span class="math inline">\(\theta_g\)</span>. The full estimated covariance matrix, <span class="math inline">\(V_\theta\)</span>, for = <span class="math inline">\(\hat{\theta}=(\hat{\theta}_d, \hat{\theta}_g)\)</span> was estimated with the empirical covariance matrix of the 5,000 samples.</p>
 <p><strong>Warning!!!</strong> The following Monte Carlo code takes a very long time to run for the FKW analysis. To improve speed of the simulation we have looped over blocks of smaller simulation in parallel. For the code below we use <code>npar &lt;- 10</code> separate <code>R</code> instances, each sampling <code>samps &lt;- 500</code> <span class="math inline">\(\theta\)</span> values for a total of 5,000 <span class="math inline">\(\theta\)</span> replications. If you want to see the code in action we suggest that you dramatically reduce the overall sample size to assess how long it will take the full sample to execute.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Design matrix for g(0) estimates </span></span>
@@ -978,8 +978,8 @@ window.document.addEventListener("DOMContentLoaded", function (event) {
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/s3_env_data/index.html" class="pagination-link" aria-label="3. Dowload envrion. data">
-        <span class="nav-page-text">3. Dowload envrion. data</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/s3_env_data/index.html" class="pagination-link" aria-label="3. Download environmental data">
+        <span class="nav-page-text">3. Download environmental data</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
