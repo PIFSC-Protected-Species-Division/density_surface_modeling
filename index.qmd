@@ -32,7 +32,7 @@ Spatially-explicit density surface models (DSMs) for cetaceans have become a pow
 
 R script files to execute the DSM analysis presented here can be found [here](https://github.com/PIFSC-Protected-Species-Division/density_surface_modeling/tree/master/_R_code) in the the Github repository for the webpage. 
 
-The R code shown here is a consolidation and update of code developed over many years by **Elizabeth Becker** and **Karin Forney** at the NOAA Fisheries Southwest Fisheries Science Center and **Dave Miller** at the University of St. Andrews, UK.
+The R code shown here is a consolidation and update of code developed over many years by **Elizabeth Becker** and **Karin Forney** while at the NOAA Fisheries Southwest Fisheries Science Center and **Dave Miller** while at the University of St. Andrews, UK.
 
 ### License
 
