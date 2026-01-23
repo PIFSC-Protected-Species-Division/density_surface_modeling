@@ -1,13 +1,12 @@
 ---
-title: "Download and Merge Environmental data to segments"
+title: "Download and Merge Environmental Data to Segments"
 ---
 
-**Note!!!** *Currently this is the way that PIFSC PSD has downloaded oceanographic model data from Copernicus Marine Service ([https://marine.copernicus.eu/](https://marine.copernicus.eu/)). This, more complicated, method was necessary because the `CopernicusMarine`package did not have the ability to download ocean product data subsets. However, as of September 2025 this capability was repaired. So, the `CopernicusMarine` package (available from [https://pepijn-devries.github.io/CopernicusMarine/](https://pepijn-devries.github.io/CopernicusMarine/)) is probably a more efficient way to download the data and we will investigate this further.*
+**Note!!!** *Currently this is the way that our team downloaded oceanographic model data from [Copernicus Marine Service](https://marine.copernicus.eu/). This more complicated method was necessary because the `CopernicusMarine`[package](https://pepijn-devries.github.io/CopernicusMarine/) did not have the ability to download ocean product data subsets. However, as of September 2025 this capability was repaired. So, the `CopernicusMarine` package* *is probably a more efficient way to download the data, and we will investigate this further.*
 
+# A. Setup Python Environment
 
-# A. Setup Python Environment 
-
-Copernicus Marine Service has created a python API for downloading subsets of their data products. To use this through `R` the user has to install python on their machine as well as the `reticulate` package for `R`. The user has to create a user name and password for Copernicus Marine Service account, these will be required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.
+Copernicus Marine Service has created a Python API for downloading subsets of their data products. To use this through `R`, the user has to install Python on their machine as well as the `reticulate` package for `R`. The user has to create a user name and password for Copernicus Marine Service account, these will be required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.
 
 ```{r}
 #| eval: false
@@ -28,7 +27,7 @@ cm$login("username","password")
 
 # B. Download Copernicus Marine Data
 
-After the python connections are established above, we can then download the ocean model data.
+After the Python connections are established above, we can then download the ocean model data.
 
 ```{r}
 #| eval: false
@@ -66,7 +65,7 @@ segdata <- segdata %>% mutate(
 ) %>% arrange(UTC)
 ```
 
-The downloading and merging process is time consuming. Therefore we set up a parallel loop to download the data for each year simultaneously. 
+The downloading and merging process is time consuming. Therefore, we set up a parallel loop to download the data for each year simultaneously.
 
 ```{r}
 #| eval: false
@@ -123,7 +122,7 @@ env_download <- do.call(rbind, env_download)
 write.csv(env_download, file.path(copernicus_data, "env_download.csv"), row.names = FALSE)
 ```
 
-# C. Merge Compernicus Marine Data with Processed Segment Data
+# C. Merge Copernicus Marine Data with Processed Segment Data
 
 ```{r}
 #| eval: false

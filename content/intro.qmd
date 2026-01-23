@@ -1,105 +1,187 @@
 ---
 title: "Introduction"
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
 # Density Surface Modeling
 
-**Density Surface Modeling (DSM)** is a powerful and increasingly common method used to estimate the abundance of cetaceans and other mobile marine species from **distance sampling** survey data. It provides a spatially explicit approach to modeling animal density, addressing limitations of traditional methods that assume uniform density across the study area.
+**Density Surface Modeling (DSM)** is a powerful and increasingly common
+method used to estimate the abundance of cetaceans and other mobile
+marine species from **distance sampling** survey data. It provides a
+spatially-explicit approach to modeling animal density, addressing
+limitations of traditional methods that assume uniform density across
+the study area.
 
 ## Conceptual Framework
 
 DSM combines two primary components:
 
-1.  **Detection Function:** Modeling the probability of detecting an animal, which typically decreases with distance from the transect line. This accounts for animals missed during the survey.
-2.  **Spatial Density Model:** Modeling the expected density of animals across the study area as a function of environmental and/or spatial covariates (e.g., bathymetry, sea surface temperature, chlorophyll-a).
+1.  **Detection Function:** Modeling the probability of detecting an
+    animal, which typically decreases with distance from the transect
+    line. This accounts for animals missed during the survey.
+2.  **Spatial Density Model:** Modeling the expected density of animals
+    across the study area as a function of environmental and/or spatial
+    covariates (e.g., bathymetry, sea surface temperature,
+    chlorophyll-a).
 
-The final abundance estimate is derived by integrating the predicted density surface over the entire area.
+The final abundance estimate is derived by integrating the predicted
+density surface over the entire area.
 
-## DSM Outline 
+## DSM Outline
 
-The core of DSM relies on the framework of **Generalized Additive Models (GAMs)** or related regression techniques to link the estimated number of detected animals in a given sampling unit to the effort expended and the predicted detection probability.
+The core of DSM relies on the framework of **Generalized Additive Models
+(GAMs)** or related regression techniques to link the estimated number
+of detected animals in a given sampling unit to the effort expended and
+the predicted detection probability.
 
 ### 1. Estimated Effective Strip Width ($ESW$)
 
-For a standard line-transect survey, the **effective strip width ($ESW$ or $\mu$)** is estimated from the fitted detection function, $\hat{g}(x)$, where $x$ is the perpendicular distance from the transect:
+For a standard line-transect survey, the **effective strip width
+(**$ESW$ or $\mu$) is estimated from the fitted detection function,
+$\hat{g}(x)$, where $x$ is the perpendicular distance from the transect:
 $$
 ESW = \int_{0}^{w} g(x) dx
-$$
-where $w$ is the truncation distance, and $g(x)$ is the estimated probability of detection at distance $x$. The function $g(x)$ is often modeled using a key function (e.g., half-normal or hazard-rate) with series expansion adjustments. Standard distance sampling methods must assume that $g(0) = 1$ because there is no information in detection distances to estimate this value. So, other data must be used to estimate $g(0)$. So, we treat this quantity as separate from $ESW$.
+$$ where $w$ is the truncation distance, and $g(x)$ is the estimated
+probability of detection at distance $x$. The function $g(x)$ is often
+modeled using a key function (e.g., half-normal or hazard-rate) with
+series expansion adjustments. Standard distance sampling methods assume
+that $g(0) = 1$ because there is no information in detection distances
+to estimate this value. Other data must be used to estimate $g(0)$. So,
+we treat this quantity as separate from $ESW$.
 
+### 2. Spatially-Explicit Model for Encounter Rate of Groups
 
-### 2. Spatially Explicit Model for Encounter Rate of Groups
+DSM typically employs a two-stage approach. The first stage estimates
+the detection probability. The second stage uses a regression model to
+predict the *expected number of detected animals* in each sampling unit
+(survey segment).
 
-DSM typically employs a two-stage approach. The first stage estimates the detection probability. The second stage uses a regression model to predict the *expected number of detected animals* in each sampling unit (survey segment).
-
-The model uses the estimated animal density, $D$, the effective strip width, $ESW$, the trackline detection probability, $g(0)$, and the length of the segment, $L$, to predict the expected number of detected groups ($E[n]$) in a segment:
-$$
+The model uses the estimated animal density, $D$, the effective strip
+width, $ESW$, the trackline detection probability, $g(0)$, and the
+length of the segment, $L$, to predict the expected number of detected
+groups ($E[n]$) in a segment: $$
 E[n] = g(0) \times ESW \times L \times D
-$$
-Taking the logarithm (commonly used for count data) yields the linear predictor for the spatial model,
-$$
+$$ Taking the logarithm (commonly used for count data) yields the linear
+predictor for the spatial model, $$
 \log(E[n_i]) = \log (g(0)_i \cdot ESW_i \cdot L_i) + D_i
-$$
-where $i$ indexed the sample unit (survey segment). This is rearranged for the actual GAM/GLM structure. The term $\log (g(0)_i \cdot ESW_i \cdot L_i) = \log E_i$ is treated as an **offset** in the model to account for detection related effort. This yields the spatially explicit model,
-$$
+$$ where $i$ indexed the sample unit (survey segment). This is
+rearranged for the actual GAM structure. The term
+$\log (g(0)_i \cdot ESW_i \cdot L_i) = \log E_i$ is treated as an
+**offset** in the model to account for detection related effort. This
+yields the spatially-explicit model, $$
 \log(E[n_i]) = \log E_i + \beta_0 + \sum_{j} f_j(\text{covariates}_{i,j}) 
-$$
-where $\beta_0$ is the intercept, and $f_j(\text{covariates}_{i,j})$ are smooth functions of the spatial and environmental covariates (e.g., longitude, latitude, depth, SST) that together model $\log(D)$.
+$$ where $\beta_0$ is the intercept, and $f_j(\text{covariates}_{i,j})$
+are smooth functions of the spatial and environmental covariates (e.g.,
+longitude, latitude, depth, SST) that together model $\log(D)$.
 
+### 3. Spatially-Explicit Model for Group Size
 
-### 4. Spatially Explicit Model for Group Size
-
-In addition to encounter rate of groups, abundance also depends on the expected size of detected groups. Often this is modeled as spatially mean. $S$. However, environmental conditions might affect group size as well. For example beneficial conditons might lead to large aggregations of individuals increaseing the groups size. So, we generalize the group size to also be a function of environmental conditions through the GLM/GAM model
-$$
+In addition to encounter rate of groups, abundance also depends on the
+expected size of detected groups. Often this is modeled as spatially
+mean, $S$. However, environmental conditions might affect group size as
+well. For example, beneficial conditions might lead to large
+aggregations of individuals increasing the groups size. So, we
+generalize the group size to also be a function of environmental
+conditions through the GAM model, $$
 \log(S_k) = \beta_0 + \sum_{j} f_j(\text{covariates}_{k,j}) 
-$$
-where $S_k$ is the observed group size for the $k$th detected group. 
+$$ where $S_k$ is the observed group size for the $k$th detected group.
 
+### 4. Abundance Estimation
 
-### 5. Abundance Estimation
-
-The final estimated total abundance ($\hat{N}$) for a region, $\mathcal{R}$, is obtained by integrating the predicted density surface of groups, $\hat{D}(z)$ times the predicted surface of group size over the entire study area,
-$$
+The final estimated total abundance ($\hat{N}$) for a region,
+$\mathcal{R}$, is obtained by integrating the predicted density surface
+of groups, $\hat{D}(z)$ times the predicted surface of group size over
+the entire study area, $$
 \hat{N} = A\int_{\mathcal{R}} \hat{D}(z) \hat{S}(z) dz
-$$
-where $\hat{D}(z)$ is the predicted density at a location $z$ (a function of the environmental and spatial covariates), $\hat{S}(z)$ is the predicted group size at location $z$, $A$ is the total area of \mathcal{R}. Typically this is executed by calculating abundance over cells of constant covariates, 
-$$
+$$ where $\hat{D}(z)$ is the predicted density at a location $z$ (a
+function of the environmental and spatial covariates), $\hat{S}(z)$ is
+the predicted group size at location $z$, $A$ is the total area of
+$\mathcal{R}$. Typically, this is executed by calculating abundance over
+cells of constant covariates, $$
 \hat{N} = \sum_{j=1}^M \hat{D}(z_j) \hat{S}(z_j) A_j
-$$
-where $z_j$ is a grid location within $\mathcal{R}$ and $A_j$ is the subarea of the region surrounding $z_j$. 
+$$ where $z_j$ is a grid location within $\mathcal{R}$ and $A_j$ is the
+subarea of the region surrounding $z_j$.
 
-### 6. Uncertainty Assessment
+### 5. Uncertainty Assessment
 
-There are several aspects contributing to uncertainty in the point estimate of abundance, $\hat{N}$: uncertainty in GLM/GAM parameters and uncertainty in $ESW$ and $g(0)$ values. These are treated as constants in the encounter rate model. However, they are estimated from data. Also the covariates are dynamic, so there is variation in covariate values through time. To assess the coefficient of variation (CV) for $\hat{N}$ we use the variance propogation procedure of Miller et al. (2022)^[Miller, D.L., Becker, E.A., Forney, K.A., Roberts, J.J., Cañadas, A. and Schick, R.S., (2022) Estimating uncertainty in density surface models. PeerJ, 10, p.e13950.] which proceeds as
+There are several aspects contributing to uncertainty in the point
+estimate of abundance, $\hat{N}$: uncertainty in GAM parameters and
+uncertainty in $ESW$ and $g(0)$ values. These are treated as constants
+in the encounter rate model. However, they are estimated from data. Also
+the covariates are dynamic, so there is variation in covariate values
+through time. To assess the coefficient of variation (CV) for $\hat{N}$,
+we use the variance propagation procedure of Miller et al. (2022)[^1]
+which proceeds as:
 
-1. Fit the extended GLM/GAM model:
-$$
-\log(E[n_i]) = \frac{\partial\log E_i(\theta)}{\partial \theta}\delta + \beta_0 + \sum_{j} f_j(\text{covariates}_{i,j})
-$$
-where $\theta$ are the parameters in the distance sampling and $g(0)$ analysis and $\delta$ is a multivariate normal random effect with fixed variance $V = \text{Var}(\theta)$. This inflates the other GLM/GAM coefficients to account for $\theta$ (hence $ESW$ and $g(0)$) uncertainty. 
+[^1]: Miller, D.L., Becker, E.A., Forney, K.A., Roberts, J.J., Cañadas,
+    A. and Schick, R.S., (2022) Estimating uncertainty in density
+    surface models. PeerJ, 10, p.e13950.
 
-2. Draw $r$ values of the GLM/GAM coefficients from the posterior distribution using importance sampling. Use the extended model for encounter rate and the initial group size model. This accounts for GLM/GAM parameter uncertainty. 
+1.  Fit the extended GAM model: $$
+    \log(E[n_i]) = \frac{\partial\log E_i(\theta)}{\partial \theta}\delta + \beta_0 + \sum_{j} f_j(\text{covariates}_{i,j})
+    $$ where $\theta$ are the parameters in the distance sampling and
+    $g(0)$ analysis, and $\delta$ is a multivariate normal random effect
+    with fixed variance $V = \text{Var}(\theta)$. This inflates the
+    other GAM coefficients to account for $\theta$ (hence $ESW$ and
+    $g(0)$) uncertainty.
 
-3. For $d$ different days of interest predict abundance within the study area using all $r$ parameter values. Then 
+2.  Draw $r$ values of the GAM coefficients from the posterior
+    distribution using importance sampling. Use the extended model for
+    encounter rate and the initial group size model. This accounts for
+    GAM parameter uncertainty.
+
+3.  For $d$ different days of interest, predict abundance within the
+    study area using all $r$ parameter values. Then
 
 $$
 \widehat{CV}(\hat{N}) = \frac{\sqrt{Var(\hat{N}_l)}}{Mean(\hat{N}_l)}
-$$ 
-over all $r\times d$ estimates. 
-
+$$ over all $r\times d$ estimates.
 
 # False Killer Whales
 
+![](fkwpic.png){fig-align="center" width="65%"}
 
-![](fkwpic.png){fig-align="center" width=65%}
+False killer whales (*Pseudorca crassidens*) are a large toothed whale
+that inhabit sub-tropical and tropical oceanic domains worldwide and
+considered rare throughout their range. Three distinct populations of
+false killer whales are found within the waters of the U.S. Exclusive
+Economic Zone (EEZ) around the Hawaiian Islands: two insular
+populations, one around the main Hawaiian Islands and the other around
+the Northwestern Hawaiian Islands, and the wide-ranging Hawaiʻi pelagic
+population.
 
-False killer whales (*Pseudorca crassidens*) are a large toothed whale that inhabit sub-tropical and tropical oceanic domains worldwide, and considered rare throughout their range. Three distinct populations of false killer whales are found within the waters of the Hawaiian Exclusive Economic Zone (EEZ): two insular populations, one around the main Hawaiian Islands (MHI) and one around the Northwestern Hawaiian Islands (NWHI), and one wide-ranging pelagic population. 
+![Relevant boundaries for the three populations of false killer whales
+in Hawaiian waters. Dotted line represents the Hawaiʻi pelagic false
+killer whale assessment area, while the solid and dashed lines represent
+the stock boundaries of the insular main Hawaiian Islands population and
+the Northwestern Hawaiian Islands population,
+respectively.](fkw_stocks.png){fig-align="center" width="65%"}
 
-![Relevant boundaries for the three stocks of false killer whales in Hawaiian waters. Dotted line represents the pelagic false killer whale assessment area, while the solid and dashed lines represent the stock boundaries of the insular main Hawaiian Islands stock and the Northwestern Hawaiian Islands stock.](fkw_stocks.png){fig-align="center" width=65%}
+The Hawaiʻi pelagic false killer whale population experiences a greater
+degree of overlap with commercial longline fisheries and has a history
+of depredating bait and catch. Bycatch of Hawaiʻi pelagic false killer
+whales has long exceeded allowable levels, leading to the formation of a
+Take Reduction Team and Take Reduction Plan to reduce serious injury and
+mortality from fishing operations, in accordance with the Marine Mammal
+Protection Act. Prior to 2023, the Hawaiʻi pelagic false killer whale
+population was assessed and managed within the EEZ. However, following
+updated NOAA Fisheries guidance for assessing marine mammal stocks, an
+assessment area beyond the EEZ was developed in an effort to better
+represent the geographic range of the population. The Hawaiʻi pelagic
+false killer whale assessment area is defined as a minimum convex
+polygon of a 35-km buffer around all genetic, telemetry, sighting, and
+bycatch location data known or assumed to be of Hawaiʻi pelagic false
+killer whales. Assessing the distribution and abundance of Hawaiʻi
+pelagic false killer whales in this area is necessary for ongoing
+efforts to measure and mitigate impacts from fisheries interactions.
 
-Pelagic false killer whales experience a greater degree of overlap with pelagic fishing vessels, and have a history of depredating bait and catch. Bycatch of false killer whales has exceeded allowable levels, leading to the formation of a Take Reduction Team and Take Reduction Plan to reduce serious injury and mortality from fishing operations, as required by the Marine Mammal Protection Act. NOAA Fisheries typically assesses marine mammal stocks at the EEZ level, however, as the EEZ represents a political boundary rather than a biological one, an assessment area beyond the EEZ was developed in an effort for a more comprehensive evaluation of the population. The assessment area for Hawaiʻi pelagic false killer whales is defined by a minimum convex polygon of a 35-km buffer around all genetic, telemetry, sighting, and bycatch location data known or assumed to be of Hawaiʻi pelagic stock animals. Assessing abundance and distribution of pelagic false killer whales throughout their range would improve ongoing efforts to measure and mitigate impacts from fisheries interactions.
+Here, we use DSM to obtain abundance estimates for pelagic false killer
+whales in three regions: the broader central Pacific, the Hawaiʻi
+pelagic false killer whale assessment area, and the Hawaiian EEZ.
 
-
-Here, we use density surface modeling to obtain abundance estimates for pelagic false killer whales in three regions: the U.S. Hawaiian EEZ, the pelagic stock assessment area, and the broader central Pacific. 
-
-![The central Pacific (red shading) with enclosed pelagic false killer whale assessment area (solid black line, Oleson et al. 2023) and the U.S. Exclusive Economic Zone for the Hawaiian Islands (dashed black line).](cenpac_sa.png){width=65%}
+![The central Pacific (rose shading) with enclosed Hawaiʻi pelagic false
+killer whale assessment area (solid black line) and the U.S. Exclusive
+Economic Zone around the Hawaiian Islands (dashed black
+line).](cenpac_sa.png){fig-align="center" width="65%"}

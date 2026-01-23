@@ -2,7 +2,7 @@
 title: "Predicting Spatial Abundance"
 ---
 
-# A. Abundance Prediction 
+# A. Abundance Prediction
 
 ## Packages and set up
 
@@ -254,9 +254,9 @@ pout <- ggarrange(ppp[[1]], ppp[[2]], ppp[[3]], ppp[[4]], ppp[[5]], ppp[[6]], pp
 ggsave(pout, file=file.path(local_wd, "output","assess_abund.png"), width=6.5, height=4.5)
 ```
 
-## Abundance Prediction Figures
+## Abundance prediction figures
 
-### Central Pacific Region
+### Central Pacific study area
 
 ```{r}
 #| echo: false
@@ -264,17 +264,17 @@ img <- file.path(local_wd, "output","cenpac_abund.png")
 knitr::include_graphics(img)
 ```
 
-### FKW Assessment Area and Hawaii EEZ
+### Hawaiʻi pelagic false killer whale assessment area and Hawaiian EEZ
+
 ```{r}
 #| echo: false
 img <- file.path(local_wd, "output","assess_abund.png")
 knitr::include_graphics(img)
 ```
 
-
 # B. Model Assessment Using Previous Data (2017 and Prior)
 
-##  Refit GAMs without new data (2020-2023 and 2010, cruise 1004)
+## Refit GAMs without new data (2020-2023 and 2010, cruise 1004)
 
 ```{r}
 #| eval: false
@@ -310,7 +310,7 @@ eez_r <- picMaps::hawaii_eez() %>% rasterize(area, touches=TRUE, cover=TRUE)
 fkw_mgmt_r <- picMaps::pfkw_mgmt() %>% rasterize(area, touches=TRUE, cover=TRUE)
 ```
 
-## Determine clamping and truncating values 
+## Determine clamping and truncating values
 
 ```{r}
 #| eval: false
@@ -380,10 +380,10 @@ write_csv(N_summ, file=file.path(local_wd,"output","previous_data","N_summ.csv")
 ```
 
 ### Abundance prediction results using only previous data
+
 ```{r}
 #| echo: false
 #| message: false
 tab <- read_csv(file.path(local_wd,"output","previous_data","N_summ.csv"))
 tab
 ```
-

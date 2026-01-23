@@ -1,12 +1,12 @@
 ---
-title: "Fit and Select Density Surface Models (DSM) using GAMs"
+title: "Fit and Select DSMs using GAMs"
 ---
 
 # A. Data Preparation
 
 ## Load data
 
-Here, we load the survey segment data and sightings data from steps 1 and 2 and clean it up for DSM fitting with the `mgcv` package. 
+Here, we load the survey segment data and sighting data from steps 1 and 2 and clean it up for DSM fitting with the `mgcv` package.
 
 ```{r}
 #| eval: false
@@ -56,8 +56,7 @@ saveRDS(segdata, file.path(localwd, "output", "fkw_dsm_data_1997to2024.rds") )
 write.csv(segdata, file.path(localwd, "output", "fkw_dsm_data_1997to2024.csv"), row.names = FALSE)
 ```
 
-
-# B. DSM Formulation And Fitting
+# B. DSM Formulation and Fitting
 
 ## Load and add effort calculation to data
 
@@ -82,7 +81,7 @@ fkw_gs <- fkw_dsm_data %>% filter(nSI_033 > 0)# Just segments with sightings
 
 ## Add augmented data for pelagic probabilty weighting
 
-Here, we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic stock animals is less than 1. For all sightings with `ProbPel` < 1, we add an additional line of data for each segment where the number of groups detected is `nSI_033 <- 0` and `ProbPel <- 1-ProbPel` for the observed encounter. 
+Here, we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic false killer whales is less than 1. For all sightings with `ProbPel` \< 1, we add an additional line of data for each segment where the number of groups detected is `nSI_033 <- 0` and `ProbPel <- 1-ProbPel` for the observed encounter.
 
 ```{r}
 #| eval: false
@@ -102,11 +101,11 @@ fkw_dsm_data <- bind_rows(fkw_dsm_data, nonpel) %>%
 
 ## Create model list and fit
 
-In this section of code we construct a list for all desired encounters and groups size model specifications. We then fit all the models and produce a table of models and AIC values. 
+In this section of code, we construct a list for all desired encounters and groups size model specifications. We then fit all the models and produce a table of models and AIC values.
 
 ### Encounter rate models
 
-Specification of the encounter rate model set is somewhat tricky due to the fact there are are several restrictions on the set of all possible models, namely due to the inclusion of Latitude interaction effects. The encounter rate models included all combinations of the 4 oceanographic variables: `sst`, `ssh`, `mld`, and `salinity` (including none) along with all combinations of the focal standard deviation versions: `sst_sd`, `ssh_sd`, `mld_sd`, and `salinity_sd`. The `_sd` versions are meant to examine the effect of fronts within the gradients of these variables. In addition to this model set, we also added an interaction term of the form `te(var,Latitude)` for interaction effects of Latitude on the main variables. Only 1 main variable was allowed to interact with Latitude at a time. The resulting list is comprised of 767 models. 
+Specification of the encounter rate model set is somewhat tricky due to the fact there are are several restrictions on the set of all possible models, namely due to the inclusion of Latitude interaction effects. The encounter rate models included all combinations of the 4 oceanographic variables: `sst`, `ssh`, `mld`, and `salinity` (including none) along with all combinations of the focal standard deviation versions: `sst_sd`, `ssh_sd`, `mld_sd`, and `salinity_sd`. The `_sd` versions are meant to examine the effect of fronts within the gradients of these variables. In addition to this model set, we also added an interaction term of the form `te(var,Latitude)` for interaction effects of Latitude on the main variables. Only 1 main variable was allowed to interact with Latitude at a time. The resulting list is comprised of 767 models.
 
 ```{r}
 #| eval: false
@@ -150,11 +149,11 @@ for(i in seq_along(form_hab)){
 }
 ```
 
-###  Fit all ER models
+### Fit all encounter rate models
 
-In this section we fit all 767 encounter rate models to determine the AIC optimal model as well as the relative rankings of different models, etc. 
+In this section, we fit all 767 encounter rate models to determine the AIC optimal model, as well as the relative rankings of different models, etc.
 
-**Warning!!!** This takes a while to implement so it was partitioned and chunks of models were fit in parallel. 
+**Warning!!!** This takes a while to implement, so it was partitioned and chunks of models were fit in parallel.
 
 ```{r}
 #| eval: false
@@ -197,7 +196,7 @@ mod_df <- data.frame(
 
 ### Group size model
 
-The group size model set is relatively easy to for as it simply consists of every combination of the 4 oceanographic variables for a total of 16 models. 
+The group size model set is relatively easy to for as it simply consists of every combination of the 4 oceanographic variables for a total of 16 models.
 
 ```{r}
 #| eval: false
@@ -216,7 +215,7 @@ forms_gs <- paste("log(ANI_033)", forms_gs, sep=" ~ ")
 forms_gs[1] <- "log(ANI_033) ~ 1"
 ```
 
-### Fit all GS models
+### Fit all group size models
 
 ```{r}
 #| eval: false
@@ -273,7 +272,7 @@ save( fkw_dsm_data, fkw_gs, spline2use, file=file.path(local_wd, "output","dsm_m
 
 # C. Model Evaluation
 
-## Load previous AIC results and data 
+## Load previous AIC results and data
 
 ```{r}
 #| eval: false
@@ -294,9 +293,9 @@ aic_gs <- read_csv(file.path(local_wd, "output","aic_gs.csv"))
 
 ```
 
-## Fit top models and examine 
+## Fit top models and examine
 
-Here we fit the AIC top models and examine the significance of the effects. For the encounter rate model only the `te(sst, Latitude)` effect was statistically significant so it was retained going forward. For the group size model all terms were statistically significant, so it is used as is. 
+Here, we fit the AIC top models and examine the significance of the effects. For the encounter rate model only, the `te(sst, Latitude)` effect was statistically significant, so it was retained going forward. For the group size model, all terms were statistically significant, so it is used as is.
 
 ```{r}
 #| eval: false
@@ -322,9 +321,9 @@ gs_fit <- gam(formula = log(ANI_033) ~ s(ssh, bs = spline2use, k = 5) + s(mld, b
 
 Traditional cross-validation is not possible for this analysis due to limited data availability to discretize into training and testing datasets. So, we use other methods of evaluating model performance.
 
-### Evaluate ratio of design-based to model-based predicted density
+### Evaluate ratio of observed to predicted density
 
-Here we examine the ratio of density estimates on the survey segments between design and model based estimators. 
+Here we examine the ratio of observed to predicted density estimates on the survey segments.
 
 ```{r}
 #| eval: false
@@ -337,13 +336,13 @@ pred_gs <- exp(predict(gs_fit) + 0.5*gs_fit$sig2)
 gs_bias_corr <- weighted.mean(fkw_gs$ANI_033,w=fkw_gs$ProbPel)/mean(pred_gs)
 pred_gs <- exp(predict(gs_fit, newdata=fkw_dsm_data) + 0.5*gs_fit$sig2)
 
-### Design-based observed and predicted
+### observed
 obsdens <- (fkw_dsm_data$nSI_033 * fkw_dsm_data$ANI_033)
 ltdens <- weighted.mean(obsdens,fkw_dsm_data$ProbPel)/weighted.mean(fkw_dsm_data$effort,fkw_dsm_data$ProbPel)
 ltdens*A
 # 23441.83
 
-## model based
+## predicted
 modeldens <- pred_er * pred_gs * gs_bias_corr
 preddens <- sum(modeldens)/sum(fkw_dsm_data$effort)
 preddens*A
@@ -354,11 +353,11 @@ ltdens/preddens
 # 1.058097
 ```
 
-## Prediction metrics
+## Performance metrics
 
 ### AUC and TSS
 
-Here, we calculate the area under the receiver operating characteristic curve (AUC, Fawcett 2006), the true skill statistic (TSS, Allouche et al. 2006). AUC discriminates between true-positive and false-positive rates, and values range from 0 to 1, where a score of > 0.5 indicates better than random discrimination. TSS accounts for both omission and commission errors and ranges from -1 to 1, where 1 indicates perfect agreement and values of zero or less indicate performance no better (or worse) than random. 
+Here, we calculate the area under the receiver operating characteristic curve (AUC) and the true skill statistic (TSS). AUC discriminates between true-positive and false-positive rates, and values range from 0 to 1, where a score of \> 0.5 indicates better than random discrimination. TSS accounts for both omission and commission errors and ranges from -1 to 1, where 1 indicates perfect agreement and values of zero or less indicate performance no better (or worse) than random.
 
 ```{r}
 #| eval: false
@@ -384,8 +383,11 @@ TSS
 
 ### ROSE bootstrap sample AUC and TSS
 
-Menardi and Torelli (2014) note that when data are highly imbalanced, performance metrics, such as AUC and TSS, as well as parameter estimation, can be compromised. So, in addition to the AUC and TSS calculations, we also used the ROSE (Random Over-Sampling Examples) sampling bootstrap (Lunardon et al., 2014) to assess the effects that sparse detection of false killer whales might have had on AUC and TSS metrics for the just the encounter rate model as it is the portion that is severely imbalanced. 
- The ROSE sampling method is described in detail by Menardi and Torelli (2014), but briefly, kernel density estimates are calculated for segments with and without detections. Then a sample is drawn with probability = 0.5 from each KDE till the desired sample size is reached. This produces a balanced sample where the predictive covariates are similar to what was observed for each group (detection vs. nondetection) in the original data.
+Menardi and Torelli (2014)[^1] note that when data are highly imbalanced, performance metrics, such as AUC and TSS, as well as parameter estimation, can be compromised. So, in addition to the AUC and TSS calculations, we also used the ROSE (Random Over-Sampling Examples) sampling bootstrap (Lunardon et al., 2014)[^2] to assess the effects that sparse detection of false killer whales might have had on AUC and TSS metrics for the just the encounter rate model as it is the portion that is severely imbalanced. In the ROSE sampling method, kernel density estimates are calculated for segments with and without detections. Then a sample is drawn with probability = 0.5 from each KDE until the desired sample size is reached. This produces a balanced sample where the predictive covariates are similar to what was observed for each group (detection vs. nondetection) in the original data.
+
+[^1]: Menardi, G., and Torelli, N., 2014. Training and assessing classification rules with imbalanced data. Data Mining and Knowledge Discovery, 28:92–122. doi:10.1007/s10618-012-0295-5.
+
+[^2]: Lunardon, N., Menardi, G. and Torelli, N. 2014. ROSE: a package for binary imbalanced learning. The R Journal, 6:79–89. doi:10.32614/RJ-2014-008.
 
 ```{r}
 #| eval: false
@@ -450,7 +452,9 @@ save(er_fit, gs_fit, gs_bias_corr, opt_rocr, fkw_dsm_data, fkw_gs, A, ltdens, sp
      file=file.path(local_wd, "output", "dsm_fit_final.RData"))
 
 ```
+
 ### Encounter rate model
+
 ```{r}
 #| echo: false
 img <- file.path(local_wd, "output","er_fit.png")
@@ -458,10 +462,9 @@ knitr::include_graphics(img)
 ```
 
 ### Group size model
+
 ```{r}
 #| echo: false
 img <- file.path(local_wd, "output","gs_fit.png")
 knitr::include_graphics(img)
 ```
-
-

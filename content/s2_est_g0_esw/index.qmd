@@ -1,8 +1,11 @@
 ---
-title: "Estimate *g*(0) and Effective Strip Width with Auxillary Data"
+title: "Estimate *g*(0) and *ESW* with Auxillary Data"
+editor: 
+  markdown: 
+    wrap: 72
 ---
 
-# A. Process Previous Survey DAS Data 
+# A. Process Previous Survey DAS Data
 
 ```{r}
 #| eval: false
@@ -21,7 +24,7 @@ localwd <- here("_R_code","task_2_est_g0_esw")
 sp.code <- "033"
 ```
 
-### Read in previous survey data
+## Read in previous survey data
 
 ```{r}
 #| eval: false
@@ -32,7 +35,7 @@ y.proc <- swfscDAS::das_process(das_file)
 strata_file_dir <- file.path(localwd, "Strata Files", "region_filter_esw_g0.csv")
 ```
 
-### Process DAS file and filter for FKW regions
+## Process DAS file and filter for false killer whale regions
 
 ```{r}
 #| eval: false
@@ -71,7 +74,7 @@ ggplot()+
 
 ```
 
-### Export data for use in *g*(0) and ESW estimation
+## Export data for use in *g*(0) and ESW estimation
 
 ```{r}
 #| eval: false
@@ -86,7 +89,9 @@ saveRDS(input_dat, file.path(localwd, "output","esw_g0_input.rds"))
 
 # B. Estimate ESW and *g*(0) Relative to Beaufort Sea State
 
-If you are not continuing from step A in the same session, the following code must be executed to load the appropriate packages and processed data from step A. Otherwise, this code chunk can be skipped.
+If you are not continuing from step A in the same session, the following
+code must be executed to load the appropriate packages and processed
+data from step A. Otherwise, this code chunk can be skipped.
 
 ```{r}
 #| eval: true
@@ -110,16 +115,16 @@ sp.code <- "033"
 input_dat <- readRDS(file.path(localwd, "output","esw_g0_input.rds"))
 ```
 
-### Estimate Effective Strip Width (ESW) relative to Beaufort sea state
+## Estimate ESW relative to Beaufort sea state
 
-Here we are using the `distance` package to fit a half-normal detection function:
-$$
+Here we are using the `distance` package to fit a half-normal detection
+function: $$
 p_i(x|\boldsymbol{\theta}_d) = \exp(-x/2\sigma_i^2)
-$$
-where the detection range parameter is a function of the Beaufort sea state, $b_i$, on survey segment $i$,
-$$
+$$ where the detection range parameter is a function of the Beaufort sea
+state, $b_i$, on survey segment $i$, $$
 \log \sigma_i = \theta_{d,0} + \theta_{d,b} b_i.
 $$
+
 ```{r}
 #| eval: true
 #| output: true
@@ -132,13 +137,17 @@ summary(detfun)
 plot(detfun, showpoints = TRUE)
 ```
 
-**Estimate ESW for all segments**
+### Estimate ESW for all segments
 
-In this step the effective strip width ($ESW_i$) is calculated for each survey segment, 
-$$
+In this step, the effective strip width ($ESW_i$) is calculated for each
+survey segment, $$
 ESW_i = \int_0^wp_i(x|\boldsymbol{\theta}_d)dx
-$$
-where $w$ is the truncation width of the transects, here is is 5.5km as can be seen in the previous code. The $ESW$ is the width of the strip that would result from a survey with perfect detection. Now the fitted $ESW$ are saved for future if the user is not continuing on to estimate $g(0;b_i)$, the probability of detection on the trackline when Beaufort sea state equals $b_i$.
+$$ where $w$ is the truncation width of the transects, here it is 5.5 km
+as can be seen in the previous code. The $ESW$ is the width of the strip
+that would result from a survey with perfect detection. Now the fitted
+$ESW$ are saved for future if the user is not continuing on to estimate
+$g(0;b_i)$, the probability of detection on the trackline when Beaufort
+sea state equals $b_i$.
 
 ```{r}
 #| output: false
@@ -148,17 +157,25 @@ modeling_data$segdata <- modeling_data$segdata %>% rename(beaufort = avgBft)
 modeling_data$segdata[paste0("esw","_",sp.code)] <- predict(detfun, modeling_data$segdata, esw=TRUE)[["fitted"]]
 ```
 
-### Estimate *g*(0) relative to Beaufort sea state
+## Estimate *g*(0) relative to Beaufort sea state
 
-Now we can use the $ESW$ results to fit a very general DSM model over FKW detections. The density model includes a Beaufort sea state effect so we can assess the relative density of detections in different sea states. By assuming that detection along the trackline is $g(0;b)=1$ for $b = 0$ or $1$ (the calmest seas) we can estimate trackline detection probability for FKW surveys. For the DSM model we need to add the effective survey area,
-$$
+Now we can use the $ESW$ results to fit a very general DSM model over
+false killer whale detections. The density model includes a Beaufort sea
+state effect so we can assess the relative density of detections in
+different sea states. By assuming that detection along the trackline is
+$g(0;b)=1$ for $b = 0$ or $1$ (the calmest seas), we can estimate
+trackline detection probability during false killer whale surveys. For
+the DSM model, we need to add the effective survey area, $$
 ESA_i = 2 \times ESW_i \times L_i
-$$
-this is used to assess the observed density, $y_i$ of FKW for each segment. Then a generalized additive model (GAM) is fitted to the observed densities with log expected value
-$$
+$$that is used to assess the observed density, $y_i$ of false killer
+whales for each segment. Then a GAM is fitted to the observed densities
+with log expected value: $$
 \log E(y_i) = \log ESA_i + f(b_i) + f(Lon_i,Lat_i) + f(year_i) 
-$$
-the $f(\dots)$ terms are nonparametric function effects. To enforce the conditions that $f(b)$ should be monotonically decreasing as sea state increases the `scam` package is used instead of `mgcv`. When the smooth formulation `bs='mpd'` is used this monotonicity is enforced.
+$$ where the $f(\dots)$ terms are nonparametric function effects. To
+enforce the conditions that $f(b)$ should be monotonically decreasing as
+sea state increases, the `scam` package is used instead of `mgcv`. When
+the smooth formulation `bs='mpd'` is used, this monotonicity is
+enforced.
 
 ```{r}
 #| output: false
@@ -182,14 +199,16 @@ g0_est<-scam::scam(formula = resp ~ s(I(pmax(beaufort-1,0)), bs='mpd', k=4)
                    gamma=1.4)
 ```
 
-**Estimate relative *g*(0) for each Beaufort sea state**
+### Estimate relative *g*(0) for each Beaufort sea state
 
-Now that the model is fit, we can estimate $g(0;b)$ by examining the relative expected density for any specific segment under different Beaufort conditions. Because the $f(b_i)$ term is additive it does not matter which is used because they will all be the same. So, we just formulate a generic segment with varying Beaufort states. For the predicted density, 
-$$
+Now that the model is fit, we can estimate $g(0;b)$ by examining the
+relative expected density for any specific segment under different
+Beaufort conditions. Because the $f(b_i)$ term is additive, it does not
+matter which is used because they will all be the same. So, we just
+formulate a generic segment with varying Beaufort states. For the
+predicted density, $$
 \mu_b = E(y_*) = \exp( \log ESA_* + f(b) + f(Lon_*,Lat_*) + f(year_*)),
-$$
-the estimated trackline probability is
-$$
+$$ the estimated trackline probability is $$
 g(0;b) = \mu_b / \mu_0
 $$
 
@@ -205,9 +224,13 @@ names(Rg0) <- 0:7
 round(Rg0,2) # for display only
 ```
 
-**Add *g*(0) estimate to all segments and save final modeling data set**
+### Add *g*(0) estimate to all segments and save final modeling data set
 
-To account for survey segments with non-integer Beaufort states, because it changed over the course of the segment, the $g(0;b)$ value was linearly interpolated between the adjacent $b$ values. Then model data for the current survey is exported for use in the Hawaiʻi pelagic false killer whale density surface model. The $g(0;b_i)$ and $ESW_i$ will serve as an effort offset. 
+To account for survey segments with non-integer Beaufort states, because
+it changed over the course of the segment, the $g(0;b)$ value was
+linearly interpolated between the adjacent $b$ values. Then model data
+for the current survey is exported for use in the pelagic false killer
+whale DSM. The $g(0;b_i)$ and $ESW_i$ will serve as an effort offset.
 
 ```{r}
 #| output: false
@@ -223,10 +246,30 @@ saveRDS(modeling_data, file.path(localwd, "output","seg_sight_out_g0_ESW.rds"))
 
 # C. Monte Carlo Estimation of ESW and *g*(0) Parameter Covariance Matrix
 
-To propagate the uncertainty for effort terms into the FKW DSM model, the covariance matrix for the detection terms needs to be estimated because the $g(0;b)$ model depends on the $ESA_i$ values calculated from the distance model. Therefore, the most straightforward method to account for the covariance between the distance sampling parameters, $\theta_d$ and the $g(0,b)$ parameters, $\theta_g$, is to perform a Monte Carlo simulation. First, we sample 5,000 $\theta_d$ replications from its large sample distribution, $N(\hat{\theta}_d, V_d)$ where $\hat{\theta}_d$ are the estimated distance function parameters and $V_d$ is the estimated covariance matrix. For each replication we calculate $ESA_i$ for the survey segments and fit the scam model to estimate the $f(b)$ parameters, $\theta_g$. The full estimated covariance matrix, $V_\theta$, for  = $\hat{\theta}=(\hat{\theta}_d, \hat{\theta}_g)$ was estimated with the empirical covariance matrix of the 5,000  samples. 
+To propagate the uncertainty for effort terms into the false killer
+whale DSM model, the covariance matrix for the detection terms needs to
+be estimated because the $g(0;b)$ model depends on the $ESA_i$ values
+calculated from the distance model. Therefore, the most straightforward
+method to account for the covariance between the distance sampling
+parameters, $\theta_d$ and the $g(0,b)$ parameters, $\theta_g$, is to
+perform a Monte Carlo simulation. First, we sample 5,000 $\theta_d$
+replications from its large sample distribution,
+$N(\hat{\theta}_d, V_d)$, where $\hat{\theta}_d$ are the estimated
+distance function parameters and $V_d$ is the estimated covariance
+matrix. For each replication, we calculate $ESA_i$ for the survey
+segments and fit the scam model to estimate the $f(b)$ parameters,
+$\theta_g$. The full estimated covariance matrix, $V_\theta$, for =
+$\hat{\theta}=(\hat{\theta}_d, \hat{\theta}_g)$, was estimated with the
+empirical covariance matrix of the 5,000 samples.
 
-**Warning!!!** The following Monte Carlo code takes a very long time to run for the FKW analysis. To improve speed of the simulation we have looped over blocks of smaller simulation in parallel. For the code below we use `npar <- 10` separate `R` instances, each sampling `samps <- 500` $\theta$ values for a total of 5,000 $\theta$ replications. If you want to see the code in action we suggest that you dramatically reduce the overall sample size to assess how long it will take the full sample to execute. 
-
+**Warning!!!** The following Monte Carlo code takes a very long time to
+run for the false killer whale analysis. To improve speed of the
+simulation, we have looped over blocks of smaller simulation in
+parallel. For the code below we use `npar <- 10` separate `R` instances,
+each sampling `samps <- 500` $\theta$ values for a total of 5,000
+$\theta$ replications. If you want to see the code in action, we suggest
+that you dramatically reduce the overall sample size to assess how long
+it will take the full sample to execute.
 
 ```{r}
 #| eval: false
@@ -271,7 +314,10 @@ g0_par_sim <- foreach(i = 1:npar,  .options.future = list(seed = TRUE), .errorha
 plan("sequential")
 ```
 
-Here we are combining the parallel samples back together and calculating the covatiance matrix $V_\theta$. Then exporting the results for use in the abundance prediction uncertainty assessment stage. 
+Here, we are combining the parallel samples back together and
+calculating the covatiance matrix $V_\theta$. Then, we export the
+results for use in the abundance prediction uncertainty assessment
+stage.
 
 ```{r}
 #| eval: false
@@ -304,4 +350,3 @@ varprop_list <- list(
 
 saveRDS(varprop_list, file = file.path(datadir, "output","varprop_list.rds"))
 ```
-
