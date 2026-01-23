@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Download and Merge Environmental data to segments – PIFSC PSD Density Surface Modeling</title>
+<title>Download and Merge Environmental Data to Segments – PIFSC PSD Density Surface Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -215,7 +215,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <ul>
   <li><a href="#a.-setup-python-environment" id="toc-a.-setup-python-environment" class="nav-link active" data-scroll-target="#a.-setup-python-environment">A. Setup Python Environment</a></li>
   <li><a href="#b.-download-copernicus-marine-data" id="toc-b.-download-copernicus-marine-data" class="nav-link" data-scroll-target="#b.-download-copernicus-marine-data">B. Download Copernicus Marine Data</a></li>
-  <li><a href="#c.-merge-compernicus-marine-data-with-processed-segment-data" id="toc-c.-merge-compernicus-marine-data-with-processed-segment-data" class="nav-link" data-scroll-target="#c.-merge-compernicus-marine-data-with-processed-segment-data">C. Merge Compernicus Marine Data with Processed Segment Data</a></li>
+  <li><a href="#c.-merge-copernicus-marine-data-with-processed-segment-data" id="toc-c.-merge-copernicus-marine-data-with-processed-segment-data" class="nav-link" data-scroll-target="#c.-merge-copernicus-marine-data-with-processed-segment-data">C. Merge Copernicus Marine Data with Processed Segment Data</a></li>
   </ul>
 <div class="toc-actions"><ul><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/edit/main/content/s3_env_data/index.qmd" class="toc-action"><i class="bi bi-github"></i>Edit this page</a></li><li><a href="https://github.com/pifsc-protected-species-division/density_surface_modeling/issues/new" class="toc-action"><i class="bi empty"></i>Report an issue</a></li></ul></div></nav>
     </div>
@@ -224,7 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Download and Merge Environmental data to segments</h1>
+<h1 class="title">Download and Merge Environmental Data to Segments</h1>
 </div>
 
 
@@ -241,10 +241,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>Note!!!</strong> <em>Currently this is the way that PIFSC PSD has downloaded oceanographic model data from Copernicus Marine Service (<a href="https://marine.copernicus.eu/">https://marine.copernicus.eu/</a>). This, more complicated, method was necessary because the <code>CopernicusMarine</code>package did not have the ability to download ocean product data subsets. However, as of September 2025 this capability was repaired. So, the <code>CopernicusMarine</code> package (available from <a href="https://pepijn-devries.github.io/CopernicusMarine/">https://pepijn-devries.github.io/CopernicusMarine/</a>) is probably a more efficient way to download the data and we will investigate this further.</em></p>
+<p><strong>Note!!!</strong> <em>Currently this is the way that our team downloaded oceanographic model data from <a href="https://marine.copernicus.eu/">Copernicus Marine Service</a>. This more complicated method was necessary because the <code>CopernicusMarine</code><a href="https://pepijn-devries.github.io/CopernicusMarine/">package</a> did not have the ability to download ocean product data subsets. However, as of September 2025 this capability was repaired. So, the <code>CopernicusMarine</code> package</em> <em>is probably a more efficient way to download the data, and we will investigate this further.</em></p>
 <section id="a.-setup-python-environment" class="level1">
 <h1>A. Setup Python Environment</h1>
-<p>Copernicus Marine Service has created a python API for downloading subsets of their data products. To use this through <code>R</code> the user has to install python on their machine as well as the <code>reticulate</code> package for <code>R</code>. The user has to create a user name and password for Copernicus Marine Service account, these will be required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.</p>
+<p>Copernicus Marine Service has created a Python API for downloading subsets of their data products. To use this through <code>R</code>, the user has to install Python on their machine as well as the <code>reticulate</code> package for <code>R</code>. The user has to create a user name and password for Copernicus Marine Service account, these will be required in the code below. This step is run only the first time when setting up the virtual Python env for data downloading.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(reticulate) </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -262,7 +262,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="b.-download-copernicus-marine-data" class="level1">
 <h1>B. Download Copernicus Marine Data</h1>
-<p>After the python connections are established above, we can then download the ocean model data.</p>
+<p>After the Python connections are established above, we can then download the ocean model data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
@@ -293,7 +293,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">UTC =</span> <span class="fu">as.POSIXct</span>(<span class="fu">paste</span>(year, month, day, <span class="at">sep =</span> <span class="st">"-"</span>), <span class="at">format =</span> <span class="st">"%Y-%m-%d"</span>, <span class="at">tz =</span> <span class="st">"UTC"</span>) <span class="sc">+</span> <span class="fu">hms</span>(mtime)</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(UTC)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>The downloading and merging process is time consuming. Therefore we set up a parallel loop to download the data for each year simultaneously.</p>
+<p>The downloading and merging process is time consuming. Therefore, we set up a parallel loop to download the data for each year simultaneously.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> <span class="fu">unique</span>(segdata<span class="sc">$</span>year)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -348,8 +348,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(env_download, <span class="fu">file.path</span>(copernicus_data, <span class="st">"env_download.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="c.-merge-compernicus-marine-data-with-processed-segment-data" class="level1">
-<h1>C. Merge Compernicus Marine Data with Processed Segment Data</h1>
+<section id="c.-merge-copernicus-marine-data-with-processed-segment-data" class="level1">
+<h1>C. Merge Copernicus Marine Data with Processed Segment Data</h1>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>years <span class="ot">&lt;-</span> env_download<span class="sc">$</span>years</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>

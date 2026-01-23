@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Estimate g(0) and Effective Strip Width with Auxillary Data – PIFSC PSD Density Surface Modeling</title>
+<title>Estimate g(0) and ESW with Auxillary Data – PIFSC PSD Density Surface Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -245,13 +245,20 @@ window.Quarto = {
   <li><a href="#a.-process-previous-survey-das-data" id="toc-a.-process-previous-survey-das-data" class="nav-link active" data-scroll-target="#a.-process-previous-survey-das-data">A. Process Previous Survey DAS Data</a>
   <ul class="collapse">
   <li><a href="#read-in-previous-survey-data" id="toc-read-in-previous-survey-data" class="nav-link" data-scroll-target="#read-in-previous-survey-data">Read in previous survey data</a></li>
-  <li><a href="#process-das-file-and-filter-for-fkw-regions" id="toc-process-das-file-and-filter-for-fkw-regions" class="nav-link" data-scroll-target="#process-das-file-and-filter-for-fkw-regions">Process DAS file and filter for FKW regions</a></li>
+  <li><a href="#process-das-file-and-filter-for-false-killer-whale-regions" id="toc-process-das-file-and-filter-for-false-killer-whale-regions" class="nav-link" data-scroll-target="#process-das-file-and-filter-for-false-killer-whale-regions">Process DAS file and filter for false killer whale regions</a></li>
   <li><a href="#export-data-for-use-in-g0-and-esw-estimation" id="toc-export-data-for-use-in-g0-and-esw-estimation" class="nav-link" data-scroll-target="#export-data-for-use-in-g0-and-esw-estimation">Export data for use in <em>g</em>(0) and ESW estimation</a></li>
   </ul></li>
   <li><a href="#b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" id="toc-b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#b.-estimate-esw-and-g0-relative-to-beaufort-sea-state">B. Estimate ESW and <em>g</em>(0) Relative to Beaufort Sea State</a>
   <ul class="collapse">
-  <li><a href="#estimate-effective-strip-width-esw-relative-to-beaufort-sea-state" id="toc-estimate-effective-strip-width-esw-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-effective-strip-width-esw-relative-to-beaufort-sea-state">Estimate Effective Strip Width (ESW) relative to Beaufort sea state</a></li>
-  <li><a href="#estimate-g0-relative-to-beaufort-sea-state" id="toc-estimate-g0-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-g0-relative-to-beaufort-sea-state">Estimate <em>g</em>(0) relative to Beaufort sea state</a></li>
+  <li><a href="#estimate-esw-relative-to-beaufort-sea-state" id="toc-estimate-esw-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-esw-relative-to-beaufort-sea-state">Estimate ESW relative to Beaufort sea state</a>
+  <ul class="collapse">
+  <li><a href="#estimate-esw-for-all-segments" id="toc-estimate-esw-for-all-segments" class="nav-link" data-scroll-target="#estimate-esw-for-all-segments">Estimate ESW for all segments</a></li>
+  </ul></li>
+  <li><a href="#estimate-g0-relative-to-beaufort-sea-state" id="toc-estimate-g0-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-g0-relative-to-beaufort-sea-state">Estimate <em>g</em>(0) relative to Beaufort sea state</a>
+  <ul class="collapse">
+  <li><a href="#estimate-relative-g0-for-each-beaufort-sea-state" id="toc-estimate-relative-g0-for-each-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-relative-g0-for-each-beaufort-sea-state">Estimate relative <em>g</em>(0) for each Beaufort sea state</a></li>
+  <li><a href="#add-g0-estimate-to-all-segments-and-save-final-modeling-data-set" id="toc-add-g0-estimate-to-all-segments-and-save-final-modeling-data-set" class="nav-link" data-scroll-target="#add-g0-estimate-to-all-segments-and-save-final-modeling-data-set">Add <em>g</em>(0) estimate to all segments and save final modeling data set</a></li>
+  </ul></li>
   </ul></li>
   <li><a href="#c.-monte-carlo-estimation-of-esw-and-g0-parameter-covariance-matrix" id="toc-c.-monte-carlo-estimation-of-esw-and-g0-parameter-covariance-matrix" class="nav-link" data-scroll-target="#c.-monte-carlo-estimation-of-esw-and-g0-parameter-covariance-matrix">C. Monte Carlo Estimation of ESW and <em>g</em>(0) Parameter Covariance Matrix</a></li>
   </ul>
@@ -262,7 +269,7 @@ window.Quarto = {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Estimate <em>g</em>(0) and Effective Strip Width with Auxillary Data</h1>
+<h1 class="title">Estimate <em>g</em>(0) and <em>ESW</em> with Auxillary Data</h1>
 </div>
 
 
@@ -295,8 +302,8 @@ window.Quarto = {
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_2_est_g0_esw"</span>)</span>
 <span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>sp.code <span class="ot">&lt;-</span> <span class="st">"033"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="read-in-previous-survey-data" class="level3">
-<h3 class="anchored" data-anchor-id="read-in-previous-survey-data">Read in previous survey data</h3>
+<section id="read-in-previous-survey-data" class="level2">
+<h2 class="anchored" data-anchor-id="read-in-previous-survey-data">Read in previous survey data</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">#read in input files</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>das_file <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localwd, <span class="st">"AllSurveys_g0_ESW_1986-2023.das"</span>)</span>
@@ -304,8 +311,8 @@ window.Quarto = {
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>strata_file_dir <span class="ot">&lt;-</span> <span class="fu">file.path</span>(localwd, <span class="st">"Strata Files"</span>, <span class="st">"region_filter_esw_g0.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="process-das-file-and-filter-for-fkw-regions" class="level3">
-<h3 class="anchored" data-anchor-id="process-das-file-and-filter-for-fkw-regions">Process DAS file and filter for FKW regions</h3>
+<section id="process-das-file-and-filter-for-false-killer-whale-regions" class="level2">
+<h2 class="anchored" data-anchor-id="process-das-file-and-filter-for-false-killer-whale-regions">Process DAS file and filter for false killer whale regions</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>y.eff <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_effort</span>(</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  y.proc, <span class="at">method =</span> <span class="st">"equallength"</span>,</span>
@@ -317,8 +324,8 @@ window.Quarto = {
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>y.eff.sight.strata <span class="ot">&lt;-</span> swfscDAS<span class="sc">::</span><span class="fu">das_intersects_strata</span>(y.eff.sight, <span class="fu">list</span>(<span class="at">InPoly =</span> strata_file_dir)) </span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="export-data-for-use-in-g0-and-esw-estimation" class="level3">
-<h3 class="anchored" data-anchor-id="export-data-for-use-in-g0-and-esw-estimation">Export data for use in <em>g</em>(0) and ESW estimation</h3>
+<section id="export-data-for-use-in-g0-and-esw-estimation" class="level2">
+<h2 class="anchored" data-anchor-id="export-data-for-use-in-g0-and-esw-estimation">Export data for use in <em>g</em>(0) and ESW estimation</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>input_dat<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>input_dat<span class="sc">$</span>esw.dat <span class="ot">&lt;-</span> y.eff.sight.strata<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> </span>
@@ -350,8 +357,8 @@ window.Quarto = {
 <span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="co">#' Recall saved data from step 1</span></span>
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>input_dat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(localwd, <span class="st">"output"</span>,<span class="st">"esw_g0_input.rds"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<section id="estimate-effective-strip-width-esw-relative-to-beaufort-sea-state" class="level3">
-<h3 class="anchored" data-anchor-id="estimate-effective-strip-width-esw-relative-to-beaufort-sea-state">Estimate Effective Strip Width (ESW) relative to Beaufort sea state</h3>
+<section id="estimate-esw-relative-to-beaufort-sea-state" class="level2">
+<h2 class="anchored" data-anchor-id="estimate-esw-relative-to-beaufort-sea-state">Estimate ESW relative to Beaufort sea state</h2>
 <p>Here we are using the <code>distance</code> package to fit a half-normal detection function: <span class="math display">\[
 p_i(x|\boldsymbol{\theta}_d) = \exp(-x/2\sigma_i^2)
 \]</span> where the detection range parameter is a function of the Beaufort sea state, <span class="math inline">\(b_i\)</span>, on survey segment <span class="math inline">\(i\)</span>, <span class="math display">\[
@@ -404,23 +411,25 @@ N in covered region 274.6616170 24.21359682 0.08815792</code></pre>
 </div>
 </div>
 </div>
-<p><strong>Estimate ESW for all segments</strong></p>
-<p>In this step the effective strip width (<span class="math inline">\(ESW_i\)</span>) is calculated for each survey segment, <span class="math display">\[
+<section id="estimate-esw-for-all-segments" class="level3">
+<h3 class="anchored" data-anchor-id="estimate-esw-for-all-segments">Estimate ESW for all segments</h3>
+<p>In this step, the effective strip width (<span class="math inline">\(ESW_i\)</span>) is calculated for each survey segment, <span class="math display">\[
 ESW_i = \int_0^wp_i(x|\boldsymbol{\theta}_d)dx
-\]</span> where <span class="math inline">\(w\)</span> is the truncation width of the transects, here is is 5.5km as can be seen in the previous code. The <span class="math inline">\(ESW\)</span> is the width of the strip that would result from a survey with perfect detection. Now the fitted <span class="math inline">\(ESW\)</span> are saved for future if the user is not continuing on to estimate <span class="math inline">\(g(0;b_i)\)</span>, the probability of detection on the trackline when Beaufort sea state equals <span class="math inline">\(b_i\)</span>.</p>
+\]</span> where <span class="math inline">\(w\)</span> is the truncation width of the transects, here it is 5.5 km as can be seen in the previous code. The <span class="math inline">\(ESW\)</span> is the width of the strip that would result from a survey with perfect detection. Now the fitted <span class="math inline">\(ESW\)</span> are saved for future if the user is not continuing on to estimate <span class="math inline">\(g(0;b_i)\)</span>, the probability of detection on the trackline when Beaufort sea state equals <span class="math inline">\(b_i\)</span>.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>modeling_data <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(<span class="fu">here</span>(), <span class="st">"_R_code"</span>, <span class="st">"task_1_segment_das_data"</span>, <span class="st">"output"</span>,<span class="st">"seg_sight_out.rds"</span>))</span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>modeling_data<span class="sc">$</span>segdata <span class="ot">&lt;-</span> modeling_data<span class="sc">$</span>segdata <span class="sc">%&gt;%</span> <span class="fu">rename</span>(<span class="at">beaufort =</span> avgBft)</span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>modeling_data<span class="sc">$</span>segdata[<span class="fu">paste0</span>(<span class="st">"esw"</span>,<span class="st">"_"</span>,sp.code)] <span class="ot">&lt;-</span> <span class="fu">predict</span>(detfun, modeling_data<span class="sc">$</span>segdata, <span class="at">esw=</span><span class="cn">TRUE</span>)[[<span class="st">"fitted"</span>]]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="estimate-g0-relative-to-beaufort-sea-state" class="level3">
-<h3 class="anchored" data-anchor-id="estimate-g0-relative-to-beaufort-sea-state">Estimate <em>g</em>(0) relative to Beaufort sea state</h3>
-<p>Now we can use the <span class="math inline">\(ESW\)</span> results to fit a very general DSM model over FKW detections. The density model includes a Beaufort sea state effect so we can assess the relative density of detections in different sea states. By assuming that detection along the trackline is <span class="math inline">\(g(0;b)=1\)</span> for <span class="math inline">\(b = 0\)</span> or <span class="math inline">\(1\)</span> (the calmest seas) we can estimate trackline detection probability for FKW surveys. For the DSM model we need to add the effective survey area, <span class="math display">\[
+</section>
+<section id="estimate-g0-relative-to-beaufort-sea-state" class="level2">
+<h2 class="anchored" data-anchor-id="estimate-g0-relative-to-beaufort-sea-state">Estimate <em>g</em>(0) relative to Beaufort sea state</h2>
+<p>Now we can use the <span class="math inline">\(ESW\)</span> results to fit a very general DSM model over false killer whale detections. The density model includes a Beaufort sea state effect so we can assess the relative density of detections in different sea states. By assuming that detection along the trackline is <span class="math inline">\(g(0;b)=1\)</span> for <span class="math inline">\(b = 0\)</span> or <span class="math inline">\(1\)</span> (the calmest seas), we can estimate trackline detection probability during false killer whale surveys. For the DSM model, we need to add the effective survey area, <span class="math display">\[
 ESA_i = 2 \times ESW_i \times L_i
-\]</span> this is used to assess the observed density, <span class="math inline">\(y_i\)</span> of FKW for each segment. Then a generalized additive model (GAM) is fitted to the observed densities with log expected value <span class="math display">\[
+\]</span>that is used to assess the observed density, <span class="math inline">\(y_i\)</span> of false killer whales for each segment. Then a GAM is fitted to the observed densities with log expected value: <span class="math display">\[
 \log E(y_i) = \log ESA_i + f(b_i) + f(Lon_i,Lat_i) + f(year_i)
-\]</span> the <span class="math inline">\(f(\dots)\)</span> terms are nonparametric function effects. To enforce the conditions that <span class="math inline">\(f(b)\)</span> should be monotonically decreasing as sea state increases the <code>scam</code> package is used instead of <code>mgcv</code>. When the smooth formulation <code>bs='mpd'</code> is used this monotonicity is enforced.</p>
+\]</span> where the <span class="math inline">\(f(\dots)\)</span> terms are nonparametric function effects. To enforce the conditions that <span class="math inline">\(f(b)\)</span> should be monotonically decreasing as sea state increases, the <code>scam</code> package is used instead of <code>mgcv</code>. When the smooth formulation <code>bs='mpd'</code> is used, this monotonicity is enforced.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>g0_dat <span class="ot">&lt;-</span> input_dat<span class="sc">$</span>g0.dat</span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>g0_dat<span class="sc">$</span>resp <span class="ot">&lt;-</span> <span class="fu">as.logical</span>(g0_dat[,<span class="fu">paste0</span>(<span class="st">"nSI_"</span>,sp.code)])</span>
@@ -440,8 +449,9 @@ ESA_i = 2 \times ESW_i \times L_i
 <span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a>                   <span class="at">not.exp=</span><span class="cn">TRUE</span>,</span>
 <span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a>                   <span class="at">gamma=</span><span class="fl">1.4</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p><strong>Estimate relative <em>g</em>(0) for each Beaufort sea state</strong></p>
-<p>Now that the model is fit, we can estimate <span class="math inline">\(g(0;b)\)</span> by examining the relative expected density for any specific segment under different Beaufort conditions. Because the <span class="math inline">\(f(b_i)\)</span> term is additive it does not matter which is used because they will all be the same. So, we just formulate a generic segment with varying Beaufort states. For the predicted density, <span class="math display">\[
+<section id="estimate-relative-g0-for-each-beaufort-sea-state" class="level3">
+<h3 class="anchored" data-anchor-id="estimate-relative-g0-for-each-beaufort-sea-state">Estimate relative <em>g</em>(0) for each Beaufort sea state</h3>
+<p>Now that the model is fit, we can estimate <span class="math inline">\(g(0;b)\)</span> by examining the relative expected density for any specific segment under different Beaufort conditions. Because the <span class="math inline">\(f(b_i)\)</span> term is additive, it does not matter which is used because they will all be the same. So, we just formulate a generic segment with varying Beaufort states. For the predicted density, <span class="math display">\[
 \mu_b = E(y_*) = \exp( \log ESA_* + f(b) + f(Lon_*,Lat_*) + f(year_*)),
 \]</span> the estimated trackline probability is <span class="math display">\[
 g(0;b) = \mu_b / \mu_0
@@ -461,8 +471,10 @@ g(0;b) = \mu_b / \mu_0
 1.00 1.00 0.70 0.49 0.34 0.23 0.16 0.11 </code></pre>
 </div>
 </div>
-<p><strong>Add <em>g</em>(0) estimate to all segments and save final modeling data set</strong></p>
-<p>To account for survey segments with non-integer Beaufort states, because it changed over the course of the segment, the <span class="math inline">\(g(0;b)\)</span> value was linearly interpolated between the adjacent <span class="math inline">\(b\)</span> values. Then model data for the current survey is exported for use in the Hawaiʻi pelagic false killer whale density surface model. The <span class="math inline">\(g(0;b_i)\)</span> and <span class="math inline">\(ESW_i\)</span> will serve as an effort offset.</p>
+</section>
+<section id="add-g0-estimate-to-all-segments-and-save-final-modeling-data-set" class="level3">
+<h3 class="anchored" data-anchor-id="add-g0-estimate-to-all-segments-and-save-final-modeling-data-set">Add <em>g</em>(0) estimate to all segments and save final modeling data set</h3>
+<p>To account for survey segments with non-integer Beaufort states, because it changed over the course of the segment, the <span class="math inline">\(g(0;b)\)</span> value was linearly interpolated between the adjacent <span class="math inline">\(b\)</span> values. Then model data for the current survey is exported for use in the pelagic false killer whale DSM. The <span class="math inline">\(g(0;b_i)\)</span> and <span class="math inline">\(ESW_i\)</span> will serve as an effort offset.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>BFlow <span class="ot">&lt;-</span> <span class="fu">floor</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>beaufort <span class="sc">+</span> <span class="dv">1</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>BFhigh <span class="ot">&lt;-</span> <span class="fu">ceiling</span>(modeling_data<span class="sc">$</span>segdata<span class="sc">$</span>beaufort <span class="sc">+</span> <span class="dv">1</span>)</span>
@@ -474,10 +486,11 @@ g(0;b) = \mu_b / \mu_0
 </div>
 </section>
 </section>
+</section>
 <section id="c.-monte-carlo-estimation-of-esw-and-g0-parameter-covariance-matrix" class="level1">
 <h1>C. Monte Carlo Estimation of ESW and <em>g</em>(0) Parameter Covariance Matrix</h1>
-<p>To propagate the uncertainty for effort terms into the FKW DSM model, the covariance matrix for the detection terms needs to be estimated because the <span class="math inline">\(g(0;b)\)</span> model depends on the <span class="math inline">\(ESA_i\)</span> values calculated from the distance model. Therefore, the most straightforward method to account for the covariance between the distance sampling parameters, <span class="math inline">\(\theta_d\)</span> and the <span class="math inline">\(g(0,b)\)</span> parameters, <span class="math inline">\(\theta_g\)</span>, is to perform a Monte Carlo simulation. First, we sample 5,000 <span class="math inline">\(\theta_d\)</span> replications from its large sample distribution, <span class="math inline">\(N(\hat{\theta}_d, V_d)\)</span> where <span class="math inline">\(\hat{\theta}_d\)</span> are the estimated distance function parameters and <span class="math inline">\(V_d\)</span> is the estimated covariance matrix. For each replication we calculate <span class="math inline">\(ESA_i\)</span> for the survey segments and fit the scam model to estimate the <span class="math inline">\(f(b)\)</span> parameters, <span class="math inline">\(\theta_g\)</span>. The full estimated covariance matrix, <span class="math inline">\(V_\theta\)</span>, for = <span class="math inline">\(\hat{\theta}=(\hat{\theta}_d, \hat{\theta}_g)\)</span> was estimated with the empirical covariance matrix of the 5,000 samples.</p>
-<p><strong>Warning!!!</strong> The following Monte Carlo code takes a very long time to run for the FKW analysis. To improve speed of the simulation we have looped over blocks of smaller simulation in parallel. For the code below we use <code>npar &lt;- 10</code> separate <code>R</code> instances, each sampling <code>samps &lt;- 500</code> <span class="math inline">\(\theta\)</span> values for a total of 5,000 <span class="math inline">\(\theta\)</span> replications. If you want to see the code in action we suggest that you dramatically reduce the overall sample size to assess how long it will take the full sample to execute.</p>
+<p>To propagate the uncertainty for effort terms into the false killer whale DSM model, the covariance matrix for the detection terms needs to be estimated because the <span class="math inline">\(g(0;b)\)</span> model depends on the <span class="math inline">\(ESA_i\)</span> values calculated from the distance model. Therefore, the most straightforward method to account for the covariance between the distance sampling parameters, <span class="math inline">\(\theta_d\)</span> and the <span class="math inline">\(g(0,b)\)</span> parameters, <span class="math inline">\(\theta_g\)</span>, is to perform a Monte Carlo simulation. First, we sample 5,000 <span class="math inline">\(\theta_d\)</span> replications from its large sample distribution, <span class="math inline">\(N(\hat{\theta}_d, V_d)\)</span>, where <span class="math inline">\(\hat{\theta}_d\)</span> are the estimated distance function parameters and <span class="math inline">\(V_d\)</span> is the estimated covariance matrix. For each replication, we calculate <span class="math inline">\(ESA_i\)</span> for the survey segments and fit the scam model to estimate the <span class="math inline">\(f(b)\)</span> parameters, <span class="math inline">\(\theta_g\)</span>. The full estimated covariance matrix, <span class="math inline">\(V_\theta\)</span>, for = <span class="math inline">\(\hat{\theta}=(\hat{\theta}_d, \hat{\theta}_g)\)</span>, was estimated with the empirical covariance matrix of the 5,000 samples.</p>
+<p><strong>Warning!!!</strong> The following Monte Carlo code takes a very long time to run for the false killer whale analysis. To improve speed of the simulation, we have looped over blocks of smaller simulation in parallel. For the code below we use <code>npar &lt;- 10</code> separate <code>R</code> instances, each sampling <code>samps &lt;- 500</code> <span class="math inline">\(\theta\)</span> values for a total of 5,000 <span class="math inline">\(\theta\)</span> replications. If you want to see the code in action, we suggest that you dramatically reduce the overall sample size to assess how long it will take the full sample to execute.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Design matrix for g(0) estimates </span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>Lp <span class="ot">&lt;-</span> scam<span class="sc">::</span><span class="fu">predict.scam</span>(g0_est, <span class="at">newdata =</span> newdata_g0, <span class="at">type=</span><span class="st">"lpmatrix"</span>)</span>
@@ -516,7 +529,7 @@ g(0;b) = \mu_b / \mu_0
 <span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"sequential"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
-<p>Here we are combining the parallel samples back together and calculating the covatiance matrix <span class="math inline">\(V_\theta\)</span>. Then exporting the results for use in the abundance prediction uncertainty assessment stage.</p>
+<p>Here, we are combining the parallel samples back together and calculating the covatiance matrix <span class="math inline">\(V_\theta\)</span>. Then, we export the results for use in the abundance prediction uncertainty assessment stage.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a>theta_star <span class="ot">&lt;-</span> <span class="fu">lapply</span>(g0_par_sim, \(x) x<span class="sc">$</span>theta_star) <span class="sc">%&gt;%</span> <span class="fu">do.call</span>(rbind,.)</span>
 <span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>alpha_star <span class="ot">&lt;-</span> <span class="fu">lapply</span>(g0_par_sim, \(x) x<span class="sc">$</span>alpha_star) <span class="sc">%&gt;%</span> <span class="fu">do.call</span>(rbind,.)</span>

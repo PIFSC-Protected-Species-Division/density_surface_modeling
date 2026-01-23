@@ -213,8 +213,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">On this page</h2>
    
   <ul>
-  <li><a href="#packages-and-python-preparation" id="toc-packages-and-python-preparation" class="nav-link active" data-scroll-target="#packages-and-python-preparation">Packages and Python Preparation</a></li>
-  <li><a href="#defining-the-central-pacific" id="toc-defining-the-central-pacific" class="nav-link" data-scroll-target="#defining-the-central-pacific">Defining the Central Pacific</a></li>
+  <li><a href="#packages-and-python-preparation" id="toc-packages-and-python-preparation" class="nav-link active" data-scroll-target="#packages-and-python-preparation">Packages and Python preparation</a></li>
+  <li><a href="#defining-the-central-pacific" id="toc-defining-the-central-pacific" class="nav-link" data-scroll-target="#defining-the-central-pacific">Defining the central Pacific</a></li>
   <li><a href="#downloading-the-environmental-variables" id="toc-downloading-the-environmental-variables" class="nav-link" data-scroll-target="#downloading-the-environmental-variables">Downloading the environmental variables</a></li>
   <li><a href="#processing-the-raw-netcdf-files" id="toc-processing-the-raw-netcdf-files" class="nav-link" data-scroll-target="#processing-the-raw-netcdf-files">Processing the raw netCDF files</a>
   <ul class="collapse">
@@ -245,10 +245,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>Note!!!</strong> <em>Currently this is the way that PIFSC PSD has downloaded oceanographic model data from Copernicus Marine Service (<a href="https://marine.copernicus.eu/">https://marine.copernicus.eu/</a>). This, more complicated, method was necessary because the <code>CopernicusMarine</code>package did not have the ability to download ocean product data subsets. However, as of September 2025 this capability was repaired. So, the <code>CopernicusMarine</code> package (available from <a href="https://pepijn-devries.github.io/CopernicusMarine/">https://pepijn-devries.github.io/CopernicusMarine/</a>) is probably a more efficient way to download the data and we will investigate this further.</em></p>
-<p>The procedure for downloading the oceanographic prediction data is nearly identical to that in step 3. The only difference is specifying the spatial and temporal grid defined by the Central Pacific study region and the tri-daily grid of days from July 1 through December 31 in the years 2017 and 2020-2024.</p>
+<p><strong>Note!!!</strong> <em>Currently this is the way that our team downloaded oceanographic model data from <a href="https://marine.copernicus.eu/">Copernicus Marine Service</a>. This more complicated method was necessary because the <code>CopernicusMarine</code><a href="https://pepijn-devries.github.io/CopernicusMarine/">package</a> did not have the ability to download ocean product data subsets. However, as of September 2025 this capability was repaired. So, the <code>CopernicusMarine</code> package</em> <em>is probably a more efficient way to download the data, and we will investigate this further.</em></p>
+<p>The procedure for downloading the oceanographic prediction data is nearly identical to that in step 3. The only difference is specifying the spatial and temporal grid defined by the central Pacific study area and the tri-daily grid of days from July 1 through December 31 in the years 2017 and 2020-2024.</p>
 <section id="packages-and-python-preparation" class="level2">
-<h2 class="anchored" data-anchor-id="packages-and-python-preparation">Packages and Python Preparation</h2>
+<h2 class="anchored" data-anchor-id="packages-and-python-preparation">Packages and Python preparation</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
@@ -279,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 <section id="defining-the-central-pacific" class="level2">
-<h2 class="anchored" data-anchor-id="defining-the-central-pacific">Defining the Central Pacific</h2>
+<h2 class="anchored" data-anchor-id="defining-the-central-pacific">Defining the central Pacific</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>cenpac <span class="ot">&lt;-</span> picMaps<span class="sc">::</span><span class="fu">cenpac</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>

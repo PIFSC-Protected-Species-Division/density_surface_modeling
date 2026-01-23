@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>Fit and Select Density Surface Models (DSM) using GAMs – PIFSC PSD Density Surface Modeling</title>
+<title>Fit and Select DSMs using GAMs – PIFSC PSD Density Surface Modeling</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -218,16 +218,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#load-data" id="toc-load-data" class="nav-link" data-scroll-target="#load-data">Load data</a></li>
   <li><a href="#attach-environmental-data-and-save-for-dsm-fitting" id="toc-attach-environmental-data-and-save-for-dsm-fitting" class="nav-link" data-scroll-target="#attach-environmental-data-and-save-for-dsm-fitting">Attach environmental data and save for DSM fitting</a></li>
   </ul></li>
-  <li><a href="#b.-dsm-formulation-and-fitting" id="toc-b.-dsm-formulation-and-fitting" class="nav-link" data-scroll-target="#b.-dsm-formulation-and-fitting">B. DSM Formulation And Fitting</a>
+  <li><a href="#b.-dsm-formulation-and-fitting" id="toc-b.-dsm-formulation-and-fitting" class="nav-link" data-scroll-target="#b.-dsm-formulation-and-fitting">B. DSM Formulation and Fitting</a>
   <ul class="collapse">
   <li><a href="#load-and-add-effort-calculation-to-data" id="toc-load-and-add-effort-calculation-to-data" class="nav-link" data-scroll-target="#load-and-add-effort-calculation-to-data">Load and add effort calculation to data</a></li>
   <li><a href="#add-augmented-data-for-pelagic-probabilty-weighting" id="toc-add-augmented-data-for-pelagic-probabilty-weighting" class="nav-link" data-scroll-target="#add-augmented-data-for-pelagic-probabilty-weighting">Add augmented data for pelagic probabilty weighting</a></li>
   <li><a href="#create-model-list-and-fit" id="toc-create-model-list-and-fit" class="nav-link" data-scroll-target="#create-model-list-and-fit">Create model list and fit</a>
   <ul class="collapse">
   <li><a href="#encounter-rate-models" id="toc-encounter-rate-models" class="nav-link" data-scroll-target="#encounter-rate-models">Encounter rate models</a></li>
-  <li><a href="#fit-all-er-models" id="toc-fit-all-er-models" class="nav-link" data-scroll-target="#fit-all-er-models">Fit all ER models</a></li>
+  <li><a href="#fit-all-encounter-rate-models" id="toc-fit-all-encounter-rate-models" class="nav-link" data-scroll-target="#fit-all-encounter-rate-models">Fit all encounter rate models</a></li>
   <li><a href="#group-size-model" id="toc-group-size-model" class="nav-link" data-scroll-target="#group-size-model">Group size model</a></li>
-  <li><a href="#fit-all-gs-models" id="toc-fit-all-gs-models" class="nav-link" data-scroll-target="#fit-all-gs-models">Fit all GS models</a></li>
+  <li><a href="#fit-all-group-size-models" id="toc-fit-all-group-size-models" class="nav-link" data-scroll-target="#fit-all-group-size-models">Fit all group size models</a></li>
   </ul></li>
   <li><a href="#aic-tables" id="toc-aic-tables" class="nav-link" data-scroll-target="#aic-tables">AIC tables</a></li>
   </ul></li>
@@ -237,9 +237,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#fit-top-models-and-examine" id="toc-fit-top-models-and-examine" class="nav-link" data-scroll-target="#fit-top-models-and-examine">Fit top models and examine</a></li>
   <li><a href="#evaluate-chosen-models" id="toc-evaluate-chosen-models" class="nav-link" data-scroll-target="#evaluate-chosen-models">Evaluate chosen models</a>
   <ul class="collapse">
-  <li><a href="#evaluate-ratio-of-design-based-to-model-based-predicted-density" id="toc-evaluate-ratio-of-design-based-to-model-based-predicted-density" class="nav-link" data-scroll-target="#evaluate-ratio-of-design-based-to-model-based-predicted-density">Evaluate ratio of design-based to model-based predicted density</a></li>
+  <li><a href="#evaluate-ratio-of-observed-to-predicted-density" id="toc-evaluate-ratio-of-observed-to-predicted-density" class="nav-link" data-scroll-target="#evaluate-ratio-of-observed-to-predicted-density">Evaluate ratio of observed to predicted density</a></li>
   </ul></li>
-  <li><a href="#prediction-metrics" id="toc-prediction-metrics" class="nav-link" data-scroll-target="#prediction-metrics">Prediction metrics</a>
+  <li><a href="#performance-metrics" id="toc-performance-metrics" class="nav-link" data-scroll-target="#performance-metrics">Performance metrics</a>
   <ul class="collapse">
   <li><a href="#auc-and-tss" id="toc-auc-and-tss" class="nav-link" data-scroll-target="#auc-and-tss">AUC and TSS</a></li>
   <li><a href="#rose-bootstrap-sample-auc-and-tss" id="toc-rose-bootstrap-sample-auc-and-tss" class="nav-link" data-scroll-target="#rose-bootstrap-sample-auc-and-tss">ROSE bootstrap sample AUC and TSS</a></li>
@@ -258,7 +258,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">Fit and Select Density Surface Models (DSM) using GAMs</h1>
+<h1 class="title">Fit and Select DSMs using GAMs</h1>
 </div>
 
 
@@ -279,7 +279,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>A. Data Preparation</h1>
 <section id="load-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-data">Load data</h2>
-<p>Here, we load the survey segment data and sightings data from steps 1 and 2 and clean it up for DSM fitting with the <code>mgcv</code> package.</p>
+<p>Here, we load the survey segment data and sighting data from steps 1 and 2 and clean it up for DSM fitting with the <code>mgcv</code> package.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>localwd <span class="ot">&lt;-</span> <span class="fu">here</span>(<span class="st">"_R_code"</span>,<span class="st">"task_4_fit_dsm_models"</span>)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -325,7 +325,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 <section id="b.-dsm-formulation-and-fitting" class="level1">
-<h1>B. DSM Formulation And Fitting</h1>
+<h1>B. DSM Formulation and Fitting</h1>
 <section id="load-and-add-effort-calculation-to-data" class="level2">
 <h2 class="anchored" data-anchor-id="load-and-add-effort-calculation-to-data">Load and add effort calculation to data</h2>
 <div class="cell">
@@ -347,7 +347,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="add-augmented-data-for-pelagic-probabilty-weighting" class="level2">
 <h2 class="anchored" data-anchor-id="add-augmented-data-for-pelagic-probabilty-weighting">Add augmented data for pelagic probabilty weighting</h2>
-<p>Here, we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic stock animals is less than 1. For all sightings with <code>ProbPel</code> &lt; 1, we add an additional line of data for each segment where the number of groups detected is <code>nSI_033 &lt;- 0</code> and <code>ProbPel &lt;- 1-ProbPel</code> for the observed encounter.</p>
+<p>Here, we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic false killer whales is less than 1. For all sightings with <code>ProbPel</code> &lt; 1, we add an additional line of data for each segment where the number of groups detected is <code>nSI_033 &lt;- 0</code> and <code>ProbPel &lt;- 1-ProbPel</code> for the observed encounter.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>nonpel <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(ProbPel<span class="sc">&lt;</span><span class="dv">1</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>nonpel <span class="ot">&lt;-</span> nonpel <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
@@ -364,7 +364,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="create-model-list-and-fit" class="level2">
 <h2 class="anchored" data-anchor-id="create-model-list-and-fit">Create model list and fit</h2>
-<p>In this section of code we construct a list for all desired encounters and groups size model specifications. We then fit all the models and produce a table of models and AIC values.</p>
+<p>In this section of code, we construct a list for all desired encounters and groups size model specifications. We then fit all the models and produce a table of models and AIC values.</p>
 <section id="encounter-rate-models" class="level3">
 <h3 class="anchored" data-anchor-id="encounter-rate-models">Encounter rate models</h3>
 <p>Specification of the encounter rate model set is somewhat tricky due to the fact there are are several restrictions on the set of all possible models, namely due to the inclusion of Latitude interaction effects. The encounter rate models included all combinations of the 4 oceanographic variables: <code>sst</code>, <code>ssh</code>, <code>mld</code>, and <code>salinity</code> (including none) along with all combinations of the focal standard deviation versions: <code>sst_sd</code>, <code>ssh_sd</code>, <code>mld_sd</code>, and <code>salinity_sd</code>. The <code>_sd</code> versions are meant to examine the effect of fronts within the gradients of these variables. In addition to this model set, we also added an interaction term of the form <code>te(var,Latitude)</code> for interaction effects of Latitude on the main variables. Only 1 main variable was allowed to interact with Latitude at a time. The resulting list is comprised of 767 models.</p>
@@ -408,10 +408,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="fit-all-er-models" class="level3">
-<h3 class="anchored" data-anchor-id="fit-all-er-models">Fit all ER models</h3>
-<p>In this section we fit all 767 encounter rate models to determine the AIC optimal model as well as the relative rankings of different models, etc.</p>
-<p><strong>Warning!!!</strong> This takes a while to implement so it was partitioned and chunks of models were fit in parallel.</p>
+<section id="fit-all-encounter-rate-models" class="level3">
+<h3 class="anchored" data-anchor-id="fit-all-encounter-rate-models">Fit all encounter rate models</h3>
+<p>In this section, we fit all 767 encounter rate models to determine the AIC optimal model, as well as the relative rankings of different models, etc.</p>
+<p><strong>Warning!!!</strong> This takes a while to implement, so it was partitioned and chunks of models were fit in parallel.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Select spline type</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' 'ts'= thin plate splines ("shrinkage approach" applies additional smoothing penalty)</span></span>
@@ -467,8 +467,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>forms_gs[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"log(ANI_033) ~ 1"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </div>
 </section>
-<section id="fit-all-gs-models" class="level3">
-<h3 class="anchored" data-anchor-id="fit-all-gs-models">Fit all GS models</h3>
+<section id="fit-all-group-size-models" class="level3">
+<h3 class="anchored" data-anchor-id="fit-all-group-size-models">Fit all group size models</h3>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>gsgam_list <span class="ot">&lt;-</span> <span class="fu">foreach</span>(</span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">i =</span> <span class="fu">seq_along</span>(forms_gs), <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>), </span>
@@ -572,7 +572,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="fit-top-models-and-examine" class="level2">
 <h2 class="anchored" data-anchor-id="fit-top-models-and-examine">Fit top models and examine</h2>
-<p>Here we fit the AIC top models and examine the significance of the effects. For the encounter rate model only the <code>te(sst, Latitude)</code> effect was statistically significant so it was retained going forward. For the group size model all terms were statistically significant, so it is used as is.</p>
+<p>Here, we fit the AIC top models and examine the significance of the effects. For the encounter rate model only, the <code>te(sst, Latitude)</code> effect was statistically significant, so it was retained going forward. For the group size model, all terms were statistically significant, so it is used as is.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use top AIC model minus non-significant terms</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -595,9 +595,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="evaluate-chosen-models" class="level2">
 <h2 class="anchored" data-anchor-id="evaluate-chosen-models">Evaluate chosen models</h2>
 <p>Traditional cross-validation is not possible for this analysis due to limited data availability to discretize into training and testing datasets. So, we use other methods of evaluating model performance.</p>
-<section id="evaluate-ratio-of-design-based-to-model-based-predicted-density" class="level3">
-<h3 class="anchored" data-anchor-id="evaluate-ratio-of-design-based-to-model-based-predicted-density">Evaluate ratio of design-based to model-based predicted density</h3>
-<p>Here we examine the ratio of density estimates on the survey segments between design and model based estimators.</p>
+<section id="evaluate-ratio-of-observed-to-predicted-density" class="level3">
+<h3 class="anchored" data-anchor-id="evaluate-ratio-of-observed-to-predicted-density">Evaluate ratio of observed to predicted density</h3>
+<p>Here we examine the ratio of observed to predicted density estimates on the survey segments.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="do">### CenPac area</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> picMaps<span class="sc">::</span><span class="fu">cenpac</span>() <span class="sc">%&gt;%</span> <span class="fu">st_area</span>() <span class="sc">%&gt;%</span> <span class="fu">set_units</span>(<span class="st">"km^2"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.numeric</span>()</span>
@@ -608,13 +608,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>gs_bias_corr <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(fkw_gs<span class="sc">$</span>ANI_033,<span class="at">w=</span>fkw_gs<span class="sc">$</span>ProbPel)<span class="sc">/</span><span class="fu">mean</span>(pred_gs)</span>
 <span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>pred_gs <span class="ot">&lt;-</span> <span class="fu">exp</span>(<span class="fu">predict</span>(gs_fit, <span class="at">newdata=</span>fkw_dsm_data) <span class="sc">+</span> <span class="fl">0.5</span><span class="sc">*</span>gs_fit<span class="sc">$</span>sig2)</span>
 <span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="do">### Design-based observed and predicted</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a><span class="do">### observed</span></span>
 <span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>obsdens <span class="ot">&lt;-</span> (fkw_dsm_data<span class="sc">$</span>nSI_033 <span class="sc">*</span> fkw_dsm_data<span class="sc">$</span>ANI_033)</span>
 <span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>ltdens <span class="ot">&lt;-</span> <span class="fu">weighted.mean</span>(obsdens,fkw_dsm_data<span class="sc">$</span>ProbPel)<span class="sc">/</span><span class="fu">weighted.mean</span>(fkw_dsm_data<span class="sc">$</span>effort,fkw_dsm_data<span class="sc">$</span>ProbPel)</span>
 <span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>ltdens<span class="sc">*</span>A</span>
 <span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 23441.83</span></span>
 <span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="do">## model based</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="do">## predicted</span></span>
 <span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>modeldens <span class="ot">&lt;-</span> pred_er <span class="sc">*</span> pred_gs <span class="sc">*</span> gs_bias_corr</span>
 <span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>preddens <span class="ot">&lt;-</span> <span class="fu">sum</span>(modeldens)<span class="sc">/</span><span class="fu">sum</span>(fkw_dsm_data<span class="sc">$</span>effort)</span>
 <span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>preddens<span class="sc">*</span>A</span>
@@ -626,11 +626,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="prediction-metrics" class="level2">
-<h2 class="anchored" data-anchor-id="prediction-metrics">Prediction metrics</h2>
+<section id="performance-metrics" class="level2">
+<h2 class="anchored" data-anchor-id="performance-metrics">Performance metrics</h2>
 <section id="auc-and-tss" class="level3">
 <h3 class="anchored" data-anchor-id="auc-and-tss">AUC and TSS</h3>
-<p>Here, we calculate the area under the receiver operating characteristic curve (AUC, Fawcett 2006), the true skill statistic (TSS, Allouche et al.&nbsp;2006). AUC discriminates between true-positive and false-positive rates, and values range from 0 to 1, where a score of &gt; 0.5 indicates better than random discrimination. TSS accounts for both omission and commission errors and ranges from -1 to 1, where 1 indicates perfect agreement and values of zero or less indicate performance no better (or worse) than random.</p>
+<p>Here, we calculate the area under the receiver operating characteristic curve (AUC) and the true skill statistic (TSS). AUC discriminates between true-positive and false-positive rates, and values range from 0 to 1, where a score of &gt; 0.5 indicates better than random discrimination. TSS accounts for both omission and commission errors and ranges from -1 to 1, where 1 indicates perfect agreement and values of zero or less indicate performance no better (or worse) than random.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>sightings <span class="ot">&lt;-</span> <span class="fu">as.numeric</span>(fkw_dsm_data<span class="sc">$</span>nSI_033<span class="sc">&gt;=</span><span class="dv">1</span>)</span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>pred_seg <span class="ot">&lt;-</span> <span class="fu">predict</span>(er_fit, <span class="at">type=</span><span class="st">"response"</span>) <span class="sc">*</span> pred_gs <span class="sc">*</span> gs_bias_corr </span>
@@ -654,7 +654,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="rose-bootstrap-sample-auc-and-tss" class="level3">
 <h3 class="anchored" data-anchor-id="rose-bootstrap-sample-auc-and-tss">ROSE bootstrap sample AUC and TSS</h3>
-<p>Menardi and Torelli (2014) note that when data are highly imbalanced, performance metrics, such as AUC and TSS, as well as parameter estimation, can be compromised. So, in addition to the AUC and TSS calculations, we also used the ROSE (Random Over-Sampling Examples) sampling bootstrap (Lunardon et al., 2014) to assess the effects that sparse detection of false killer whales might have had on AUC and TSS metrics for the just the encounter rate model as it is the portion that is severely imbalanced. The ROSE sampling method is described in detail by Menardi and Torelli (2014), but briefly, kernel density estimates are calculated for segments with and without detections. Then a sample is drawn with probability = 0.5 from each KDE till the desired sample size is reached. This produces a balanced sample where the predictive covariates are similar to what was observed for each group (detection vs.&nbsp;nondetection) in the original data.</p>
+<p>Menardi and Torelli (2014)<a href="#fn1" class="footnote-ref" id="fnref1" role="doc-noteref"><sup>1</sup></a> note that when data are highly imbalanced, performance metrics, such as AUC and TSS, as well as parameter estimation, can be compromised. So, in addition to the AUC and TSS calculations, we also used the ROSE (Random Over-Sampling Examples) sampling bootstrap (Lunardon et al., 2014)<a href="#fn2" class="footnote-ref" id="fnref2" role="doc-noteref"><sup>2</sup></a> to assess the effects that sparse detection of false killer whales might have had on AUC and TSS metrics for the just the encounter rate model as it is the portion that is severely imbalanced. In the ROSE sampling method, kernel density estimates are calculated for segments with and without detections. Then a sample is drawn with probability = 0.5 from each KDE until the desired sample size is reached. This produces a balanced sample where the predictive covariates are similar to what was observed for each group (detection vs.&nbsp;nondetection) in the original data.</p>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>rose_df <span class="ot">&lt;-</span> fkw_dsm_data <span class="sc">%&gt;%</span> <span class="fu">select</span>(</span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>  nSI_033, sst, sst_sd, salinity, salinity_sd, mld, mld_sd, ssh, ssh_sd, Latitude, Longitude, effort</span>
@@ -745,7 +745,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 </section>
 
-</main> <!-- /main -->
+
+<div id="quarto-appendix" class="default"><section id="footnotes" class="footnotes footnotes-end-of-document" role="doc-endnotes"><h2 class="anchored quarto-appendix-heading">Footnotes</h2>
+
+<ol>
+<li id="fn1"><p>Menardi, G., and Torelli, N., 2014. Training and assessing classification rules with imbalanced data. Data Mining and Knowledge Discovery, 28:92–122. doi:10.1007/s10618-012-0295-5.<a href="#fnref1" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+<li id="fn2"><p>Lunardon, N., Menardi, G. and Torelli, N. 2014. ROSE: a package for binary imbalanced learning. The R Journal, 6:79–89. doi:10.32614/RJ-2014-008.<a href="#fnref2" class="footnote-back" role="doc-backlink">↩︎</a></p></li>
+</ol>
+</section></div></main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
 window.document.addEventListener("DOMContentLoaded", function (event) {
   const toggleBodyColorMode = (bsSheetEl) => {

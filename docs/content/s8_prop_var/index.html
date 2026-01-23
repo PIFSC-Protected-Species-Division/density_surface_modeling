@@ -223,12 +223,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#load-necessary-results-and-r-packages" id="toc-load-necessary-results-and-r-packages" class="nav-link" data-scroll-target="#load-necessary-results-and-r-packages">Load necessary results and R packages</a></li>
   <li><a href="#create-raster-and-abundance-storage-objects" id="toc-create-raster-and-abundance-storage-objects" class="nav-link" data-scroll-target="#create-raster-and-abundance-storage-objects">Create raster and abundance storage objects</a></li>
   <li><a href="#loop-over-years-and-parameters-to-make-predictions" id="toc-loop-over-years-and-parameters-to-make-predictions" class="nav-link" data-scroll-target="#loop-over-years-and-parameters-to-make-predictions">Loop over years and parameters to make predictions</a></li>
-  <li><a href="#calculate-cvs-and-interval-estimates" id="toc-calculate-cvs-and-interval-estimates" class="nav-link" data-scroll-target="#calculate-cvs-and-interval-estimates">Calculate CVs and Interval Estimates</a>
+  <li><a href="#calculate-cvs-and-interval-estimates" id="toc-calculate-cvs-and-interval-estimates" class="nav-link" data-scroll-target="#calculate-cvs-and-interval-estimates">Calculate CVs and interval estimates</a>
   <ul class="collapse">
   <li><a href="#abundance-uncertainty-results" id="toc-abundance-uncertainty-results" class="nav-link" data-scroll-target="#abundance-uncertainty-results">Abundance uncertainty results</a></li>
-  <li><a href="#central-pacific-area-results" id="toc-central-pacific-area-results" class="nav-link" data-scroll-target="#central-pacific-area-results">Central Pacific Area Results</a></li>
-  <li><a href="#fkw-assessment-area-results" id="toc-fkw-assessment-area-results" class="nav-link" data-scroll-target="#fkw-assessment-area-results">FKW Assessment Area Results</a></li>
-  <li><a href="#hawaii-eez-results" id="toc-hawaii-eez-results" class="nav-link" data-scroll-target="#hawaii-eez-results">Hawaii EEZ Results</a></li>
+  <li><a href="#central-pacific-study-area-results" id="toc-central-pacific-study-area-results" class="nav-link" data-scroll-target="#central-pacific-study-area-results">Central Pacific study area results</a></li>
+  <li><a href="#hawaiʻi-pelagic-false-killer-whale-assessment-area-results" id="toc-hawaiʻi-pelagic-false-killer-whale-assessment-area-results" class="nav-link" data-scroll-target="#hawaiʻi-pelagic-false-killer-whale-assessment-area-results">Hawaiʻi pelagic false killer whale assessment area results</a></li>
+  <li><a href="#hawaiian-eez-results" id="toc-hawaiian-eez-results" class="nav-link" data-scroll-target="#hawaiian-eez-results">Hawaiian EEZ results</a></li>
   </ul></li>
   </ul></li>
   <li><a href="#c.-plotting-spatial-uncertainty" id="toc-c.-plotting-spatial-uncertainty" class="nav-link" data-scroll-target="#c.-plotting-spatial-uncertainty">C. Plotting Spatial Uncertainty</a>
@@ -238,8 +238,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#create-yearly-spatial-cv-plots" id="toc-create-yearly-spatial-cv-plots" class="nav-link" data-scroll-target="#create-yearly-spatial-cv-plots">Create yearly spatial CV plots</a></li>
   <li><a href="#spatial-cv-figures" id="toc-spatial-cv-figures" class="nav-link" data-scroll-target="#spatial-cv-figures">Spatial CV figures</a>
   <ul class="collapse">
-  <li><a href="#central-pacfic-region" id="toc-central-pacfic-region" class="nav-link" data-scroll-target="#central-pacfic-region">Central Pacfic region</a></li>
-  <li><a href="#fkw-assessment-area-and-hawaii-eez" id="toc-fkw-assessment-area-and-hawaii-eez" class="nav-link" data-scroll-target="#fkw-assessment-area-and-hawaii-eez">FKW Assessment Area and Hawaii EEZ</a></li>
+  <li><a href="#central-pacfic-study-area" id="toc-central-pacfic-study-area" class="nav-link" data-scroll-target="#central-pacfic-study-area">Central Pacfic study area</a></li>
+  <li><a href="#hawaiʻi-pelagic-false-killer-whale-assessment-area-and-hawaiian-eez" id="toc-hawaiʻi-pelagic-false-killer-whale-assessment-area-and-hawaiian-eez" class="nav-link" data-scroll-target="#hawaiʻi-pelagic-false-killer-whale-assessment-area-and-hawaiian-eez">Hawaiʻi pelagic false killer whale assessment area and Hawaiian EEZ</a></li>
   </ul></li>
   </ul></li>
   </ul>
@@ -452,7 +452,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 <section id="calculate-cvs-and-interval-estimates" class="level2">
-<h2 class="anchored" data-anchor-id="calculate-cvs-and-interval-estimates">Calculate CVs and Interval Estimates</h2>
+<h2 class="anchored" data-anchor-id="calculate-cvs-and-interval-estimates">Calculate CVs and interval estimates</h2>
 <div class="cell">
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>N_cv <span class="ot">&lt;-</span> N_storage <span class="sc">%&gt;%</span> <span class="fu">group_by</span>(year) <span class="sc">%&gt;%</span> </span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
@@ -507,8 +507,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="abundance-uncertainty-results" class="level3">
 <h3 class="anchored" data-anchor-id="abundance-uncertainty-results">Abundance uncertainty results</h3>
 </section>
-<section id="central-pacific-area-results" class="level3">
-<h3 class="anchored" data-anchor-id="central-pacific-area-results">Central Pacific Area Results</h3>
+<section id="central-pacific-study-area-results" class="level3">
+<h3 class="anchored" data-anchor-id="central-pacific-study-area-results">Central Pacific study area results</h3>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 5
@@ -524,8 +524,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="fkw-assessment-area-results" class="level3">
-<h3 class="anchored" data-anchor-id="fkw-assessment-area-results">FKW Assessment Area Results</h3>
+<section id="hawaiʻi-pelagic-false-killer-whale-assessment-area-results" class="level3">
+<h3 class="anchored" data-anchor-id="hawaiʻi-pelagic-false-killer-whale-assessment-area-results">Hawaiʻi pelagic false killer whale assessment area results</h3>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 5
@@ -541,8 +541,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="hawaii-eez-results" class="level3">
-<h3 class="anchored" data-anchor-id="hawaii-eez-results">Hawaii EEZ Results</h3>
+<section id="hawaiian-eez-results" class="level3">
+<h3 class="anchored" data-anchor-id="hawaiian-eez-results">Hawaiian EEZ results</h3>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code># A tibble: 7 × 5
@@ -699,8 +699,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="spatial-cv-figures" class="level2">
 <h2 class="anchored" data-anchor-id="spatial-cv-figures">Spatial CV figures</h2>
-<section id="central-pacfic-region" class="level3">
-<h3 class="anchored" data-anchor-id="central-pacfic-region">Central Pacfic region</h3>
+<section id="central-pacfic-study-area" class="level3">
+<h3 class="anchored" data-anchor-id="central-pacfic-study-area">Central Pacfic study area</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
@@ -711,8 +711,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="fkw-assessment-area-and-hawaii-eez" class="level3">
-<h3 class="anchored" data-anchor-id="fkw-assessment-area-and-hawaii-eez">FKW Assessment Area and Hawaii EEZ</h3>
+<section id="hawaiʻi-pelagic-false-killer-whale-assessment-area-and-hawaiian-eez" class="level3">
+<h3 class="anchored" data-anchor-id="hawaiʻi-pelagic-false-killer-whale-assessment-area-and-hawaiian-eez">Hawaiʻi pelagic false killer whale assessment area and Hawaiian EEZ</h3>
 <div class="cell">
 <div class="cell-output-display">
 <div>
