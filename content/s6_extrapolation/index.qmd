@@ -138,7 +138,7 @@ ggsave(pout, file=file.path(local_wd, "output","extrap_fig.png"), width=6.5, hei
 
 ## Visual extrapolation assessment
 
-Proportion of days each year where grid cells were classified as having extrapolation conditions.
+Proportion of days each year where grid cells were classified as having extrapolation conditions. Deeper red hues represent more days with extrapolation conditions.
 
 ```{r}
 #| echo: false

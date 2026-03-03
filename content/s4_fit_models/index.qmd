@@ -79,7 +79,7 @@ fkw_dsm_data <- fkw_dsm_data %>% filter(year%in%nz_sight$year, beaufort<7, effor
 fkw_gs <- fkw_dsm_data %>% filter(nSI_033 > 0)# Just segments with sightings
 ```
 
-## Add augmented data for pelagic probabilty weighting
+## Add augmented data for pelagic probability weighting
 
 Here, we add the augmented data for mixture-like weighting of encounters where the probability that the sighting is of pelagic false killer whales is less than 1. For all sightings with `ProbPel` \< 1, we add an additional line of data for each segment where the number of groups detected is `nSI_033 <- 0` and `ProbPel <- 1-ProbPel` for the observed encounter.
 
@@ -196,7 +196,7 @@ mod_df <- data.frame(
 
 ### Group size model
 
-The group size model set is relatively easy to for as it simply consists of every combination of the 4 oceanographic variables for a total of 16 models.
+The group size model set is relatively easy to fit as it simply consists of every combination of the 4 oceanographic variables for a total of 16 models.
 
 ```{r}
 #| eval: false

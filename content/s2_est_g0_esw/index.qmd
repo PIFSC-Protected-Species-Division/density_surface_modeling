@@ -7,6 +7,10 @@ editor:
 
 # A. Process Previous Survey DAS Data
 
+We are using a broader dataset of false killer whale encounters and
+associated effort to estimate detectability parameters, *g(0)* and
+*ESW*.
+
 ```{r}
 #| eval: false
 
@@ -118,7 +122,7 @@ input_dat <- readRDS(file.path(localwd, "output","esw_g0_input.rds"))
 ## Estimate ESW relative to Beaufort sea state
 
 Here we are using the `distance` package to fit a half-normal detection
-function: $$
+function, defined as: $$
 p_i(x|\boldsymbol{\theta}_d) = \exp(-x/2\sigma_i^2)
 $$ where the detection range parameter is a function of the Beaufort sea
 state, $b_i$, on survey segment $i$, $$
@@ -130,7 +134,7 @@ $$
 #| output: true
 
 df <- data.frame(distance = input_dat$esw.dat$PerpDistKm, beaufort = input_dat$esw.dat$Bft)
-df <- df[complete.cases(df),]
+df <- df[complete.cases(df),] 
 
 detfun <- ds(df, formula = ~beaufort, truncation = 5.5, key="hn") 
 summary(detfun)
@@ -142,12 +146,12 @@ plot(detfun, showpoints = TRUE)
 In this step, the effective strip width ($ESW_i$) is calculated for each
 survey segment, $$
 ESW_i = \int_0^wp_i(x|\boldsymbol{\theta}_d)dx
-$$ where $w$ is the truncation width of the transects, here it is 5.5 km
-as can be seen in the previous code. The $ESW$ is the width of the strip
-that would result from a survey with perfect detection. Now the fitted
-$ESW$ are saved for future if the user is not continuing on to estimate
-$g(0;b_i)$, the probability of detection on the trackline when Beaufort
-sea state equals $b_i$.
+$$ where $w$ is the truncation width of the transects (here it is 5.5 km
+as can be seen in the previous code). The $ESW$ is the width of the
+strip that would result from a survey with perfect detection. Now the
+fitted $ESW$ are saved for future if the user is not continuing on to
+estimate $g(0;b_i)$, the probability of detection on the trackline when
+Beaufort sea state equals $b_i$.
 
 ```{r}
 #| output: false
@@ -167,9 +171,10 @@ $g(0;b)=1$ for $b = 0$ or $1$ (the calmest seas), we can estimate
 trackline detection probability during false killer whale surveys. For
 the DSM model, we need to add the effective survey area, $$
 ESA_i = 2 \times ESW_i \times L_i
-$$that is used to assess the observed density, $y_i$ of false killer
-whales for each segment. Then a GAM is fitted to the observed densities
-with log expected value: $$
+$$where $L_i$ is the length of segment $i$. $ESA_i$ is then used to
+assess the observed density, $y_i$ of false killer whales for each
+segment. Then a GAM is fitted to the observed densities with log
+expected value: $$
 \log E(y_i) = \log ESA_i + f(b_i) + f(Lon_i,Lat_i) + f(year_i) 
 $$ where the $f(\dots)$ terms are nonparametric function effects. To
 enforce the conditions that $f(b)$ should be monotonically decreasing as
@@ -186,7 +191,7 @@ g0_dat <- g0_dat%>%dplyr::select(resp, mlat, mlon, avgBft, year,dist) %>%
   rename(beaufort = avgBft)
 g0_dat <- g0_dat[complete.cases(g0_dat), ]
 
-g0_dat$esa <- predict(detfun, newdata = g0_dat, esw=TRUE)[["fitted"]] * 2 * g0_dat$dist
+g0_dat$esa <- predict(detfun, newdata = g0_dat, esw=TRUE)[["fitted"]] * 2 * g0_dat$dist #predict an ESW for each segment for use in g0 model
 g0_dat <- filter(g0_dat, esa>0)
 
 #' Combine beaufort=0,1 as the same g(0) = 1
@@ -315,7 +320,7 @@ plan("sequential")
 ```
 
 Here, we are combining the parallel samples back together and
-calculating the covatiance matrix $V_\theta$. Then, we export the
+calculating the covariance matrix $V_\theta$. Then, we export the
 results for use in the abundance prediction uncertainty assessment
 stage.
 

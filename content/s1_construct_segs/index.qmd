@@ -2,7 +2,7 @@
 title: "Segmenting DAS Survey Data"
 ---
 
-The first step in our workflow is to process raw DAS data collected during NOAA Fisheries ship-based line-transect surveys and break effort into discrete segments for variance estimation. Here, we use [swfscdas](https://swfsc.github.io/swfscDAS/) package tools to load, process, and segment these DAS files, but this functionality exists in other packages such as [LTabundR](https://pifsc-protected-species-division.github.io/LTabundR-vignette/index.html#installation).
+The first step in our workflow is to process raw DAS data collected during NOAA Fisheries ship-based line-transect surveys . DAS data are collected using WinCruz, the data collection software developed by Southwest Fisheries Science Center, and record animal encounter data as well as in-situ visual sighting conditions. After processing, we break effort into discrete segments for variance estimation. Here, we use [swfscdas](https://swfsc.github.io/swfscDAS/) package tools to load, process, and segment these DAS files, but this functionality exists in other packages such as [LTabundR](https://pifsc-protected-species-division.github.io/LTabundR-vignette/index.html#installation).
 
 ## Load packages and define working directory
 

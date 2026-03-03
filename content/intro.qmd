@@ -42,14 +42,14 @@ For a standard line-transect survey, the **effective strip width
 (**$ESW$ or $\mu$) is estimated from the fitted detection function,
 $\hat{g}(x)$, where $x$ is the perpendicular distance from the transect:
 $$
-ESW = \int_{0}^{w} g(x) dx
-$$ where $w$ is the truncation distance, and $g(x)$ is the estimated
-probability of detection at distance $x$. The function $g(x)$ is often
-modeled using a key function (e.g., half-normal or hazard-rate) with
-series expansion adjustments. Standard distance sampling methods assume
-that $g(0) = 1$ because there is no information in detection distances
-to estimate this value. Other data must be used to estimate $g(0)$. So,
-we treat this quantity as separate from $ESW$.
+ESW = \int_{0}^{w} \hat{g}(x) dx
+$$ where $w$ is the truncation distance, and $\hat{g}(x)$ is the
+estimated probability of detection at distance $x$. The function $g(x)$
+is often modeled using a key function (e.g., half-normal or hazard-rate)
+with series expansion adjustments. Standard distance sampling methods
+assume that $g(0) = 1$ because there is no information in detection
+distances to estimate this value. Other data must be used to estimate
+$\hat{g}(0)$. So, we treat this quantity as separate from $ESW$.
 
 ### 2. Spatially-Explicit Model for Encounter Rate of Groups
 
@@ -58,17 +58,17 @@ the detection probability. The second stage uses a regression model to
 predict the *expected number of detected animals* in each sampling unit
 (survey segment).
 
-The model uses the estimated animal density, $D$, the effective strip
-width, $ESW$, the trackline detection probability, $g(0)$, and the
-length of the segment, $L$, to predict the expected number of detected
-groups ($E[n]$) in a segment: $$
-E[n] = g(0) \times ESW \times L \times D
+The model uses the estimated animal density, $\hat{D}$, the effective
+strip width, $ESW$, the trackline detection probability, $\hat{g}(0)$,
+and the length of the segment, $L$, to predict the expected number of
+detected groups ($E[n]$) in a segment: $$
+E[n] = 2 \cdot \hat{g}(0) \times ESW \times L \times \hat{D}
 $$ Taking the logarithm (commonly used for count data) yields the linear
 predictor for the spatial model, $$
-\log(E[n_i]) = \log (g(0)_i \cdot ESW_i \cdot L_i) + D_i
+\log(E[n_i]) = \log (\hat{g}(0)_i \cdot ESW_i \cdot L_i) + log(\hat{D}_i)
 $$ where $i$ indexed the sample unit (survey segment). This is
 rearranged for the actual GAM structure. The term
-$\log (g(0)_i \cdot ESW_i \cdot L_i) = \log E_i$ is treated as an
+$\log (\hat{g}(0)_i \cdot ESW_i \cdot L_i) = \log E_i$ is treated as an
 **offset** in the model to account for detection related effort. This
 yields the spatially-explicit model, $$
 \log(E[n_i]) = \log E_i + \beta_0 + \sum_{j} f_j(\text{covariates}_{i,j}) 
@@ -79,7 +79,7 @@ longitude, latitude, depth, SST) that together model $\log(D)$.
 ### 3. Spatially-Explicit Model for Group Size
 
 In addition to encounter rate of groups, abundance also depends on the
-expected size of detected groups. Often this is modeled as spatially
+expected size of detected groups. Often this is modeled as a spatial
 mean, $S$. However, environmental conditions might affect group size as
 well. For example, beneficial conditions might lead to large
 aggregations of individuals increasing the groups size. So, we
@@ -99,7 +99,7 @@ $$ where $\hat{D}(z)$ is the predicted density at a location $z$ (a
 function of the environmental and spatial covariates), $\hat{S}(z)$ is
 the predicted group size at location $z$, $A$ is the total area of
 $\mathcal{R}$. Typically, this is executed by calculating abundance over
-cells of constant covariates, $$
+a fixed set of $M$ grid cells, $$
 \hat{N} = \sum_{j=1}^M \hat{D}(z_j) \hat{S}(z_j) A_j
 $$ where $z_j$ is a grid location within $\mathcal{R}$ and $A_j$ is the
 subarea of the region surrounding $z_j$.
@@ -109,15 +109,15 @@ subarea of the region surrounding $z_j$.
 There are several aspects contributing to uncertainty in the point
 estimate of abundance, $\hat{N}$: uncertainty in GAM parameters and
 uncertainty in $ESW$ and $g(0)$ values. These are treated as constants
-in the encounter rate model. However, they are estimated from data. Also
-the covariates are dynamic, so there is variation in covariate values
-through time. To assess the coefficient of variation (CV) for $\hat{N}$,
-we use the variance propagation procedure of Miller et al. (2022)[^1]
-which proceeds as:
+in the encounter rate model. However, they are estimated from data.
+Dynamic covariates may also be considered, so there is variation in
+covariate values through time. To assess the coefficient of variation
+(CV) for $\hat{N}$, we use the variance propagation procedure of
+Bravington et al. (2021)[^1] which proceeds as:
 
-[^1]: Miller, D.L., Becker, E.A., Forney, K.A., Roberts, J.J., Cañadas,
-    A. and Schick, R.S., (2022) Estimating uncertainty in density
-    surface models. PeerJ, 10, p.e13950.
+[^1]: Bravington, M.V., Miller, D.L., and Hedley, S.L., (2021) Variance
+    propagation for density surface models. J. Agri, Bio, and Env. Stat.
+    26:306-323.
 
 1.  Fit the extended GAM model: $$
     \log(E[n_i]) = \frac{\partial\log E_i(\theta)}{\partial \theta}\delta + \beta_0 + \sum_{j} f_j(\text{covariates}_{i,j})
@@ -143,8 +143,8 @@ $$ over all $r\times d$ estimates.
 
 ![](fkwpic.png){fig-align="center" width="65%"}
 
-False killer whales (*Pseudorca crassidens*) are a large toothed whale
-that inhabit sub-tropical and tropical oceanic domains worldwide and
+False killer whales (*Pseudorca crassidens*) are large toothed whales
+that inhabit sub-tropical and tropical oceanic domains worldwide and are
 considered rare throughout their range. Three distinct populations of
 false killer whales are found within the waters of the U.S. Exclusive
 Economic Zone (EEZ) around the Hawaiian Islands: two insular
@@ -154,10 +154,12 @@ population.
 
 ![Relevant boundaries for the three populations of false killer whales
 in Hawaiian waters. Dotted line represents the Hawaiʻi pelagic false
-killer whale assessment area, while the solid and dashed lines represent
-the stock boundaries of the insular main Hawaiian Islands population and
-the Northwestern Hawaiian Islands population,
-respectively.](fkw_stocks.png){fig-align="center" width="65%"}
+killer whale assessment area, while the lighter solid and dashed lines
+represent the stock boundaries of the insular main Hawaiian Islands
+population and the Northwestern Hawaiian Islands population,
+respectively. The darker solid line delineates the U.S. Exclusive
+Economic Zone around the Hawaiian
+Islands.](fkw_stocks.png){fig-align="center" width="65%"}
 
 The Hawaiʻi pelagic false killer whale population experiences a greater
 degree of overlap with commercial longline fisheries and has a history
