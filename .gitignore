@@ -7,3 +7,6 @@
 
 _R_code/**/*.*
 !_R_code/**/*.R
+
+**/*.quarto_ipynb
+/_R_code/task_4_fit_dsm_models/pam_check_test
