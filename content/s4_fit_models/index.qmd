@@ -355,6 +355,21 @@ ltdens/preddens
 
 ## Performance metrics
 
+### Standard metrics from `mgcv`
+
+```{r}
+#| eval: false
+gam.check(er_fit)
+qq.gam(er_fit, cex=4)
+
+gam.check(gs_fit)
+qq.gam(gs_fit, cex=4)
+```
+
+
+ADD FIGS!!!!
+
+
 ### AUC and TSS
 
 Here, we calculate the area under the receiver operating characteristic curve (AUC) and the true skill statistic (TSS). AUC discriminates between true-positive and false-positive rates, and values range from 0 to 1, where a score of \> 0.5 indicates better than random discrimination. TSS accounts for both omission and commission errors and ranges from -1 to 1, where 1 indicates perfect agreement and values of zero or less indicate performance no better (or worse) than random.

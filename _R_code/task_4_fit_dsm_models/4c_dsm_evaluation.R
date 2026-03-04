@@ -66,6 +66,13 @@ preddens*A
 ltdens/preddens 
 # 1.058097
 
+### Standard GAM checks from `mgcv`
+gam.check(er_fit)
+qq.gam(er_fit, cex=4)
+
+gam.check(gs_fit)
+qq.gam(gs_fit, cex=4)
+
 ### Compute AUC & TSS 
 
 #  Set up presence and absence points as 0's and 1's
