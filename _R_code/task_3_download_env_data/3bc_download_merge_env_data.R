@@ -63,10 +63,9 @@ with_progress({
       bound <- st_bbox(tmp_seg) + c(-1/6, -1/6, 1/6, 1/6)
       time_span <- date(tmp_seg$UTC) %>% range() %>% as.character()
       
-      dataset_id <- "cmems_mod_glo_phy_my_0.083deg_P1D-m" 
       
       nc_dl <- cm$subset(
-        dataset_id = dataset_id,
+        dataset_id = "cmems_mod_glo_phy_my_0.083deg_P1D-m",
         variables = as.list(c("mlotst","so","thetao","zos")),
         minimum_longitude = bound$xmin,
         maximum_longitude = bound$xmax,
