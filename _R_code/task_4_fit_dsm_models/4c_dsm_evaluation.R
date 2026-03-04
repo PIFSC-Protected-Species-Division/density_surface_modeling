@@ -68,10 +68,10 @@ ltdens/preddens
 
 ### Standard GAM checks from `mgcv`
 gam.check(er_fit)
-qq.gam(er_fit, cex=4)
+qq.gam(er_fit, rep=100, cex=4)
 
 gam.check(gs_fit)
-qq.gam(gs_fit, cex=4)
+qq.gam(gs_fit, rep=100, cex=4)
 
 ### Compute AUC & TSS 
 
