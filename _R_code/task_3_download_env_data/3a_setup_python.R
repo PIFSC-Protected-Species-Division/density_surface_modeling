@@ -8,6 +8,7 @@ library(reticulate)
 # install_python() 
 
 reticulate::virtualenv_create(envname = "cm_py")
+reticulate::virtualenv_install("cm_py", packages = "h5py")
 reticulate::virtualenv_install("cm_py", packages = c("copernicusmarine"))
 reticulate::use_virtualenv("cm_py", required = TRUE)
 cm <- reticulate::import("copernicusmarine")
