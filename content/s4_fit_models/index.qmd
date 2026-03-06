@@ -360,14 +360,54 @@ ltdens/preddens
 ```{r}
 #| eval: false
 gam.check(er_fit)
-qq.gam(er_fit, cex=4)
+qq.gam(er_fit, rep=100, cex=4)
+```
+```
+Method: REML   Optimizer: outer newton
+full convergence after 18 iterations.
+Gradient range [-0.0008121005,5.945633e-05]
+(score 200.2306 & scale 1.071581).
+Hessian positive definite, eigenvalue range [5.945613e-05,3544.944].
+Model rank =  25 / 25 
 
+Basis dimension (k) checking results. Low p-value (k-index<1) may
+indicate that k is too low, especially if edf is close to k'.
+
+                    k'   edf k-index p-value
+te(sst,Latitude) 24.00  3.76    0.85    0.14
+```
+```{r}
+#| echo: false
+img <- file.path(local_wd, "output","er_qqplot.png")
+knitr::include_graphics(img)
+```
+```{r}
+#| eval: false
 gam.check(gs_fit)
-qq.gam(gs_fit, cex=4)
+qq.gam(gs_fit, rep=100, cex=4)
+```
+```
+Method: REML   Optimizer: outer newton
+full convergence after 6 iterations.
+Gradient range [-4.679584e-08,3.065578e-08]
+(score 43.81738 & scale 0.2549699).
+Hessian positive definite, eigenvalue range [0.3710348,21.52089].
+Model rank =  9 / 9 
+
+Basis dimension (k) checking results. Low p-value (k-index<1) may
+indicate that k is too low, especially if edf is close to k'.
+
+          k'   edf k-index p-value
+s(ssh) 4.000 0.952    1.09    0.61
+s(mld) 4.000 0.927    1.25    0.93
+```
+```{r}
+#| echo: false
+img <- file.path(local_wd, "output","gs_qqplot.png")
+knitr::include_graphics(img)
 ```
 
 
-ADD FIGS!!!!
 
 
 ### AUC and TSS
