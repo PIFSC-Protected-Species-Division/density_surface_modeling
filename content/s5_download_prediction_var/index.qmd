@@ -75,12 +75,9 @@ with_progress({
                            .options.future = list(seed = TRUE)) %do% 
     {
       time_span <- paste(years[i],c("-07-01","-12-31"), sep="")
-      dataset_id <- ifelse(years[i] < 2021,
-                           "cmems_mod_glo_phy_my_0.083deg_P1D-m",
-                           "cmems_mod_glo_phy_myint_0.083deg_P1D-m")
       
       nc_dl <- cm$subset(
-        dataset_id = dataset_id,
+        dataset_id = "cmems_mod_glo_phy_my_0.083deg_P1D-m",
         variables = as.list(c("mlotst","so","thetao","zos")),
         minimum_longitude = bound$xmin - 1/6,
         maximum_longitude = bound$xmax + 1/6,

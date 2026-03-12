@@ -309,35 +309,32 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                           <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>)) <span class="sc">%do%</span> </span>
 <span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    {</span>
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>      time_span <span class="ot">&lt;-</span> <span class="fu">paste</span>(years[i],<span class="fu">c</span>(<span class="st">"-07-01"</span>,<span class="st">"-12-31"</span>), <span class="at">sep=</span><span class="st">""</span>)</span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      dataset_id <span class="ot">&lt;-</span> <span class="fu">ifelse</span>(years[i] <span class="sc">&lt;</span> <span class="dv">2021</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"cmems_mod_glo_phy_my_0.083deg_P1D-m"</span>,</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>                           <span class="st">"cmems_mod_glo_phy_myint_0.083deg_P1D-m"</span>)</span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>      nc_dl <span class="ot">&lt;-</span> cm<span class="sc">$</span><span class="fu">subset</span>(</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">dataset_id =</span> dataset_id,</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">variables =</span> <span class="fu">as.list</span>(<span class="fu">c</span>(<span class="st">"mlotst"</span>,<span class="st">"so"</span>,<span class="st">"thetao"</span>,<span class="st">"zos"</span>)),</span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_longitude =</span> bound<span class="sc">$</span>xmin <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_longitude =</span> bound<span class="sc">$</span>xmax <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_latitude =</span> bound<span class="sc">$</span>ymin <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_latitude =</span> bound<span class="sc">$</span>ymax <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">start_datetime =</span> time_span[<span class="dv">1</span>], </span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">end_datetime =</span> time_span[<span class="dv">2</span>], </span>
-<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_depth =</span> <span class="fl">0.5</span>,</span>
-<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_depth =</span> <span class="fl">0.5</span>,</span>
-<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">coordinates_selection_method =</span> <span class="st">"outside"</span>,</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">dataset_version =</span> <span class="st">"202311"</span>,</span>
-<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">disable_progress_bar =</span> <span class="cn">FALSE</span>,</span>
-<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">skip_existing =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">output_directory =</span> copernicus_data</span>
-<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>      </span>
-<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pb</span>()</span>
-<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.frame</span>(<span class="at">year=</span>years[i], <span class="at">filename=</span>nc_dl<span class="sc">$</span>filename)</span>
-<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>}) </span>
-<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="co"># plan("sequential")</span></span>
-<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>pred_download <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, pred_download)</span>
-<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(pred_download, <span class="fu">file.path</span>(copernicus_data, <span class="st">"pred_download.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>      nc_dl <span class="ot">&lt;-</span> cm<span class="sc">$</span><span class="fu">subset</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">dataset_id =</span> <span class="st">"cmems_mod_glo_phy_my_0.083deg_P1D-m"</span>,</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="at">variables =</span> <span class="fu">as.list</span>(<span class="fu">c</span>(<span class="st">"mlotst"</span>,<span class="st">"so"</span>,<span class="st">"thetao"</span>,<span class="st">"zos"</span>)),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_longitude =</span> bound<span class="sc">$</span>xmin <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_longitude =</span> bound<span class="sc">$</span>xmax <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_latitude =</span> bound<span class="sc">$</span>ymin <span class="sc">-</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_latitude =</span> bound<span class="sc">$</span>ymax <span class="sc">+</span> <span class="dv">1</span><span class="sc">/</span><span class="dv">6</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">start_datetime =</span> time_span[<span class="dv">1</span>], </span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">end_datetime =</span> time_span[<span class="dv">2</span>], </span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>        <span class="at">minimum_depth =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>        <span class="at">maximum_depth =</span> <span class="fl">0.5</span>,</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">coordinates_selection_method =</span> <span class="st">"outside"</span>,</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">dataset_version =</span> <span class="st">"202311"</span>,</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">disable_progress_bar =</span> <span class="cn">FALSE</span>,</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">skip_existing =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">output_directory =</span> copernicus_data</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>      </span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pb</span>()</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      <span class="fu">data.frame</span>(<span class="at">year=</span>years[i], <span class="at">filename=</span>nc_dl<span class="sc">$</span>filename)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>}) </span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="co"># plan("sequential")</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>pred_download <span class="ot">&lt;-</span> <span class="fu">do.call</span>(rbind, pred_download)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a><span class="fu">write.csv</span>(pred_download, <span class="fu">file.path</span>(copernicus_data, <span class="st">"pred_download.csv"</span>), <span class="at">row.names =</span> <span class="cn">FALSE</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="processing-the-raw-netcdf-files" class="level2">
