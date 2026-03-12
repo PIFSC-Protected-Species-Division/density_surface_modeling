@@ -28,7 +28,6 @@ load(here("_R_code","task_4_fit_dsm_models","output","dsm_fit_final.RData"))
 fkw_dsm_data <- fkw_dsm_data %>% filter(year<=2017, Cruise!=1004)
 fkw_gs <- fkw_gs %>% filter(year<=2017, Cruise!=1004)
 
-spline2use <- "ts"
 
 er_fit <- gam(as.list(er_fit$call)$formula, 
               offset = log(effort),

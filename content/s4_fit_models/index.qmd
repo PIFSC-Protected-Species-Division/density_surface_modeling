@@ -119,8 +119,8 @@ hab_sd_inc <- expand.grid(rep(list(0:1), length(hab_var_sd)))
 
 form_hab <- apply(hab_inc, 1, function(row) {
   terms <- mapply(function(choice, var) {
-    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
-    if (choice == 2) return(paste0("te(", var, ",Latitude,bs=spline2use,k=5)"))
+    if (choice == 1) return(paste0("s(",var,",bs='ts')"))
+    if (choice == 2) return(paste0("te(", var, ",Latitude,bs='ts')"))
     return(NULL)
   }, row, hab_var)
   terms <- unlist(terms)
@@ -130,7 +130,7 @@ form_hab <- apply(hab_inc, 1, function(row) {
 
 form_hab_sd <- apply(hab_sd_inc, 1, function(row) {
   terms <- mapply(function(choice, var) {
-    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
+    if (choice == 1) return(paste0("s(",var,",bs='ts')"))
     return(NULL)
   }, row, hab_var_sd)
   terms <- unlist(terms)
@@ -161,7 +161,6 @@ In this section, we fit all 767 encounter rate models to determine the AIC optim
 #' Select spline type
 #' 'ts'= thin plate splines ("shrinkage approach" applies additional smoothing penalty)
 #' "tp" is default for s()
-spline2use <- "ts" 
 
 workers <- 8
 plan("multisession", workers=workers)
@@ -204,7 +203,7 @@ The group size model set is relatively easy to fit as it simply consists of ever
 hab_inc_gs <- expand.grid(rep(list(0:1), length(hab_var)))
 forms_gs <- apply(hab_inc_gs, 1, function(row) {
   terms <- mapply(function(choice, var) {
-    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
+    if (choice == 1) return(paste0("s(",var,",bs='ts')"))
     return(NULL)
   }, row, hab_var)
   terms <- unlist(terms)
@@ -307,12 +306,12 @@ Here, we fit the AIC top models and examine the significance of the effects. For
 #               method="REML", 
 #               data = fkw_dsm_data, weights = ProbPel)
 
-er_fit <- gam(formula = nSI_033 ~ te(sst, Latitude, bs = spline2use, k = 5),
+er_fit <- gam(formula = nSI_033 ~ te(sst, Latitude, bs = 'ts'),
               offset = log(effort),
               family = tw(),
               method="REML", 
               data = fkw_dsm_data, weights = ProbPel)
-gs_fit <- gam(formula = log(ANI_033) ~ s(ssh, bs = spline2use, k = 5) + s(mld, bs = spline2use, k = 5),
+gs_fit <- gam(formula = log(ANI_033) ~ s(ssh, bs = 'ts') + s(mld, bs = 'ts'),
               method="REML", 
               data = fkw_gs, weights = ProbPel)
 ```
@@ -424,7 +423,7 @@ rocr <- WeightedROC(pred_seg, sightings, weight = fkw_dsm_data$ProbPel)
 ## AUC
 auc <- WeightedAUC(rocr)
 auc
-# 0.7119164
+# 0.7121108
 
 ## Compute TSS
 d <- sqrt((rocr$TPR-1)^2 + (rocr$FPR-0)^2)
@@ -433,7 +432,7 @@ opt_rocr <- rocr[which(d==min(d)),]
 
 TSS <- opt_rocr$TPR + (1-opt_rocr$FPR) -1 
 TSS
-# 0.3626605
+# 0.3627301
 ```
 
 ### ROSE bootstrap sample AUC and TSS
@@ -469,12 +468,12 @@ for(i in 1:50){
   cat(i," ")
 }
 mean(auc_stor)
-# 0.7626317
+# 0.7626315
 range(auc_stor)
-# 0.7581797 0.7666302
+# 0.7581795 0.7666299
 
 mean(tss_stor)
-# 0.4331774
+# 0.4331769
 range(tss_stor)
 # 0.4144445 0.4537293
 ```

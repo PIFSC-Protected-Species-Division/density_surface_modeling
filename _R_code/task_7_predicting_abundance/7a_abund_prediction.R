@@ -99,7 +99,6 @@ for(i in seq_along(years)){
   }
   cat("\n\n")
 }
-# plan("sequential")  
 
 save(N_data, clamp_df, file=file.path(local_wd, "output","N_est_df.RData"))
 

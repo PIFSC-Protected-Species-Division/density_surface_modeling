@@ -6,6 +6,7 @@ library(picMaps)
 library(units)
 library(WeightedROC)
 library(gratia)
+library(ROSE)
 
 #' -----------------------------------------------------------------------------
 #' Load data and AIC tables
@@ -22,18 +23,22 @@ aic_gs <- read_csv(file.path(local_wd, "output","aic_gs.csv"))
 
 # Use top AIC model minus non-significant terms
 
-# er_fit <- gam(formula =as.formula(aic_er$form[1]),
+# as.formula(aic_er$form[1])
+# er_fit <- gam(formula =nSI_033 ~ te(sst, Latitude, bs = "ts") + s(ssh, bs = "ts") + 
+#               s(ssh_sd, bs = "ts") + s(salinity_sd, bs = "ts"),
 #               offset = log(effort),
 #               family = tw(),
-#               method="REML", 
+#               method="REML",
 #               data = fkw_dsm_data, weights = ProbPel)
 
-er_fit <- gam(formula = nSI_033 ~ te(sst, Latitude, bs = spline2use, k = 5),
+er_fit <- gam(formula = nSI_033 ~ te(sst, Latitude, bs = "ts"),
               offset = log(effort),
               family = tw(),
               method="REML", 
               data = fkw_dsm_data, weights = ProbPel)
-gs_fit <- gam(formula = log(ANI_033) ~ s(ssh, bs = spline2use, k = 5) + s(mld, bs = spline2use, k = 5),
+
+# as.formula(aic_gs$form[1])
+gs_fit <- gam(formula = log(ANI_033) ~ s(ssh, bs = "ts") + s(mld, bs = "ts"),
               method="REML", 
               data = fkw_gs, weights = ProbPel)
 
@@ -60,11 +65,11 @@ ltdens*A
 modeldens <- pred_er * pred_gs * gs_bias_corr
 preddens <- sum(modeldens)/sum(fkw_dsm_data$effort)
 preddens*A
-# 22154.7
+# 22146.64
 
 # Ratio
 ltdens/preddens 
-# 1.058097
+# 1.058483
 
 ### Standard GAM checks from `mgcv`
 gam.check(er_fit)
@@ -84,7 +89,7 @@ rocr <- WeightedROC(pred_seg, sightings, weight = fkw_dsm_data$ProbPel)
 ## AUC
 auc <- WeightedAUC(rocr)
 auc
-# 0.7119164
+# 0.7121108
 
 #  Plot ROC curve
 ggplot()+geom_path(aes(FPR, TPR), data=rocr)+coord_equal()
@@ -97,7 +102,7 @@ opt_rocr <- rocr[which(d==min(d)),]
 
 TSS <- opt_rocr$TPR + (1-opt_rocr$FPR) -1 
 TSS
-# 0.3626605
+# 0.3627301
 
 #' -----------------------------------------------------------------------------
 #' ROSE Bootstrap
@@ -111,7 +116,7 @@ auc_stor <- rep(NA, 50)
 tss_stor <- rep(NA, 50)
 for(i in 1:50){
   resamp <- ROSE(cls~., data=rose_df, hmult.majo=0.25, hmult.mino=0.25, seed=i)$data
-  er_fit_rose <- gam(formula = cls ~ te(sst, Latitude, bs = spline2use, k = 5),
+  er_fit_rose <- gam(formula = cls ~ te(sst, Latitude, bs='ts'),
                      family = tw(),
                      method="REML", 
                      data = resamp)
@@ -126,12 +131,12 @@ for(i in 1:50){
   cat(i," ")
 }
 mean(auc_stor)
-# 0.7626317
+# 0.7626315
 range(auc_stor)
-# 0.7581797 0.7666302
+# 0.7581795 0.7666299
 
 mean(tss_stor)
-# 0.4331774
+# 0.4331769
 range(tss_stor)
 # 0.4144445 0.4537293
 
@@ -141,6 +146,7 @@ range(tss_stor)
 #' -----------------------------------------------------------------------------
 
 #' plots
+dat_res <- fkw_dsm_data %>% select(sst,Latitude)
 sm_grid <- smooth_estimates(er_fit, select = "te(sst,Latitude)")
 out <- exclude.too.far(sm_grid$sst, sm_grid$Latitude, fkw_dsm_data$sst, fkw_dsm_data$Latitude, 0.1)
 sm_grid$.estimate[out] <- NA
@@ -150,8 +156,8 @@ ggplot(data = sm_grid) +
   geom_point(
     data = dat_res,
     aes(x = sst, y = Latitude),
-    size = 0.25, 
-    alpha = 0.25 
+    size = 0.25,
+    alpha = 0.25
   ) +
   labs(title = "te(sst, Latitude)") + 
   scale_fill_distiller(palette = "RdBu", type = "div", name = "effect", na.value = NA) +
@@ -161,7 +167,7 @@ ggsave(file=file.path(local_wd,"output","er_fit.png"),width=6.5, height=4)
 draw(gs_fit) & theme_bw()
 ggsave(file=file.path(local_wd,"output","gs_fit.png"),width=6.5, height=4)
 
-save(er_fit, gs_fit, gs_bias_corr, opt_rocr, fkw_dsm_data, fkw_gs, A, ltdens, spline2use,
+save(er_fit, gs_fit, gs_bias_corr, opt_rocr, fkw_dsm_data, fkw_gs, A, ltdens,
      file=file.path(local_wd, "output", "dsm_fit_final.RData"))
 
      

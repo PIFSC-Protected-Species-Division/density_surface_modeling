@@ -383,8 +383,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>form_hab <span class="ot">&lt;-</span> <span class="fu">apply</span>(hab_inc, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
 <span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(choice, var) {</span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"s("</span>,var,<span class="st">",bs=spline2use,k=5)"</span>))</span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">2</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"te("</span>, var, <span class="st">",Latitude,bs=spline2use,k=5)"</span>))</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"s("</span>,var,<span class="st">",bs='ts')"</span>))</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">2</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"te("</span>, var, <span class="st">",Latitude,bs='ts')"</span>))</span>
 <span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
 <span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>  }, row, hab_var)</span>
 <span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">unlist</span>(terms)</span>
@@ -394,7 +394,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>form_hab_sd <span class="ot">&lt;-</span> <span class="fu">apply</span>(hab_sd_inc, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
 <span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(choice, var) {</span>
-<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"s("</span>,var,<span class="st">",bs=spline2use,k=5)"</span>))</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"s("</span>,var,<span class="st">",bs='ts')"</span>))</span>
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
 <span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  }, row, hab_var_sd)</span>
 <span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">unlist</span>(terms)</span>
@@ -421,37 +421,36 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' Select spline type</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">#' 'ts'= thin plate splines ("shrinkage approach" applies additional smoothing penalty)</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">#' "tp" is default for s()</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>spline2use <span class="ot">&lt;-</span> <span class="st">"ts"</span> </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>workers <span class="ot">&lt;-</span> <span class="dv">8</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"multisession"</span>, <span class="at">workers=</span>workers)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># forms &lt;- split(forms, cut(seq_along(forms), breaks = workers, labels = FALSE))</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">with_progress</span>({</span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  pb <span class="ot">&lt;-</span> <span class="fu">progressor</span>(<span class="at">along =</span> forms_er) </span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  ergam_list <span class="ot">&lt;-</span> <span class="fu">foreach</span>(</span>
-<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="fu">seq_along</span>(forms_er), <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>), </span>
-<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">.errorhandling =</span> <span class="st">"pass"</span>) <span class="sc">%dofuture%</span> {</span>
-<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      spline2use <span class="ot">&lt;-</span> spline2use</span>
-<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>      gam_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> <span class="fu">as.formula</span>(forms_er[i]), <span class="at">offset =</span> <span class="fu">log</span>(effort),</span>
-<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">family =</span> <span class="fu">tw</span>(),</span>
-<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method=</span><span class="st">"REML"</span>, </span>
-<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> fkw_dsm_data, <span class="at">weights =</span> ProbPel)</span>
-<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pb</span>()</span>
-<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">summary =</span> <span class="fu">summary</span>(gam_fit), <span class="at">aic=</span>gam_fit<span class="sc">$</span>aic)</span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>})</span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"sequential"</span>)</span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>mod_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">idx =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(ergam_list),</span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">form =</span> forms_er, </span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">aic =</span> <span class="fu">sapply</span>(ergam_list, \(x) x<span class="sc">$</span>aic), </span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">dev_expl=</span><span class="fu">sapply</span>(ergam_list, \(x) x<span class="sc">$</span>summary<span class="sc">$</span>dev.expl<span class="sc">*</span><span class="dv">100</span>)</span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">waic =</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.5</span><span class="sc">*</span>(aic<span class="sc">-</span><span class="fu">min</span>(aic))),</span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">waic =</span> waic<span class="sc">/</span><span class="fu">sum</span>(waic)</span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(waic))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>workers <span class="ot">&lt;-</span> <span class="dv">8</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"multisession"</span>, <span class="at">workers=</span>workers)</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># forms &lt;- split(forms, cut(seq_along(forms), breaks = workers, labels = FALSE))</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="fu">with_progress</span>({</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  pb <span class="ot">&lt;-</span> <span class="fu">progressor</span>(<span class="at">along =</span> forms_er) </span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  ergam_list <span class="ot">&lt;-</span> <span class="fu">foreach</span>(</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">i =</span> <span class="fu">seq_along</span>(forms_er), <span class="at">.options.future =</span> <span class="fu">list</span>(<span class="at">seed =</span> <span class="cn">TRUE</span>), </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">.errorhandling =</span> <span class="st">"pass"</span>) <span class="sc">%dofuture%</span> {</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>      spline2use <span class="ot">&lt;-</span> spline2use</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      gam_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> <span class="fu">as.formula</span>(forms_er[i]), <span class="at">offset =</span> <span class="fu">log</span>(effort),</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>                     <span class="at">family =</span> <span class="fu">tw</span>(),</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>                     <span class="at">method=</span><span class="st">"REML"</span>, </span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                     <span class="at">data =</span> fkw_dsm_data, <span class="at">weights =</span> ProbPel)</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>      <span class="fu">pb</span>()</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">list</span>(<span class="at">summary =</span> <span class="fu">summary</span>(gam_fit), <span class="at">aic=</span>gam_fit<span class="sc">$</span>aic)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="fu">plan</span>(<span class="st">"sequential"</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>mod_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">idx =</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">length</span>(ergam_list),</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">form =</span> forms_er, </span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">aic =</span> <span class="fu">sapply</span>(ergam_list, \(x) x<span class="sc">$</span>aic), </span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">dev_expl=</span><span class="fu">sapply</span>(ergam_list, \(x) x<span class="sc">$</span>summary<span class="sc">$</span>dev.expl<span class="sc">*</span><span class="dv">100</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">waic =</span> <span class="fu">exp</span>(<span class="sc">-</span><span class="fl">0.5</span><span class="sc">*</span>(aic<span class="sc">-</span><span class="fu">min</span>(aic))),</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">waic =</span> waic<span class="sc">/</span><span class="fu">sum</span>(waic)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span> <span class="fu">arrange</span>(<span class="fu">desc</span>(waic))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="group-size-model" class="level3">
@@ -461,7 +460,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>hab_inc_gs <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="fu">rep</span>(<span class="fu">list</span>(<span class="dv">0</span><span class="sc">:</span><span class="dv">1</span>), <span class="fu">length</span>(hab_var)))</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>forms_gs <span class="ot">&lt;-</span> <span class="fu">apply</span>(hab_inc_gs, <span class="dv">1</span>, <span class="cf">function</span>(row) {</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">mapply</span>(<span class="cf">function</span>(choice, var) {</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"s("</span>,var,<span class="st">",bs=spline2use,k=5)"</span>))</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (choice <span class="sc">==</span> <span class="dv">1</span>) <span class="fu">return</span>(<span class="fu">paste0</span>(<span class="st">"s("</span>,var,<span class="st">",bs='ts')"</span>))</span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">NULL</span>)</span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  }, row, hab_var)</span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  terms <span class="ot">&lt;-</span> <span class="fu">unlist</span>(terms)</span>
@@ -505,38 +504,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <pre><code># A tibble: 767 × 6
     ...1   idx form                                         aic dev_expl    waic
    &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                                      &lt;dbl&gt;    &lt;dbl&gt;   &lt;dbl&gt;
- 1     1    90 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
- 2     2    91 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
- 3     3   411 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
- 4     4    94 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
- 5     5   218 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
- 6     6   219 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
- 7     7   414 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
- 8     8   410 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
- 9     9    95 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
-10    10   538 nSI_033 ~ te(sst,Latitude,bs=spline2use,k…  398.     5.93 0.00638
+ 1     1    90 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
+ 2     2   218 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
+ 3     3    95 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
+ 4     4    91 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
+ 5     5   538 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
+ 6     6   410 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
+ 7     7    94 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
+ 8     8   223 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
+ 9     9   411 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
+10    10   219 nSI_033 ~ te(sst,Latitude,bs='ts') + s(ss…  398.     5.93 0.00639
 # ℹ 757 more rows</code></pre>
 </div>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 16 × 5
-     idx form                                              aic  dev_expl    waic
-   &lt;dbl&gt; &lt;chr&gt;                                           &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
- 1     7 log(ANI_033) ~ s(ssh,bs=spline2use,k=5) + s(ml…  85.7  2.88e+ 1 2.38e-1
- 2     8 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ss…  85.7  2.88e+ 1 2.38e-1
- 3    16 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ss…  85.7  2.88e+ 1 2.38e-1
- 4    15 log(ANI_033) ~ s(ssh,bs=spline2use,k=5) + s(ml…  85.7  2.88e+ 1 2.38e-1
- 5    13 log(ANI_033) ~ s(mld,bs=spline2use,k=5) + s(sa…  92.8  1.24e+ 1 6.81e-3
- 6    14 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ml…  92.8  1.24e+ 1 6.81e-3
- 7     5 log(ANI_033) ~ s(mld,bs=spline2use,k=5)          92.8  1.23e+ 1 6.81e-3
- 8     6 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ml…  92.8  1.23e+ 1 6.81e-3
- 9     3 log(ANI_033) ~ s(ssh,bs=spline2use,k=5)          93.6  1.07e+ 1 4.63e-3
-10    11 log(ANI_033) ~ s(ssh,bs=spline2use,k=5) + s(sa…  93.6  1.07e+ 1 4.63e-3
-11     4 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ss…  93.6  1.07e+ 1 4.63e-3
-12    12 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(ss…  93.6  1.07e+ 1 4.63e-3
-13     1 log(ANI_033) ~ 1                                 96.9 -3.62e-14 8.85e-4
-14     9 log(ANI_033) ~ s(salinity,bs=spline2use,k=5)     96.9  1.73e- 3 8.85e-4
-15    10 log(ANI_033) ~ s(sst,bs=spline2use,k=5) + s(sa…  96.9  4.62e- 4 8.85e-4
-16     2 log(ANI_033) ~ s(sst,bs=spline2use,k=5)          96.9  1.45e- 4 8.85e-4</code></pre>
+<pre><code># A tibble: 16 × 6
+    ...1   idx form                                        aic  dev_expl    waic
+   &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt;                                     &lt;dbl&gt;     &lt;dbl&gt;   &lt;dbl&gt;
+ 1     1     7 log(ANI_033) ~ s(ssh,bs='ts') + s(mld,bs…  85.7  2.87e+ 1 2.38e-1
+ 2     2    16 log(ANI_033) ~ s(sst,bs='ts') + s(ssh,bs…  85.7  2.87e+ 1 2.38e-1
+ 3     3     8 log(ANI_033) ~ s(sst,bs='ts') + s(ssh,bs…  85.7  2.87e+ 1 2.38e-1
+ 4     4    15 log(ANI_033) ~ s(ssh,bs='ts') + s(mld,bs…  85.7  2.87e+ 1 2.38e-1
+ 5     5    13 log(ANI_033) ~ s(mld,bs='ts') + s(salini…  92.8  1.24e+ 1 6.84e-3
+ 6     6    14 log(ANI_033) ~ s(sst,bs='ts') + s(mld,bs…  92.8  1.24e+ 1 6.84e-3
+ 7     7     5 log(ANI_033) ~ s(mld,bs='ts')              92.8  1.23e+ 1 6.83e-3
+ 8     8     6 log(ANI_033) ~ s(sst,bs='ts') + s(mld,bs…  92.8  1.23e+ 1 6.83e-3
+ 9     9     3 log(ANI_033) ~ s(ssh,bs='ts')              93.6  1.07e+ 1 4.63e-3
+10    10     4 log(ANI_033) ~ s(sst,bs='ts') + s(ssh,bs…  93.6  1.07e+ 1 4.63e-3
+11    11    12 log(ANI_033) ~ s(sst,bs='ts') + s(ssh,bs…  93.6  1.07e+ 1 4.63e-3
+12    12    11 log(ANI_033) ~ s(ssh,bs='ts') + s(salini…  93.6  1.07e+ 1 4.63e-3
+13    13     1 log(ANI_033) ~ 1                           96.9 -1.21e-14 8.88e-4
+14    14     9 log(ANI_033) ~ s(salinity,bs='ts')         96.9  1.56e- 3 8.88e-4
+15    15    10 log(ANI_033) ~ s(sst,bs='ts') + s(salini…  96.9  9.45e- 4 8.88e-4
+16    16     2 log(ANI_033) ~ s(sst,bs='ts')              96.9  2.54e- 4 8.88e-4</code></pre>
 </div>
 </div>
 <div class="cell">
@@ -578,12 +577,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">#               method="REML", </span></span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co">#               data = fkw_dsm_data, weights = ProbPel)</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>er_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> nSI_033 <span class="sc">~</span> <span class="fu">te</span>(sst, Latitude, <span class="at">bs =</span> spline2use, <span class="at">k =</span> <span class="dv">5</span>),</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>er_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> nSI_033 <span class="sc">~</span> <span class="fu">te</span>(sst, Latitude, <span class="at">bs =</span> <span class="st">'ts'</span>),</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>              <span class="at">offset =</span> <span class="fu">log</span>(effort),</span>
 <span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>              <span class="at">family =</span> <span class="fu">tw</span>(),</span>
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>              <span class="at">method=</span><span class="st">"REML"</span>, </span>
 <span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> fkw_dsm_data, <span class="at">weights =</span> ProbPel)</span>
-<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>gs_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> <span class="fu">log</span>(ANI_033) <span class="sc">~</span> <span class="fu">s</span>(ssh, <span class="at">bs =</span> spline2use, <span class="at">k =</span> <span class="dv">5</span>) <span class="sc">+</span> <span class="fu">s</span>(mld, <span class="at">bs =</span> spline2use, <span class="at">k =</span> <span class="dv">5</span>),</span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>gs_fit <span class="ot">&lt;-</span> <span class="fu">gam</span>(<span class="at">formula =</span> <span class="fu">log</span>(ANI_033) <span class="sc">~</span> <span class="fu">s</span>(ssh, <span class="at">bs =</span> <span class="st">'ts'</span>) <span class="sc">+</span> <span class="fu">s</span>(mld, <span class="at">bs =</span> <span class="st">'ts'</span>),</span>
 <span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>              <span class="at">method=</span><span class="st">"REML"</span>, </span>
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>              <span class="at">data =</span> fkw_gs, <span class="at">weights =</span> ProbPel)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
@@ -690,7 +689,7 @@ s(mld) 4.000 0.927    1.25    0.93</code></pre>
 <span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="do">## AUC</span></span>
 <span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>auc <span class="ot">&lt;-</span> <span class="fu">WeightedAUC</span>(rocr)</span>
 <span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>auc</span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.7119164</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.7121108</span></span>
 <span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a><span class="do">## Compute TSS</span></span>
 <span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>d <span class="ot">&lt;-</span> <span class="fu">sqrt</span>((rocr<span class="sc">$</span>TPR<span class="dv">-1</span>)<span class="sc">^</span><span class="dv">2</span> <span class="sc">+</span> (rocr<span class="sc">$</span>FPR<span class="dv">-0</span>)<span class="sc">^</span><span class="dv">2</span>)</span>
@@ -699,7 +698,7 @@ s(mld) 4.000 0.927    1.25    0.93</code></pre>
 <span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>TSS <span class="ot">&lt;-</span> opt_rocr<span class="sc">$</span>TPR <span class="sc">+</span> (<span class="dv">1</span><span class="sc">-</span>opt_rocr<span class="sc">$</span>FPR) <span class="sc">-</span><span class="dv">1</span> </span>
 <span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>TSS</span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.3626605</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.3627301</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="rose-bootstrap-sample-auc-and-tss" class="level3">
@@ -729,12 +728,12 @@ s(mld) 4.000 0.927    1.25    0.93</code></pre>
 <span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(i,<span class="st">" "</span>)</span>
 <span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(auc_stor)</span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.7626317</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.7626315</span></span>
 <span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(auc_stor)</span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.7581797 0.7666302</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.7581795 0.7666299</span></span>
 <span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a><span class="fu">mean</span>(tss_stor)</span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.4331774</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.4331769</span></span>
 <span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a><span class="fu">range</span>(tss_stor)</span>
 <span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 0.4144445 0.4537293</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>

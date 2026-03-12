@@ -159,16 +159,23 @@ N_cv <- N_cv %>% mutate(
   mu_cenpac = log(N_cenpac_est)-sigma_cenpac^2/2,
   mu_eez = log(N_eez_est)-sigma_eez^2/2,
   mu_assess = log(N_fkw_mgmt_est)-sigma_assess^2/2,
-  CI_low_cenpac = exp(mu_cenpac - 1.96*sigma_cenpac),
-  CI_hi_cenpac = exp(mu_cenpac + 1.96*sigma_cenpac),
-  CI_low_eez = exp(mu_eez - 1.96*sigma_eez),
-  CI_hi_eez = exp(mu_eez + 1.96*sigma_eez),
-  CI_low_assess = exp(mu_assess - 1.96*sigma_assess),
-  CI_hi_assess = exp(mu_assess + 1.96*sigma_assess)
+  CI_low_cenpac = round(exp(mu_cenpac - 1.96*sigma_cenpac)),
+  CI_hi_cenpac = round(exp(mu_cenpac + 1.96*sigma_cenpac)),
+  CI_low_eez = round(exp(mu_eez - 1.96*sigma_eez)),
+  CI_hi_eez = round(exp(mu_eez + 1.96*sigma_eez)),
+  CI_low_assess = round(exp(mu_assess - 1.96*sigma_assess)),
+  CI_hi_assess = round(exp(mu_assess + 1.96*sigma_assess))
 )
 N_cv <- N_cv %>% select(year, 
                         N_cenpac_est, CI_low_cenpac, CI_hi_cenpac, N_cenpac_cv,
                         N_eez_est, CI_low_eez, CI_hi_eez, N_eez_cv,
                         N_fkw_mgmt_est, CI_low_assess, CI_hi_assess, N_assess_cv)
+
+N_cv <- N_cv %>% mutate(
+  N_cenpac_cv = round(N_cenpac_cv,2),
+  N_eez_cv = round(N_eez_cv,2),
+  N_assess_cv = round(N_assess_cv,2)
+)
+
 write_csv(N_cv, file=file.path(local_wd,"output","N_cv_varprop.csv"))
 

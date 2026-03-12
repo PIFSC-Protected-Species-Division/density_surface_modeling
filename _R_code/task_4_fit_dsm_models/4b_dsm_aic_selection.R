@@ -58,8 +58,8 @@ hab_sd_inc <- expand.grid(rep(list(0:1), length(hab_var_sd)))
 
 form_hab <- apply(hab_inc, 1, function(row) {
   terms <- mapply(function(choice, var) {
-    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
-    if (choice == 2) return(paste0("te(", var, ",Latitude,bs=spline2use,k=5)"))
+    if (choice == 1) return(paste0("s(",var,",bs='ts')"))
+    if (choice == 2) return(paste0("te(", var, ",Latitude,bs='ts')"))
     return(NULL)
   }, row, hab_var)
   terms <- unlist(terms)
@@ -69,7 +69,7 @@ form_hab <- apply(hab_inc, 1, function(row) {
 
 form_hab_sd <- apply(hab_sd_inc, 1, function(row) {
   terms <- mapply(function(choice, var) {
-    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
+    if (choice == 1) return(paste0("s(",var,",bs='ts')"))
     return(NULL)
   }, row, hab_var_sd)
   terms <- unlist(terms)
@@ -94,9 +94,8 @@ for(i in seq_along(form_hab)){
 #' Select spline type
 #' 'ts'= thin plate splines ("shrinkage approach" applies additional smoothing penalty)
 #' "tp" is default for s()
-spline2use <- "ts" 
 
-workers <- 8
+workers <- 10
 plan("multisession", workers=workers)
 # forms <- split(forms, cut(seq_along(forms), breaks = workers, labels = FALSE))
 
@@ -105,7 +104,6 @@ with_progress({
   ergam_list <- foreach(
     i = seq_along(forms_er), .options.future = list(seed = TRUE), 
     .errorhandling = "pass") %dofuture% {
-      spline2use <- spline2use
       gam_fit <- gam(formula = as.formula(forms_er[i]), offset = log(effort),
                      family = tw(),
                      method="REML", 
@@ -133,7 +131,7 @@ mod_df <- data.frame(
 hab_inc_gs <- expand.grid(rep(list(0:1), length(hab_var)))
 forms_gs <- apply(hab_inc_gs, 1, function(row) {
   terms <- mapply(function(choice, var) {
-    if (choice == 1) return(paste0("s(",var,",bs=spline2use,k=5)"))
+    if (choice == 1) return(paste0("s(",var,",bs='ts')"))
     return(NULL)
   }, row, hab_var)
   terms <- unlist(terms)
@@ -146,7 +144,6 @@ forms_gs[1] <- "log(ANI_033) ~ 1"
 gsgam_list <- foreach(
   i = seq_along(forms_gs), .options.future = list(seed = TRUE), 
   .errorhandling = "pass") %do% {
-    spline2use <- spline2use
     gam_fit <- gam(formula = as.formula(forms_gs[i]),
                    method="REML", 
                    data = fkw_gs, weights = ProbPel)
@@ -168,8 +165,8 @@ mod_df_gs <- data.frame(
 #' -----------------------------------------------------------------------------
 
 write.csv(mod_df, file = file.path(local_wd, "output", "aic_er.csv"))
-write.csv(mod_df_gs, file = file.path(local_wd, "output" "aic_gs.csv"))
-save( fkw_dsm_data, fkw_gs, spline2use, file=file.path(local_wd, "output","dsm_model_data.RData"))
+write.csv(mod_df_gs, file = file.path(local_wd, "output", "aic_gs.csv"))
+save( fkw_dsm_data, fkw_gs, file=file.path(local_wd, "output","dsm_model_data.RData"))
 
 
 
