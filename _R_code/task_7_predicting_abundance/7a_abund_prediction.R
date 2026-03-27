@@ -228,8 +228,4 @@ for(i in seq_along(years)){
 }
 
 pout <- ggarrange(ppp[[1]], ppp[[2]], ppp[[3]], ppp[[4]], ppp[[5]], ppp[[6]], ppp[[7]],lll)
-ggsave(pout, file=file.path(local_wd, "output","assess_abund.png"), width=6.5, height=4.5)
-
-
-
-
+ggsave(pout, file=file.path(local_wd, "output","assess_abund.png"), width=6.5, height=4.6)
