@@ -57,6 +57,6 @@ input_dat<-list()
 input_dat$esw.dat <- y.eff.sight.strata$sightinfo %>% filter(SpCode == sp.code,
                                                          InPoly == 1,
                                                          OnEffort == TRUE)
-input_dat$g0.dat <- y.eff.sight.strata$segdata %>% filter(InPoly == 1, EffType == "S")
+input_dat$g0.dat <- y.eff.sight.strata$segdata %>% filter(InPoly == 1)
 
 saveRDS(input_dat, file.path(localwd, "output","esw_g0_input.rds"))
