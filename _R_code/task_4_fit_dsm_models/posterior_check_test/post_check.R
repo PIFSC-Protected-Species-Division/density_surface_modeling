@@ -51,23 +51,28 @@ sig <- sqrt(gs_fit$sig2)
 Ler <- predict(er_fit, newdata=fkw_dsm_data, type="lpmatrix")
 Lgs <- predict(gs_fit, newdata=fkw_dsm_data, type="lpmatrix")
 
-nz <- NULL
-dens <- NULL
+num_sightings <- NULL
+avg_density <- NULL
 n <- nrow(fkw_dsm_data)
 mean_eff <- mean(fkw_dsm_data$effort)
+set.seed(8675309)
 for(i in 1:nrow(b_er)){
   mu <- as.vector(exp(Ler %*% b_er[i,]+ log(fkw_dsm_data$effort)))
   tt <- draw_tw(mu, p, phi)
   ss <- exp(rnorm(n, mean=Lgs %*% b_gs[i,], sd=sig))
   y <- ss*tt
-  dens <- c(dens, 100*mean(y)/mean_eff)
-  nz <- c(nz, sum(tt>0))
+  avg_density <- c(avg_density, 100*mean(y)/mean_eff)
+  num_sightings  <- c(num_sightings , sum(tt>0))
 }
   
-  # pred_gs <- as.vector(exp(Lgs%*%b_gs[i,] + 0.5*gs_fit$sig2))
-  # modeldens <- pred_er * pred_gs * gs_bias_corr
-  # preddens <- sum(modeldens)/sum(fkw_dsm_data$effort)
-  # dens <- c(dens,preddens*A)
+obsdens <- (fkw_dsm_data$nSI_033 * fkw_dsm_data$ANI_033)
+ltdens <- weighted.mean(obsdens,fkw_dsm_data$ProbPel)/weighted.mean(fkw_dsm_data$effort,fkw_dsm_data$ProbPel)
+
+hist(avg_density)
+abline(v=100*ltdens, col="red",lwd=3)
+
+hist(num_sightings)
+abline(v=sum(fkw_gs$ProbPel), col="red",lwd=3)
 
 
 }
