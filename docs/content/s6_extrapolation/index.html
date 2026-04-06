@@ -249,7 +249,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<p><strong>Alert!!!</strong> <em>Here we use the methods within the <code>dsmextra</code> package to examine spatial areas of extrapolation. However, at the time this code was written, the <code>dsmextra</code> package was not functioning due to recent changes in the R spatial data ecosystem. Therefore, we pulled the necessary components from the package and repackaged them as <code>dsmextraLite</code>, available for download and installation with the code snippet:</em></p>
+<p><strong>Note!!!</strong> <em>Here we use the methods within the <code>dsmextra</code> package to examine spatial areas of extrapolation. However, at the time this code was written, the <code>dsmextra</code> package was not functioning due to recent changes in the R spatial data ecosystem. The <code>dsmextra</code> package was updated after this analysis. In the future we will investigate including it into the workflow. For this analysis, we pulled the necessary components from the old package and repackaged them as <code>dsmextraLite</code>, available for download and installation with the code snippet:</em></p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">'dsmextraLite'</span>, </span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="at">repos=</span><span class="fu">c</span>(<span class="st">'https://pifsc-protected-species-division.r-universe.dev'</span>,</span>
@@ -286,7 +286,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="examine-extrapolation-regions-with-dsmextralite" class="level2">
 <h2 class="anchored" data-anchor-id="examine-extrapolation-regions-with-dsmextralite">Examine extrapolation regions with dsmExtraLite</h2>
-<p>For every day in the prediction data set, we used <code>dsmextraLite</code> to determine if the oceanographic variables in that cell were outside the values that were used to fit the model. For each year and grid cell, we summarized the proportion of the prediction days that were classified as either univariate or multivariate extrapolation conditions.</p>
+<p>For every day in the prediction data set, we used <code>dsmextraLite</code> to determine if the oceanographic variables in that cell were outside the values that were used to fit the model. For each year and grid cell, we summarized the proportion of the prediction days that were classified as either univariate or combinatorial extrapolation conditions.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>fkw_dsm_data <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(fkw_dsm_data, <span class="at">coords=</span><span class="fu">c</span>(<span class="st">"mlon"</span>,<span class="st">"mlat"</span>), <span class="at">crs=</span><span class="dv">4326</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">st_shift_longitude</span>()</span>

@@ -2,7 +2,7 @@
 title: "Assessing Areas of Extrapolation"
 ---
 
-**Alert!!!** *Here we use the methods within the `dsmextra` package to examine spatial areas of extrapolation. However, at the time this code was written, the `dsmextra` package was not functioning due to recent changes in the R spatial data ecosystem. Therefore, we pulled the necessary components from the package and repackaged them as `dsmextraLite`, available for download and installation with the code snippet:*
+**Note!!!** *Here we use the methods within the `dsmextra` package to examine spatial areas of extrapolation. However, at the time this code was written, the `dsmextra` package was not functioning due to recent changes in the R spatial data ecosystem. The `dsmextra` package was updated after this analysis. In the future we will investigate including it into the workflow. For this analysis, we pulled the necessary components from the old package and repackaged them as `dsmextraLite`, available for download and installation with the code snippet:*
 
 ```{r}
 #| eval: false
@@ -46,7 +46,7 @@ ocean_files <- paste(ocean_dir,list.files(ocean_dir), sep="/")
 
 ## Examine extrapolation regions with dsmExtraLite
 
-For every day in the prediction data set, we used `dsmextraLite` to determine if the oceanographic variables in that cell were outside the values that were used to fit the model. For each year and grid cell, we summarized the proportion of the prediction days that were classified as either univariate or multivariate extrapolation conditions.
+For every day in the prediction data set, we used `dsmextraLite` to determine if the oceanographic variables in that cell were outside the values that were used to fit the model. For each year and grid cell, we summarized the proportion of the prediction days that were classified as either univariate or combinatorial  extrapolation conditions.
 
 ```{r}
 #| output: false
