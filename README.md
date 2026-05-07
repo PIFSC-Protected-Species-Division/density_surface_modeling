@@ -1,4 +1,5 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
+
 <!-- badges: start 
 [![crawl status badge](https://dsjohnson.r-universe.dev/badges/crawl)](https://dsjohnson.r-universe.dev)
 [![R-CMD-check](https://github.com/NMML/crawl/workflows/R-CMD-check/badge.svg)](https://github.com/NMML/crawl/actions)
@@ -16,6 +17,9 @@
 
 Full documentation is available
 [here](https://pifsc-protected-species-division.github.io/density_surface_modeling/).
+A collection of independent reviews and responses of the work presented
+in this repository can be downloaded from
+[here](https://github.com/PIFSC-Protected-Species-Division/density_surface_modeling/blob/master/content/FKW-DSM-2026_Technical-Review-Documentation.pdf?raw=true).
 
 ### License
 
