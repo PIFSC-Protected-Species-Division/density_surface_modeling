@@ -19,7 +19,7 @@ Full documentation is available
 [here](https://pifsc-protected-species-division.github.io/density_surface_modeling/).
 A collection of independent reviews and responses of the work presented
 in this repository can be downloaded from
-[here](https://github.com/PIFSC-Protected-Species-Division/density_surface_modeling/blob/master/content/FKW-DSM-2026_Technical-Review-Documentation.pdf?raw=true).
+[here](https://github.com/PIFSC-Protected-Species-Division/density_surface_modeling/raw/master/content/FKW-DSM-2026_Technical-Review-Documentation.pdf).
 
 ### License
 
