@@ -10,3 +10,5 @@ _R_code/**/*.*
 
 **/*.quarto_ipynb
 /_R_code/task_4_fit_dsm_models/pam_check_test
+/_R_code/task_4_fit_dsm_models/nimble_test
+/_R_code/task_2_est_g0_esw/testing
