@@ -339,9 +339,16 @@ hi <- picMaps::hawaii_coast()
 eez <- picMaps::hawaii_eez()
 fkwm <- picMaps::pfkw_mgmt()
 
+# Load survey data
+load(here("_R_code","task_4_fit_dsm_models", "output","dsm_model_data.RData"))
+surv_loc <- fkw_dsm_data %>% select(mlon,mlat) %>% 
+  st_as_sf(coords=c("mlon","mlat"), crs=4326) %>% st_shift_longitude()
+
+
 ppp <- vector("list",nlyr(cv_raster))
 
 ppp[[1]] <- ggplot() + geom_spatraster(data=cv_raster[[1]]) +
+  layer_spatial(surv_loc, shape=20, color=gray(0.8), size=0.01, alpha=0.25) +
   layer_spatial(hi, fill="white", color=NA) +
   layer_spatial(eez, color="white", fill=NA, linetype="dashed",lwd=0.5) +
   layer_spatial(fkwm, color="white", fill=NA,lwd=0.5) +
@@ -358,6 +365,7 @@ ppp[[1]] <- ppp[[1]] + theme(legend.position="none")
 
 for(i in 2:nlyr(cv_raster)){
   ppp[[i]] <- ggplot() + geom_spatraster(data=cv_raster[[i]]) +
+    layer_spatial(surv_loc, shape=20, color=gray(0.8), size=0.01, alpha=0.25) +
     layer_spatial(hi, fill="white", color=NA) +
     layer_spatial(eez, color="white", fill=NA, linetype="dashed",lwd=0.5) +
     layer_spatial(fkwm, color="white", fill=NA,lwd=0.5) +
@@ -380,6 +388,7 @@ bound  <- eez_asses %>% st_buffer(100000) %>% st_shift_longitude()
 cv_clip <- crop(cv_raster, vect(bound)) %>% mask(eez_asses)
 
 ppp[[1]] <- ggplot() + geom_spatraster(data=cv_clip[[1]]) +
+  annotation_spatial(surv_loc, shape=20, color=gray(0.2), size=0.001, alpha=0.1) + 
   layer_spatial(hi, fill="black", color=NA) +
   layer_spatial(eez, color="black", fill=NA, linetype="dashed",lwd=0.5) +
   layer_spatial(fkwm, color="black", fill=NA,lwd=0.5) +
@@ -395,6 +404,7 @@ ppp[[1]] <- ppp[[1]] + theme(legend.position="none")
 
 for(i in 2:nlyr(cv_raster)){
   ppp[[i]] <- ggplot() + geom_spatraster(data=cv_clip[[i]]) +
+    annotation_spatial(surv_loc, shape=20, color=gray(0.2), size=0.001, alpha=0.1) + 
     layer_spatial(hi, fill="black", color=NA) +
     layer_spatial(eez, color="black", fill=NA, linetype="dashed",lwd=0.5) +
     layer_spatial(fkwm, color="black", fill=NA, lwd=0.5) +
