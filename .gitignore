@@ -7,6 +7,11 @@
 
 _R_code/**/*.*
 !_R_code/**/*.R
+!_R_code/**/AllSurveys_g0_ESW_1986-2023.das
+!_R_code/**/CenPac2.csv
+!_R_code/**/CenPac_Toolbox_1997-2023.das
+!_R_code/**/region_filter_esw_g0.csv
+!_R_code/**/region_filter_poly_esw_g0.rds
 
 **/*.quarto_ipynb
 /_R_code/task_4_fit_dsm_models/pam_check_test
