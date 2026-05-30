@@ -78,7 +78,7 @@ ggplot()+
 
 ```
 
-## Export data for use in *g*(0) and ESW estimation
+## Export data for use in *g*(0) and *ESW* estimation
 
 ```{r}
 #| eval: false
@@ -91,7 +91,7 @@ input_dat$g0.dat <- y.eff.sight.strata$segdata %>% filter(InPoly == 1, EffType =
 saveRDS(input_dat, file.path(localwd, "output","esw_g0_input.rds"))
 ```
 
-# B. Estimate ESW and *g*(0) Relative to Beaufort Sea State
+# B. Estimate *ESW* and *g*(0) Relative to Beaufort Sea State
 
 If you are not continuing from step A in the same session, the following
 code must be executed to load the appropriate packages and processed
@@ -119,7 +119,7 @@ sp.code <- "033"
 input_dat <- readRDS(file.path(localwd, "output","esw_g0_input.rds"))
 ```
 
-## Estimate ESW relative to Beaufort sea state
+## Estimate *ESW* relative to Beaufort sea state
 
 Here we are using the `distance` package to fit a half-normal detection
 function, defined as: $$
@@ -141,7 +141,7 @@ summary(detfun)
 plot(detfun, showpoints = TRUE)
 ```
 
-### Estimate ESW for all segments
+### Estimate *ESW* for all segments
 
 In this step, the effective strip width ($ESW_i$) is calculated for each
 survey segment, $$

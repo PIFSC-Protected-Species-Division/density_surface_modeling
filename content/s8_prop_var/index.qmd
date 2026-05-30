@@ -1,5 +1,5 @@
 ---
-title: "Assessing Abundance Prediction Uncertainty"
+title: "Assess Abundance Prediction Uncertainty"
 ---
 
 # A. Fitting Extended GAM Model for Encounter Rate

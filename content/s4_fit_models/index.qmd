@@ -322,7 +322,7 @@ Traditional cross-validation is not possible for this analysis due to limited da
 
 ### Evaluate ratio of observed to predicted density
 
-Here we examine the ratio of observed to predicted density estimates on the survey segments.
+Here, we examine the ratio of observed to predicted density estimates on the survey segments.
 
 ```{r}
 #| eval: false

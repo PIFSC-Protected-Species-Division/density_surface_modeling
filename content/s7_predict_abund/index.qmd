@@ -1,5 +1,5 @@
 ---
-title: "Predicting Spatial Abundance"
+title: "Predict Spatial Abundance"
 ---
 
 # A. Abundance Prediction

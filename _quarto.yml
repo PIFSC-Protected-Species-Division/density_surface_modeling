@@ -33,21 +33,21 @@ website:
       - href: content/intro.qmd
         text: Introduction
       - href: content/s1_construct_segs/index.qmd
-        text: 1. Segmenting DAS Survey Data
+        text: 1. Segment DAS Survey Data
       - href: content/s2_est_g0_esw/index.qmd
         text: 2. Estimate g(0) and ESW
       - href: content/s3_env_data/index.qmd
-        text: 3. Download environmental data
+        text: 3. Download Environmental Data
       - href: content/s4_fit_models/index.qmd
-        text: 4. Fit DSM models
+        text: 4. Fit DSM Models
       - href: content/s5_download_prediction_var/index.qmd
-        text: 5. Download environmental variables for prediction
+        text: 5. Download Environmental Variables for Prediction
       - href: content/s6_extrapolation/index.qmd
-        text: 6. Examine areas of extrapolation
+        text: 6. Examine Areas of Extrapolation
       - href: content/s7_predict_abund/index.qmd
-        text: 7. Predicting spatial abundance
+        text: 7. Predict Spatial Abundance
       - href: content/s8_prop_var/index.qmd
-        text: 8. Estimating full spatial abundance uncertainty
+        text: 8. Assess Abundance Prediction Uncertainty
 
 
 format:
