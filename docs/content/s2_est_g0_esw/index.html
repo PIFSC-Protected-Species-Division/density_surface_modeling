@@ -191,7 +191,7 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s1_construct_segs/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">1. Segmenting DAS Survey Data</span></a>
+ <span class="menu-text">1. Segment DAS Survey Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -203,37 +203,37 @@ window.Quarto = {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s3_env_data/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">3. Download environmental data</span></a>
+ <span class="menu-text">3. Download Environmental Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s4_fit_models/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">4. Fit DSM models</span></a>
+ <span class="menu-text">4. Fit DSM Models</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s5_download_prediction_var/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">5. Download environmental variables for prediction</span></a>
+ <span class="menu-text">5. Download Environmental Variables for Prediction</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s6_extrapolation/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">6. Examine areas of extrapolation</span></a>
+ <span class="menu-text">6. Examine Areas of Extrapolation</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s7_predict_abund/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">7. Predicting spatial abundance</span></a>
+ <span class="menu-text">7. Predict Spatial Abundance</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s8_prop_var/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">8. Estimating full spatial abundance uncertainty</span></a>
+ <span class="menu-text">8. Assess Abundance Prediction Uncertainty</span></a>
   </div>
 </li>
     </ul>
@@ -250,13 +250,13 @@ window.Quarto = {
   <ul class="collapse">
   <li><a href="#read-in-previous-survey-data" id="toc-read-in-previous-survey-data" class="nav-link" data-scroll-target="#read-in-previous-survey-data">Read in previous survey data</a></li>
   <li><a href="#process-das-file-and-filter-for-false-killer-whale-regions" id="toc-process-das-file-and-filter-for-false-killer-whale-regions" class="nav-link" data-scroll-target="#process-das-file-and-filter-for-false-killer-whale-regions">Process DAS file and filter for false killer whale regions</a></li>
-  <li><a href="#export-data-for-use-in-g0-and-esw-estimation" id="toc-export-data-for-use-in-g0-and-esw-estimation" class="nav-link" data-scroll-target="#export-data-for-use-in-g0-and-esw-estimation">Export data for use in <em>g</em>(0) and ESW estimation</a></li>
+  <li><a href="#export-data-for-use-in-g0-and-esw-estimation" id="toc-export-data-for-use-in-g0-and-esw-estimation" class="nav-link" data-scroll-target="#export-data-for-use-in-g0-and-esw-estimation">Export data for use in <em>g</em>(0) and <em>ESW</em> estimation</a></li>
   </ul></li>
-  <li><a href="#b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" id="toc-b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#b.-estimate-esw-and-g0-relative-to-beaufort-sea-state">B. Estimate ESW and <em>g</em>(0) Relative to Beaufort Sea State</a>
+  <li><a href="#b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" id="toc-b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#b.-estimate-esw-and-g0-relative-to-beaufort-sea-state">B. Estimate <em>ESW</em> and <em>g</em>(0) Relative to Beaufort Sea State</a>
   <ul class="collapse">
-  <li><a href="#estimate-esw-relative-to-beaufort-sea-state" id="toc-estimate-esw-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-esw-relative-to-beaufort-sea-state">Estimate ESW relative to Beaufort sea state</a>
+  <li><a href="#estimate-esw-relative-to-beaufort-sea-state" id="toc-estimate-esw-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-esw-relative-to-beaufort-sea-state">Estimate <em>ESW</em> relative to Beaufort sea state</a>
   <ul class="collapse">
-  <li><a href="#estimate-esw-for-all-segments" id="toc-estimate-esw-for-all-segments" class="nav-link" data-scroll-target="#estimate-esw-for-all-segments">Estimate ESW for all segments</a></li>
+  <li><a href="#estimate-esw-for-all-segments" id="toc-estimate-esw-for-all-segments" class="nav-link" data-scroll-target="#estimate-esw-for-all-segments">Estimate <em>ESW</em> for all segments</a></li>
   </ul></li>
   <li><a href="#estimate-g0-relative-to-beaufort-sea-state" id="toc-estimate-g0-relative-to-beaufort-sea-state" class="nav-link" data-scroll-target="#estimate-g0-relative-to-beaufort-sea-state">Estimate <em>g</em>(0) relative to Beaufort sea state</a>
   <ul class="collapse">
@@ -330,7 +330,7 @@ window.Quarto = {
 </div>
 </section>
 <section id="export-data-for-use-in-g0-and-esw-estimation" class="level2">
-<h2 class="anchored" data-anchor-id="export-data-for-use-in-g0-and-esw-estimation">Export data for use in <em>g</em>(0) and ESW estimation</h2>
+<h2 class="anchored" data-anchor-id="export-data-for-use-in-g0-and-esw-estimation">Export data for use in <em>g</em>(0) and <em>ESW</em> estimation</h2>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>input_dat<span class="ot">&lt;-</span><span class="fu">list</span>()</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>input_dat<span class="sc">$</span>esw.dat <span class="ot">&lt;-</span> y.eff.sight.strata<span class="sc">$</span>sightinfo <span class="sc">%&gt;%</span> </span>
@@ -342,7 +342,7 @@ window.Quarto = {
 </section>
 </section>
 <section id="b.-estimate-esw-and-g0-relative-to-beaufort-sea-state" class="level1">
-<h1>B. Estimate ESW and <em>g</em>(0) Relative to Beaufort Sea State</h1>
+<h1>B. Estimate <em>ESW</em> and <em>g</em>(0) Relative to Beaufort Sea State</h1>
 <p>If you are not continuing from step A in the same session, the following code must be executed to load the appropriate packages and processed data from step A. Otherwise, this code chunk can be skipped.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#' load packages</span></span>
@@ -363,7 +363,7 @@ window.Quarto = {
 <span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>input_dat <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="fu">file.path</span>(localwd, <span class="st">"output"</span>,<span class="st">"esw_g0_input.rds"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <section id="estimate-esw-relative-to-beaufort-sea-state" class="level2">
-<h2 class="anchored" data-anchor-id="estimate-esw-relative-to-beaufort-sea-state">Estimate ESW relative to Beaufort sea state</h2>
+<h2 class="anchored" data-anchor-id="estimate-esw-relative-to-beaufort-sea-state">Estimate <em>ESW</em> relative to Beaufort sea state</h2>
 <p>Here we are using the <code>distance</code> package to fit a half-normal detection function, defined as: <span class="math display">\[
 p_i(x|\boldsymbol{\theta}_d) = \exp(-x/2\sigma_i^2)
 \]</span> where the detection range parameter is a function of the Beaufort sea state, <span class="math inline">\(b_i\)</span>, on survey segment <span class="math inline">\(i\)</span>, <span class="math display">\[
@@ -417,7 +417,7 @@ N in covered region 274.6616170 24.21359682 0.08815792</code></pre>
 </div>
 </div>
 <section id="estimate-esw-for-all-segments" class="level3">
-<h3 class="anchored" data-anchor-id="estimate-esw-for-all-segments">Estimate ESW for all segments</h3>
+<h3 class="anchored" data-anchor-id="estimate-esw-for-all-segments">Estimate <em>ESW</em> for all segments</h3>
 <p>In this step, the effective strip width (<span class="math inline">\(ESW_i\)</span>) is calculated for each survey segment, <span class="math display">\[
 ESW_i = \int_0^wp_i(x|\boldsymbol{\theta}_d)dx
 \]</span> where <span class="math inline">\(w\)</span> is the truncation width of the transects (here it is 5.5 km as can be seen in the previous code). The <span class="math inline">\(ESW\)</span> is the width of the strip that would result from a survey with perfect detection. Now the fitted <span class="math inline">\(ESW\)</span> are saved for future if the user is not continuing on to estimate <span class="math inline">\(g(0;b_i)\)</span>, the probability of detection on the trackline when Beaufort sea state equals <span class="math inline">\(b_i\)</span>.</p>
@@ -971,13 +971,13 @@ g(0;b) = \mu_b / \mu_0
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/s1_construct_segs/index.html" class="pagination-link" aria-label="1. Segmenting DAS Survey Data">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">1. Segmenting DAS Survey Data</span>
+      <a href="../../content/s1_construct_segs/index.html" class="pagination-link" aria-label="1. Segment DAS Survey Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">1. Segment DAS Survey Data</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/s3_env_data/index.html" class="pagination-link" aria-label="3. Download environmental data">
-        <span class="nav-page-text">3. Download environmental data</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/s3_env_data/index.html" class="pagination-link" aria-label="3. Download Environmental Data">
+        <span class="nav-page-text">3. Download Environmental Data</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

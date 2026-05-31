@@ -117,7 +117,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/s4_fit_models/index.html">4. Fit DSM models</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="../../content/s4_fit_models/index.html">4. Fit DSM Models</a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -162,7 +162,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s1_construct_segs/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">1. Segmenting DAS Survey Data</span></a>
+ <span class="menu-text">1. Segment DAS Survey Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
@@ -174,37 +174,37 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s3_env_data/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">3. Download environmental data</span></a>
+ <span class="menu-text">3. Download Environmental Data</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s4_fit_models/index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">4. Fit DSM models</span></a>
+ <span class="menu-text">4. Fit DSM Models</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s5_download_prediction_var/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">5. Download environmental variables for prediction</span></a>
+ <span class="menu-text">5. Download Environmental Variables for Prediction</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s6_extrapolation/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">6. Examine areas of extrapolation</span></a>
+ <span class="menu-text">6. Examine Areas of Extrapolation</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s7_predict_abund/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">7. Predicting spatial abundance</span></a>
+ <span class="menu-text">7. Predict Spatial Abundance</span></a>
   </div>
 </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="../../content/s8_prop_var/index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">8. Estimating full spatial abundance uncertainty</span></a>
+ <span class="menu-text">8. Assess Abundance Prediction Uncertainty</span></a>
   </div>
 </li>
     </ul>
@@ -592,7 +592,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>Traditional cross-validation is not possible for this analysis due to limited data availability to discretize into training and testing datasets. So, we use other methods of evaluating model performance.</p>
 <section id="evaluate-ratio-of-observed-to-predicted-density" class="level3">
 <h3 class="anchored" data-anchor-id="evaluate-ratio-of-observed-to-predicted-density">Evaluate ratio of observed to predicted density</h3>
-<p>Here we examine the ratio of observed to predicted density estimates on the survey segments.</p>
+<p>Here, we examine the ratio of observed to predicted density estimates on the survey segments.</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="do">### CenPac area</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>A <span class="ot">&lt;-</span> picMaps<span class="sc">::</span><span class="fu">cenpac</span>() <span class="sc">%&gt;%</span> <span class="fu">st_area</span>() <span class="sc">%&gt;%</span> <span class="fu">set_units</span>(<span class="st">"km^2"</span>) <span class="sc">%&gt;%</span> <span class="fu">as.numeric</span>()</span>
@@ -1204,13 +1204,13 @@ s(mld) 4.000 0.927    1.25    0.93</code></pre>
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="../../content/s3_env_data/index.html" class="pagination-link" aria-label="3. Download environmental data">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">3. Download environmental data</span>
+      <a href="../../content/s3_env_data/index.html" class="pagination-link" aria-label="3. Download Environmental Data">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text">3. Download Environmental Data</span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="../../content/s5_download_prediction_var/index.html" class="pagination-link" aria-label="5. Download environmental variables for prediction">
-        <span class="nav-page-text">5. Download environmental variables for prediction</span> <i class="bi bi-arrow-right-short"></i>
+      <a href="../../content/s5_download_prediction_var/index.html" class="pagination-link" aria-label="5. Download Environmental Variables for Prediction">
+        <span class="nav-page-text">5. Download Environmental Variables for Prediction</span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
