@@ -36,7 +36,7 @@ This R code is a consolidation and update of code developed over many years by *
 
 ### Technical Review
 
-The work presented in this vignette was reviewed and improved by three independent reviewers with DSM expertise. A [packet](https://github.com/PIFSC-Protected-Species-Division/density_surface_modeling/raw/master/content/FKW-DSM-2026_Technical-Review-Documentation.pdf) of their reviews and our responses is available to download. 
+The work presented in this vignette was reviewed and improved by three independent reviewers with DSM expertise. A [packet](https://github.com/PIFSC-Protected-Species-Division/density_surface_modeling/raw/master/content/FKW-DSM-2026_Technical-Review-Documentation.pdf) of their reviews and our responses is available to download. The packet is a PDF portfolio and also includes the reviewer instructions and draft project report sent to the reviewers.   
 
 ### License
 
