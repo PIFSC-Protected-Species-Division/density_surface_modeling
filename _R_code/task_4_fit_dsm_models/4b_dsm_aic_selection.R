@@ -166,7 +166,11 @@ mod_df_gs <- data.frame(
 
 write.csv(mod_df, file = file.path(local_wd, "output", "aic_er.csv"))
 write.csv(mod_df_gs, file = file.path(local_wd, "output", "aic_gs.csv"))
+<<<<<<< Updated upstream
 save( fkw_dsm_data, fkw_gs, file=file.path(local_wd, "output","dsm_model_data.RData"))
+=======
+save( fkw_dsm_data, fkw_gs, spline2use, file=file.path(local_wd, "output","dsm_model_data.RData"))
+>>>>>>> Stashed changes
 
 
 
